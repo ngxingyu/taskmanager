@@ -28,14 +28,13 @@ FactoryBot.define do
     after(:create) do |todo_list, evaluator|
       (0...evaluator.tags_count).each do |i|
         tag = create(:tag, user: evaluator.user)
-        create(:tagging, user: evaluator.user, todo_list: todo_list, tag: tag)
+        create(:tagging, todo_list: todo_list, tag: tag)
       end
     end
   end
   factory :tagging do
     todo_list
     tag
-    user
   end 
   factory :todo_item do
     association :user
