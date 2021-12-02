@@ -1,0 +1,44 @@
+# Attempt to access API without a token
+# GET http://127.0.0.1:3000/api/v1/todo_lists
+# >> {
+# >>   "message": "Missing token"
+# >> }
+
+# Signup a new user - get token from here
+# POST http://127.0.0.1:3000/signup HTTP/1.1
+# content-type: application/json
+
+# { "name": "test", "email":"test@test.com",  "password":"foobar"}
+
+# >> {
+# >>   "message": "Account created successfully",
+# >>   "auth_token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2Mzg1NDczOTV9.K7LBRFiV9VcYOeX83ZqjnQbXJf01kg8vNCc9tvELtLA"
+# >> }
+
+# >> {
+# >>   "message": "Validation failed: Email has already been taken"
+# >> }
+
+# GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+# Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2Mzg1NDczOTV9.K7LBRFiV9VcYOeX83ZqjnQbXJf01kg8vNCc9tvELtLA
+
+# >> []
+
+# POST http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+# Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2Mzg1NDczOTV9.K7LBRFiV9VcYOeX83ZqjnQbXJf01kg8vNCc9tvELtLA
+# content-type: application/json
+
+# {
+#     "title": "l2",
+#     "description": "desc",
+#     "all_tags": "a,b"
+# }
+
+# >> {
+# >>   "id": 6,
+# >>   "title": "l2",
+# >>   "description": "desc",
+# >>   "user_id": 2,
+# >>   "created_at": "2021-12-02T16:04:21.619Z",
+# >>   "updated_at": "2021-12-02T16:04:21.619Z"
+# >> }
