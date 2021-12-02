@@ -24,7 +24,8 @@ class Api::V1::TagsController < ApplicationController
 
   # DELETE /api/v1/tags/:id
   def destroy
-    @tag.destroy
+    @resource = Tagging.find_by(tag_id: params[:tag_id], todo_list_id: params[:todo_list_id])
+    @resource.destroy
     head :no_content
   end
 

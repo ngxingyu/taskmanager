@@ -15,12 +15,10 @@ ActiveRecord::Schema.define(version: 2021_11_26_171228) do
   create_table "taggings", force: :cascade do |t|
     t.integer "todo_list_id", null: false
     t.integer "tag_id", null: false
-    t.integer "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
     t.index ["todo_list_id"], name: "index_taggings_on_todo_list_id"
-    t.index ["user_id"], name: "index_taggings_on_user_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -68,7 +66,6 @@ ActiveRecord::Schema.define(version: 2021_11_26_171228) do
 
   add_foreign_key "taggings", "tags"
   add_foreign_key "taggings", "todo_lists"
-  add_foreign_key "taggings", "users"
   add_foreign_key "tags", "users"
   add_foreign_key "todo_items", "todo_lists"
   add_foreign_key "todo_items", "users"

@@ -2,12 +2,22 @@ class Api::V1::TodoListsController < ApplicationController
   # GET /api/v1/todo_lists
   def index
     @todo_lists = TodoList.all
+    @todo_lists = @todo_lists.where(user: current_user)
     json_response(@todo_lists)
   end
 
   # POST /api/v1/todo_lists
   def create
-    json_response(TodoList.create!(todo_list_params))
+    p = todo_list_params
+    p[:all_tags] = params[:all_tags]
+    todos = TodoList.create!(p)
+
+    Tagging.where(todo_list_id: todos.id).destroy_all
+    todos.tags.map do |tag|
+      Tagging.create!(todo_list_id: todos.id,
+                            tag_id: tag.id)
+    end
+    json_response(todos)
   end
 
   # GET /api/v1/todo_lists/:id
@@ -31,7 +41,7 @@ class Api::V1::TodoListsController < ApplicationController
 
   def todo_list_params
     # whitelist params
-    params.permit(:title, :description, :created_by, :tags)
+    params.require(:todo_list).permit(:title, :description, :all_tags).reverse_merge(user_id: current_user.id)
   end
 
   def set_todo
