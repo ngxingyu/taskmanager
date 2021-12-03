@@ -38,6 +38,7 @@ group :test do
   gem 'faker'
   gem 'shoulda-matchers', '~> 4.5', '>= 4.5.1'
 end
+gem 'simplecov', require: false, group: :test
 
 group :development do
   gem 'listen', '~> 3.3'
