@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :user do
     transient do
-      todo_lists_count { 2 }
-      todo_items_count { 3 }
-      tags_count { 2 }
+      todo_lists_count { 0 }
+      todo_items_count { 0 }
+      tags_count { 0 }
     end
     email { Faker::Internet.email }
     name { Faker::Name.name }
@@ -23,7 +23,7 @@ FactoryBot.define do
     description { Faker::Lorem.paragraph }
     transient do
       user
-      tags_count { 5 }
+      tags_count { 0 }
     end
     after(:create) do |todo_list, evaluator|
       (0...evaluator.tags_count).each do |i|
@@ -45,6 +45,5 @@ FactoryBot.define do
   end
 end
 
-def create_users(users_count, todo_lists_count, todo_items_count)
-  FactoryBot.create_list(:user, users_count, todo_lists_count: todo_lists_count, todo_items_count: todo_items_count)
-end
+# FactoryBot.create_list(:user, users_count, todo_lists_count: todo_lists_count, todo_items_count: todo_items_count)
+# FactoryBot.create_list(:tag, user: :user, name: :name)

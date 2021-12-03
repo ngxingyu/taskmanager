@@ -8,21 +8,13 @@ class Api::V1::TodoListsController < ApplicationController
 
   # POST /api/v1/todo_lists
   def create
-    p = todo_list_params
-    p[:all_tags] = params[:all_tags]
-    todos = TodoList.create!(p)
-
-    Tagging.where(todo_list_id: todos.id).destroy_all
-    todos.tags.map do |tag|
-      Tagging.create!(todo_list_id: todos.id,
-                            tag_id: tag.id)
-    end
+    todos = TodoList.create!(todo_list_params)
     json_response(todos)
   end
 
   # GET /api/v1/todo_lists/:id
   def show
-    json_response(TodoList.find(params[:id]))
+    json_response(TodoList.where(user: current_user).find(params[:id]))
   end
 
   # PUT /api/v1/todo_lists/:id
@@ -41,7 +33,9 @@ class Api::V1::TodoListsController < ApplicationController
 
   def todo_list_params
     # whitelist params
-    params.require(:todo_list).permit(:title, :description, :all_tags).reverse_merge(user_id: current_user.id)
+    params.require(:todo_list)
+      .permit(:title, :description)
+      .reverse_merge(user_id: current_user.id, all_tags: params[:all_tags])
   end
 
   def set_todo
