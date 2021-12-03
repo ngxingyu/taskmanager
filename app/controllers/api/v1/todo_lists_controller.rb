@@ -19,12 +19,18 @@ class Api::V1::TodoListsController < ApplicationController
 
   # PUT /api/v1/todo_lists/:id
   def update
+    @todo_list = TodoList.where(user: current_user).find(params[:id])
+    if params.key?(:all_tags)
+      @todo_list.tags.delete_all
+    end
     @todo_list.update(todo_list_params)
     head :no_content
   end
 
   # DELETE /api/v1/todo_lists/:id
   def destroy
+    @todo_list = TodoList.where(user: current_user).find(params[:id])
+    @todo_list.tags.delete_all
     @todo_list.destroy
     head :no_content
   end
@@ -33,12 +39,9 @@ class Api::V1::TodoListsController < ApplicationController
 
   def todo_list_params
     # whitelist params
-    params.require(:todo_list)
+    params
+      # .require(:todo_list)
       .permit(:title, :description)
-      .reverse_merge(user_id: current_user.id, all_tags: params[:all_tags])
-  end
-
-  def set_todo
-    @todo_list = TodoList.find(params[:id])
+      .reverse_merge(user_id: current_user.id, all_tags: params[:all_tags]).reject { |k, v| v.nil? }
   end
 end
