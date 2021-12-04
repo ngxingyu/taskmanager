@@ -1,31 +1,43 @@
 class Api::V1::TagsController < ApplicationController
-  # GET /api/v1/tags
+  # GET /api/v1/tags?user_id=??
   def index
-    @tags = Tag.where(nil)
-    @tags = @tags.filter_by_user(params[:user_id]) if params[:user_id].present?
-    json_response(@tags)
+    @tags = Tag.all
+    if params[:user_id].present?
+      check_permission(lambda {
+        @tags = @tags.where(user_id: params[:user_id])
+        json_response(@tags)
+      })
+    else
+      @tags = @tags.where(user_id: current_user.id)
+      json_response(@tags)
+    end
   end
 
   # POST /api/v1/tags
   def create
-    json_response(Tag.create!(tag_params))
+    json_response(Tag.create(tag_params))
+  rescue ActiveRecord::RecordNotUnique => e
+    unprocessable_request(e)
   end
 
   # GET /api/v1/tags/:id
   def show
-    json_response(Tag.find(params[:id]))
+    json_response(Tag.find_by(params.permit(:id, :name).merge({ user_id: current_user.id })))
   end
 
   # PUT /api/v1/tags/:id
   def update
+    @tag = Tag.where(params.permit(:id, :name).merge({ user_id: current_user.id }))
     @tag.update(tag_params)
     head :no_content
   end
 
   # DELETE /api/v1/tags/:id
   def destroy
-    @resource = Tagging.find_by(tag_id: params[:tag_id], todo_list_id: params[:todo_list_id])
-    @resource.destroy
+    # @taggings = Tagging.where(params.permit(:tag_id))
+    # @taggings.destroy
+    @tag = Tag.find_by(params.permit(:tag_id))
+    @tag.destroy
     head :no_content
   end
 
@@ -33,6 +45,15 @@ class Api::V1::TagsController < ApplicationController
 
   def tag_params
     # whitelist params
-    params.permit(:user_id, :name)
+    params.permit(:user_id, :name).merge({ user_id: current_user.id })
+  end
+
+  def check_permission(fn)
+    # proceed if admin or same user id as current_user
+    if (current_user.admin || params[:user_id].to_i == current_user.id)
+      fn.call
+    else
+      json_response({ message: "Permission denied" }, :unauthorized)
+    end
   end
 end

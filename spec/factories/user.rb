@@ -15,8 +15,12 @@ FactoryBot.define do
     end
   end
   factory :tag do
-    name { Faker::Creature::Animal.name }
+    sequence(:name) { |n| "#{Faker::Company.name} #{n}" }
     user
+    to_create do |instance|
+      instance.id = Tag.find_or_create_by(name: instance.name, user: instance.user).id
+      instance.reload
+    end
   end
   factory :todo_list do
     title { Faker::Team.state }
