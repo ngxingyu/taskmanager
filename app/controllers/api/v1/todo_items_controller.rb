@@ -1,9 +1,18 @@
 class Api::V1::TodoItemsController < ApplicationController
   # GET /api/v1/todo_items
   def index
-    @todo_items = TodoItem.where(nil)
-    @todo_items = @todo_items.filter_by_user(params[:user_id]) if params[:user_id].present?
-    json_response(@todo_items)
+    @todo_items = TodoItem.all
+    if params[:user_id].present?
+      if (current_user.admin || params[:user_id].to_i == current_user.id)
+        @todo_items = @todo_items.where(user_id: params[:user_id])
+        json_response(@todo_items)
+      else
+        json_response({ message: "Permission denied" }, :unauthorized)
+      end
+    else
+      @todo_items = @todo_items.where(user_id: current_user.id)
+      json_response(@todo_items)
+    end
   end
 
   # POST /api/v1/todo_items
@@ -13,24 +22,39 @@ class Api::V1::TodoItemsController < ApplicationController
 
   # GET /api/v1/todo_items/:id
   def show
-    json_response(TodoItem.find(params[:id]))
+    json_response(TodoItem.find_by(id: params[:id], user_id: current_user.id))
   end
 
   # PUT /api/v1/todo_items/:id
   def update
-    @todo_item.update(todo_item_params)
-    head :no_content
+    check_permission(lambda {
+      @todo_item = TodoItem.where(id: params[:id], user_id: current_user.id)
+      @todo_item.update(todo_item_params)
+      head :no_content
+    })
   end
 
   # DELETE /api/v1/todo_items/:id
   def destroy
-    @todo_item.destroy
-    head :no_content
+    check_permission(lambda {
+      @todo_item = TodoItem.find_by(id: params[:id], user_id: current_user.id)
+      @todo_item.destroy
+      head :no_content
+    })
   end
 
   private
 
   def todo_item_params
-    params.permit(:title, :description, :created_by, :tags)
+    params.permit(:title, :description, :start_at, :duration, :notes, :importance, :todo_list_id).merge(user_id: current_user.id)
+  end
+
+  def check_permission(fn)
+    # proceed if admin or user owns the todo item
+    if (current_user.admin || TodoItem.find_by(id: params[:id]).user_id == current_user.id)
+      fn.call
+    else
+      json_response({ message: "Permission denied" }, :unauthorized)
+    end
   end
 end

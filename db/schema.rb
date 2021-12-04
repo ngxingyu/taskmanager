@@ -33,9 +33,10 @@ ActiveRecord::Schema.define(version: 2021_11_26_171228) do
   create_table "todo_items", force: :cascade do |t|
     t.string "title"
     t.string "description"
-    t.boolean "completed"
+    t.string "notes", default: ""
+    t.boolean "completed", default: false
     t.datetime "start_at"
-    t.time "duration"
+    t.integer "duration", default: 60
     t.integer "importance", default: 1
     t.integer "todo_list_id", null: false
     t.integer "user_id", null: false
