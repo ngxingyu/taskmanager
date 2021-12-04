@@ -16,8 +16,6 @@ class Api::V1::TagsController < ApplicationController
   # POST /api/v1/tags
   def create
     json_response(Tag.create(tag_params))
-  rescue ActiveRecord::RecordNotUnique => e
-    unprocessable_request(e)
   end
 
   # GET /api/v1/tags/:id
