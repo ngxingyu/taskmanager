@@ -1,11 +1,16 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :authorize_request, only: :create
-
   # GET /api/v1/users
   def index
-    @users = User.where(nil)
-    @users = @users.filter_by_id(params[:id]) if params[:id].present?
-    json_response(@users)
+    check_permission(lambda {
+      @users = User.all
+      json_response(@users)
+    })
+  end
+
+  # GET /profile
+  def profile
+    json_response(current_user)
   end
 
   # POST /api/v1/users
@@ -19,19 +24,27 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /api/v1/users/:id
   def show
-    json_response(User.find(params[:id]))
+    check_permission(lambda {
+      json_response(User.find(params[:id]))
+    })
   end
 
   # PUT /api/v1/users/:id
   def update
-    @user.update(user_params)
-    head :no_content
+    check_permission(lambda {
+      @user = User.find(params[:id])
+      @user.update(user_params)
+      head :no_content
+    })
   end
 
   # DELETE /api/v1/users/:id
   def destroy
-    @user.destroy
-    head :no_content
+    check_permission(lambda {
+      @user = User.find(params[:id])
+      @user.destroy
+      head :no_content
+    })
   end
 
   private
@@ -39,5 +52,14 @@ class Api::V1::UsersController < ApplicationController
   def user_params
     # whitelist params
     params.permit(:email, :name, :password, :verified)
+  end
+
+  def check_permission(fn)
+    # proceed if admin or same user id as current_user
+    if (current_user.admin || params[:id].to_i == current_user.id)
+      fn.call
+    else
+      json_response({ message: "Permission denied" }, :unauthorized)
+    end
   end
 end
