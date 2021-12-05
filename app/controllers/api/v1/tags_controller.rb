@@ -34,7 +34,7 @@ class Api::V1::TagsController < ApplicationController
   def destroy
     # @taggings = Tagging.where(params.permit(:tag_id))
     # @taggings.destroy
-    @tag = Tag.find_by(params.permit(:tag_id))
+    @tag = Tag.where(user_id: current_user.id).find(params[:id])
     @tag.destroy
     head :no_content
   end

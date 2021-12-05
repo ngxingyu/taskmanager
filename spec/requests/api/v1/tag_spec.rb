@@ -104,18 +104,11 @@ RSpec.describe "Api::V1::Tags", type: :request do
         expect(response).to have_http_status(204)
         expect(Tagging.where(tag_id: @tag.id).count).to eq(0)
       end
-      it "same for admin" do
-        @tag = Tag.where(user_id: user.id).first
-        expect(Tagging.where(tag_id: @tag.id).count).to eq(1)
-        delete "/api/v1/tags/#{@tag.id}", headers: headersadmin
-        expect(response).to have_http_status(204)
-        expect(Tagging.where(tag_id: @tag.id).count).to eq(0)
-      end
       it "user cannot delete others" do
         @tag = Tag.where(user_id: admin.id).first
         expect(Tagging.where(tag_id: @tag.id).count).to eq(1)
         delete "/api/v1/tags/#{@tag.id}", headers: headers
-        expect(response).to have_http_status(204)
+        expect(response).to have_http_status(404)
         expect(Tagging.where(tag_id: @tag.id).count).to eq(1)
       end
     end

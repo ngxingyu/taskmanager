@@ -54,7 +54,9 @@ class Api::V1::TodoItemsController < ApplicationController
 
   def check_permission(fn)
     # proceed if admin or user owns the todo item
-    if (current_user.admin || TodoItem.find_by(id: params[:id]).user_id == current_user.id)
+    if (current_user.admin ||
+        TodoItem.exists?(id: params[:id]) &&
+        TodoItem.find_by(id: params[:id]).user_id == current_user.id)
       fn.call
     else
       raise(
