@@ -60,7 +60,34 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(response).to have_http_status(401)
       end
       it "returns lists" do
-        expect(json["message"]).to eq("Permission denied")
+        expect(json["message"]).to eq(Message.unauthorized)
+      end
+    end
+  end
+
+  describe "GET /api/v1/users (for admin)" do
+    context "admin user" do
+      before {
+        expect(User.all.count).to eq(1)
+        @admin = create(:user, admin: true)
+        @admin_headers = valid_headers(@admin)
+        get "/api/v1/users", headers: @admin_headers
+      }
+      it "returns lists" do
+        expect(json).not_to be_empty
+        expect(json.size).to eq(2)
+      end
+      it "returns status code 200" do
+        expect(response).to have_http_status(200)
+      end
+    end
+    context "non-admin user" do
+      before(:each) { get "/api/v1/users", headers: headers }
+      it "returns status code 401" do
+        expect(response).to have_http_status(401)
+      end
+      it "returns lists" do
+        expect(json["message"]).to eq(Message.unauthorized)
       end
     end
   end

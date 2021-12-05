@@ -7,7 +7,10 @@ class Api::V1::TodoItemsController < ApplicationController
         @todo_items = @todo_items.where(user_id: params[:user_id])
         json_response(@todo_items)
       else
-        json_response({ message: "Permission denied" }, :unauthorized)
+        raise(
+          ExceptionHandler::AuthenticationError,
+          ("#{Message.unauthorized}")
+        )
       end
     else
       @todo_items = @todo_items.where(user_id: current_user.id)
@@ -22,7 +25,7 @@ class Api::V1::TodoItemsController < ApplicationController
 
   # GET /api/v1/todo_items/:id
   def show
-    json_response(TodoItem.find_by(id: params[:id], user_id: current_user.id))
+    json_response(TodoItem.where(user_id: current_user.id).find(params[:id]))
   end
 
   # PUT /api/v1/todo_items/:id
@@ -54,7 +57,10 @@ class Api::V1::TodoItemsController < ApplicationController
     if (current_user.admin || TodoItem.find_by(id: params[:id]).user_id == current_user.id)
       fn.call
     else
-      json_response({ message: "Permission denied" }, :unauthorized)
+      raise(
+        ExceptionHandler::AuthenticationError,
+        ("#{Message.unauthorized}")
+      )
     end
   end
 end

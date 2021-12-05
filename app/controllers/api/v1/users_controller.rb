@@ -59,7 +59,10 @@ class Api::V1::UsersController < ApplicationController
     if (current_user.admin || params[:id].to_i == current_user.id)
       fn.call
     else
-      json_response({ message: "Permission denied" }, :unauthorized)
+      raise(
+        ExceptionHandler::AuthenticationError,
+        ("#{Message.unauthorized}")
+      )
     end
   end
 end

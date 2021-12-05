@@ -51,7 +51,10 @@ class Api::V1::TagsController < ApplicationController
     if (current_user.admin || params[:user_id].to_i == current_user.id)
       fn.call
     else
-      json_response({ message: "Permission denied" }, :unauthorized)
+      raise(
+        ExceptionHandler::AuthenticationError,
+        ("#{Message.unauthorized}")
+      )
     end
   end
 end

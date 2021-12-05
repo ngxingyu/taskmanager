@@ -59,19 +59,33 @@ RSpec.describe "Api::V1::TodoItems", type: :request do
   end
 
   describe "GET /api/v1/todo_items/:id" do
-    before {
-      @todo = TodoItem.where(todo_list_id: todo_list_id).first
-      get "/api/v1/todo_items/#{@todo.id}", headers: headers
-    }
-    it "returns items" do
-      expect(json).not_to be_empty
-      expect(json["id"].to_i).to eq(@todo.id)
-      expect(json["todo_list_id"].to_i).to eq(todo_list_id)
-      expect(json["notes"]).to eq(@todo.notes)
-      expect(json["title"]).to eq(@todo.title)
+    context "item exists" do
+      before {
+        @todo = TodoItem.where(todo_list_id: todo_list_id).first
+        get "/api/v1/todo_items/#{@todo.id}", headers: headers
+      }
+      it "returns items" do
+        expect(json).not_to be_empty
+        expect(json["id"].to_i).to eq(@todo.id)
+        expect(json["todo_list_id"].to_i).to eq(todo_list_id)
+        expect(json["notes"]).to eq(@todo.notes)
+        expect(json["title"]).to eq(@todo.title)
+      end
+      it "returns status code 200" do
+        expect(response).to have_http_status(200)
+      end
     end
-    it "returns status code 200" do
-      expect(response).to have_http_status(200)
+    context "item doesn't exist" do
+      before {
+        @todo = TodoItem.where(todo_list_id: admin_todo_list_id).first
+        get "/api/v1/todo_items/#{@todo.id}", headers: headers
+      }
+      it "returns items" do
+        expect(json["message"]).to eq("Couldn't find TodoItem with 'id'=#{@todo.id} [WHERE \"todo_items\".\"user_id\" = ?]")
+      end
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
+      end
     end
   end
   describe "PUT /api/v1/todo_items/:id" do
@@ -112,7 +126,7 @@ RSpec.describe "Api::V1::TodoItems", type: :request do
         expect(response).to have_http_status(204)
       end
       it "deletes the item" do
-        expect(TodoItem.where(id:@todo.id).count).to eq(0)
+        expect(TodoItem.where(id: @todo.id).count).to eq(0)
       end
     end
     before {
@@ -123,7 +137,7 @@ RSpec.describe "Api::V1::TodoItems", type: :request do
       expect(response).to have_http_status(401)
     end
     it "does not delete the item" do
-      expect(TodoItem.where(id:@todo1.id).count).to eq(1)
+      expect(TodoItem.where(id: @todo1.id).count).to eq(1)
     end
   end
 end

@@ -1,8 +1,8 @@
 # app/lib/message.rb
 class Message
-    def self.not_found(record = 'record')
-      "Sorry, #{record} not found."
-    end
+    # def self.not_found(record = 'record')
+    #   "Sorry, #{record} not found."
+    # end
   
     def self.invalid_credentials
       'Invalid credentials'
@@ -28,7 +28,7 @@ class Message
       'Account could not be created'
     end
   
-    def self.expired_token
-      'Sorry, your token has expired. Please login to continue.'
-    end
+    # def self.expired_token
+    #   'Sorry, your token has expired. Please login to continue.'
+    # end
   end
