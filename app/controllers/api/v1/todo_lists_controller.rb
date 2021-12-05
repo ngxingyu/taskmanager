@@ -3,18 +3,18 @@ class Api::V1::TodoListsController < ApplicationController
   def index
     @todo_lists = TodoList.all
     @todo_lists = @todo_lists.where(user: current_user)
-    json_response(@todo_lists)
+    json_response(@todo_lists.map { |t| t.to_h })
   end
 
   # POST /api/v1/todo_lists
   def create
     todos = TodoList.create!(todo_list_params)
-    json_response(todos)
+    json_response(todos.to_h)
   end
 
   # GET /api/v1/todo_lists/:id
   def show
-    json_response(TodoList.where(user: current_user).find(params[:id]))
+    json_response(TodoList.where(user: current_user).find(params[:id]).to_h)
   end
 
   # PUT /api/v1/todo_lists/:id
@@ -40,7 +40,7 @@ class Api::V1::TodoListsController < ApplicationController
   def todo_list_params
     # whitelist params
     params
-      # .require(:todo_list)
+    # .require(:todo_list)
       .permit(:title, :description)
       .reverse_merge(user_id: current_user.id, all_tags: params[:all_tags]).reject { |k, v| v.nil? }
   end

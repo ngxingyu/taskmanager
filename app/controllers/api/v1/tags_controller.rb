@@ -20,13 +20,13 @@ class Api::V1::TagsController < ApplicationController
 
   # GET /api/v1/tags/:id
   def show
-    json_response(Tag.find_by(params.permit(:id, :name).merge({ user_id: current_user.id })))
+    json_response(Tag.find_by(tag_params))
   end
 
   # PUT /api/v1/tags/:id
   def update
-    @tag = Tag.where(params.permit(:id, :name).merge({ user_id: current_user.id }))
-    @tag.update(tag_params)
+    Tag.where(user_id: current_user.id, id: params[:id])
+      .update(tag_params)
     head :no_content
   end
 
@@ -43,7 +43,7 @@ class Api::V1::TagsController < ApplicationController
 
   def tag_params
     # whitelist params
-    params.permit(:user_id, :name).merge({ user_id: current_user.id })
+    params.permit(:tag, :id, :name).merge({ user_id: current_user.id })
   end
 
   def check_permission(fn)

@@ -29,7 +29,7 @@ RSpec.describe "Api::V1::TodoLists", type: :request do
   end
   describe "POST /api/v1/todo_lists updates tags, taggings" do
     before {
-      params = { title: "a", description: "b", all_tags: "1, 2, 3" }
+      params = { title: "a", description: "b", all_tags: ["1", "2", "3"] }
       post "/api/v1/todo_lists",
            params: params.to_json,
            headers: headers
@@ -42,7 +42,7 @@ RSpec.describe "Api::V1::TodoLists", type: :request do
       expect(json["description"]).to eq("b")
       expect(Tagging.where(todo_list_id: json["id"]).size).to eq(3)
       expect(Tag.find_by(id: Tagging.find_by(todo_list_id: json["id"]).tag_id).name).to eq("1")
-      expect(TodoList.find_by(id: json["id"]).all_tags).to eq("1, 2, 3")
+      expect(TodoList.find_by(id: json["id"]).all_tags).to eq(["1", "2", "3"])
     end
   end
 
@@ -78,7 +78,7 @@ RSpec.describe "Api::V1::TodoLists", type: :request do
   describe "update: PUT /api/v1/todo_items/:id" do
     before(:each) {
       @user1 = create(:user)
-      @x = TodoList.create(user: user, title: "A", description: "B", all_tags: "1,2,3")
+      @x = TodoList.create(user: user, title: "A", description: "B", all_tags: ["1", "2", "3"])
       @y = TodoList.create(user: @user1, title: "C", description: "D")
       @header1 = valid_headers(@user1)
     }
@@ -106,10 +106,10 @@ RSpec.describe "Api::V1::TodoLists", type: :request do
       params = { title: "E", description: "F" }
       put "/api/v1/todo_lists/#{@x[:id]}", params: params.to_json, headers: headers
       expect(Tagging.where(todo_list_id: @x.id).count).to eq(3)
-      params = { all_tags: "" }
+      params = { all_tags: [] }
       put "/api/v1/todo_lists/#{@x[:id]}", params: params.to_json, headers: headers
       expect(Tagging.where(todo_list_id: @x.id).count).to eq(0)
-      params = { all_tags: "1" }
+      params = { all_tags: ["1"] }
       put "/api/v1/todo_lists/#{@x[:id]}", params: params.to_json, headers: headers
       expect(Tagging.where(todo_list_id: @x.id).count).to eq(1)
     end
@@ -117,7 +117,7 @@ RSpec.describe "Api::V1::TodoLists", type: :request do
   describe "delete: DELETE /api/v1/todo_lists/:id" do
     before(:each) {
       @user1 = create(:user)
-      @x = TodoList.create(user: user, title: "A", description: "B", all_tags: "1,2,3")
+      @x = TodoList.create(user: user, title: "A", description: "B", all_tags: ["1", "2", "3"])
       @y = TodoList.create(user: @user1, title: "C", description: "D")
       @header1 = valid_headers(@user1)
     }

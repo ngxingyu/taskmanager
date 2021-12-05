@@ -8,13 +8,17 @@ class TodoList < ApplicationRecord
   # after_save :create_taggings
 
   def all_tags=(names)
-    names.split(",").each do |name|
+    names.each do |name|
       self.tags << Tag.find_or_create_by!(user: user, name: name.strip)
     end
   end
 
   def all_tags
-    self.tags.map(&:name).join(", ")
+    self.tags.map(&:name)
+  end
+
+  def to_h
+    attributes.merge("all_tags" => all_tags)
   end
 
   # def create_taggings
