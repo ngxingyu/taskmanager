@@ -15,10 +15,18 @@ class Api::V1::UsersController < ApplicationController
 
   # POST /api/v1/users
   def create
-    user = User.create!(user_params)
-    auth_token = AuthenticateUser.new(user.email, user.password).call
-    response = { message: Message.account_created, auth_token: auth_token }
-    json_response(response, :created)
+    par = user_params
+    if par[:password_confirmation] != par[:password]
+      raise(
+        ExceptionHandler::InvalidEntry,
+        Message.invalid_confirmation_password
+      )
+    else
+      user = User.create!(par)
+      auth_token = AuthenticateUser.new(user.email, user.password).call
+      response = { message: Message.account_created, auth_token: auth_token }
+      json_response(response, :created)
+    end
     # json_response(User.create!(user_params))
   end
 
@@ -51,7 +59,7 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     # whitelist params
-    params.permit(:email, :name, :password, :verified)
+    params.permit(:email, :name, :password, :password_confirmation, :verified)
   end
 
   def check_permission(fn)

@@ -4,6 +4,7 @@ module ExceptionHandler
   class AuthenticationError < StandardError; end
   class MissingToken < StandardError; end
   class InvalidToken < StandardError; end
+  class InvalidEntry < StandardError; end
 
   included do
     rescue_from ActiveRecord::RecordNotFound do |e|
@@ -14,6 +15,7 @@ module ExceptionHandler
     rescue_from ExceptionHandler::AuthenticationError, with: :unauthorized_request
     rescue_from ExceptionHandler::MissingToken, with: :unprocessable_request
     rescue_from ExceptionHandler::InvalidToken, with: :unprocessable_request
+    rescue_from ExceptionHandler::InvalidEntry, with: :unprocessable_request
   end
 
   # JSON response with message; Status code 422 - unprocessable entity

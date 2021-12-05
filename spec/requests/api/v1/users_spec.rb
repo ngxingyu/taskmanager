@@ -4,7 +4,7 @@ RSpec.describe "Api::V1::Users", type: :request do
   let!(:user) { create(:user) }
   let(:headers) { valid_headers }
   let(:valid_attributes) do
-    attributes_for(:user, password_confirmation: user.password)
+    attributes_for(:user, password: user.password, password_confirmation: user.password)
   end
 
   # User signup test suite
@@ -34,6 +34,21 @@ RSpec.describe "Api::V1::Users", type: :request do
 
       it "returns failure message" do
         expect(json["message"]).to match("Validation failed: Password can't be blank, Name can't be blank, Email can't be blank, Email is too short (minimum is 5 characters), Email Invalid email, Password digest can't be blank")
+      end
+    end
+    context "when wrong confirmation password" do
+      before {
+        post "/signup", params: attributes_for(:user, password: "a", password_confirmation: "b").to_json,
+                        headers: headers
+      }
+
+      it "does not succeed, throws error message" do
+        expect(response).to have_http_status(422)
+        expect(json["message"]).to match(Message.invalid_confirmation_password)
+      end
+
+      it "returns an authentication token" do
+        expect(json["auth_token"]).to be_nil
       end
     end
   end
