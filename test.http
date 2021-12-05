@@ -1,44 +1,388 @@
 # Attempt to access API without a token
-# GET http://127.0.0.1:3000/api/v1/todo_lists
-# >> {
-# >>   "message": "Missing token"
-# >> }
+GET http://127.0.0.1:3000/api/v1/todo_lists
+### 422
+# { "message": "Missing token" }
 
 # Signup a new user - get token from here
-# POST http://127.0.0.1:3000/signup HTTP/1.1
-# content-type: application/json
+POST http://127.0.0.1:3000/signup HTTP/1.1
+content-type: application/json
 
-# { "name": "test", "email":"test@test.com",  "password":"foobar"}
+{ "name": "test", "email":"test@test.com",  "password":"password", "password_confirmation":""}
+### 422
+# { "message": "Confirmation password does not match" }
 
-# >> {
-# >>   "message": "Account created successfully",
-# >>   "auth_token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2Mzg1NDczOTV9.K7LBRFiV9VcYOeX83ZqjnQbXJf01kg8vNCc9tvELtLA"
-# >> }
+POST http://127.0.0.1:3000/signup HTTP/1.1
+content-type: application/json
 
-# >> {
-# >>   "message": "Validation failed: Email has already been taken"
-# >> }
+{ "name": "test", "email":"test@test.com",  "password":"", "password_confirmation":""}
+### 422
+# { "message": "Validation failed: Password can't be blank, Password digest can't be blank" }
 
-# GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
-# Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2Mzg1NDczOTV9.K7LBRFiV9VcYOeX83ZqjnQbXJf01kg8vNCc9tvELtLA
+POST http://127.0.0.1:3000/signup HTTP/1.1
+content-type: application/json
 
-# >> []
+{ "name": "test", "email":"test@test.com",  "password":"password", "password_confirmation":"password"}
+### 422
+# { "message": "Account created successfully", "auth_token": "..." }
 
-# POST http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
-# Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2Mzg1NDczOTV9.K7LBRFiV9VcYOeX83ZqjnQbXJf01kg8vNCc9tvELtLA
-# content-type: application/json
+# Login
+POST http://127.0.0.1:3000/login HTTP/1.1
+content-type: application/json
 
+{"email":"test@test.com",  "password":"wrongpassword"}
+### 401
+#{ "message": "Invalid credentials" }
+
+
+POST http://127.0.0.1:3000/login HTTP/1.1
+content-type: application/json
+
+{"email":"test@test.com",  "password":"password"}
+### 200
+# { "auth_token": "..." }
+
+# User 1:
+# Expired token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjg4MTMwMDg4Mn0.frlG6gNX2foum5hN8gPDYZlEi5wUrnfLC1FmDITrtew
+# Unexpired token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+
+# Retrieve todo_lists
+GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjg4MTMwMDg4Mn0.frlG6gNX2foum5hN8gPDYZlEi5wUrnfLC1FmDITrtew
+### 422
+# { "message": "Signature has expired" }
+
+GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# []
+
+POST http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+
+{
+    "title": "l2",
+    "description": "desc",
+    "all_tags": ["a", "b"]
+}
+### 200
 # {
-#     "title": "l2",
-#     "description": "desc",
-#     "all_tags": "a,b"
+#   "id": 1,
+#   "title": "l2",
+#   "description": "desc",
+#   "user_id": 1,
+#   "created_at": "2021-12-05T09:32:31.135Z",
+#   "updated_at": "2021-12-05T09:32:31.135Z"
 # }
 
-# >> {
-# >>   "id": 6,
-# >>   "title": "l2",
-# >>   "description": "desc",
-# >>   "user_id": 2,
-# >>   "created_at": "2021-12-02T16:04:21.619Z",
-# >>   "updated_at": "2021-12-02T16:04:21.619Z"
-# >> }
+GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "title": "l2",
+#     "description": "desc",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.135Z",
+#     "updated_at": "2021-12-05T09:32:31.135Z",
+#     "all_tags": ["a", "b"]
+#   }
+# ]
+
+GET http://127.0.0.1:3000/api/v1/tags HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "name": "a",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.114Z",
+#     "updated_at": "2021-12-05T09:32:31.114Z"
+#   },
+#   {
+#     "id": 2,
+#     "name": "b",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.127Z",
+#     "updated_at": "2021-12-05T09:32:31.127Z"
+#   }
+# ]
+
+PATCH http://127.0.0.1:3000/api/v1/todo_lists/1 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+
+{
+    "title": "E",
+    "description": "F",
+    "all_tags": ["a"]
+}
+### 204
+
+
+GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "title": "E",
+#     "description": "F",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.135Z",
+#     "updated_at": "2021-12-05T09:43:29.786Z",
+#     "all_tags": ["a"]
+#   }
+# ]
+
+GET http://127.0.0.1:3000/api/v1/tags HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "name": "a",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.114Z",
+#     "updated_at": "2021-12-05T09:32:31.114Z"
+#   },
+#   {
+#     "id": 2,
+#     "name": "b",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.127Z",
+#     "updated_at": "2021-12-05T09:32:31.127Z"
+#   }
+# ]
+
+
+PATCH http://127.0.0.1:3000/api/v1/todo_lists/1 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+
+{
+    "all_tags": ["c", "d"]
+}
+### 204
+
+
+GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "title": "E",
+#     "description": "F",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.135Z",
+#     "updated_at": "2021-12-05T09:43:29.786Z",
+#     "all_tags": ["c", "d"]
+#   }
+# ]
+
+GET http://127.0.0.1:3000/api/v1/tags HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "name": "a",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.114Z",
+#     "updated_at": "2021-12-05T09:32:31.114Z"
+#   },
+#   {
+#     "id": 2,
+#     "name": "b",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.127Z",
+#     "updated_at": "2021-12-05T09:32:31.127Z"
+#   },
+#   {
+#     "id": 3,
+#     "name": "c",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:44:40.761Z",
+#     "updated_at": "2021-12-05T09:44:40.761Z"
+#   },
+#   {
+#     "id": 4,
+#     "name": "d",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T11:00:16.549Z",
+#     "updated_at": "2021-12-05T11:00:16.549Z"
+#   }
+# ]
+
+PATCH http://127.0.0.1:3000/api/v1/tags/3 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+
+{
+    "name": "e"
+}
+### 204
+
+GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "title": "E",
+#     "description": "F",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.135Z",
+#     "updated_at": "2021-12-05T09:43:29.786Z",
+#     "all_tags": ["e", "d"]
+#   }
+# ]
+
+DELETE http://127.0.0.1:3000/api/v1/tags/4 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 204
+
+GET http://127.0.0.1:3000/api/v1/tags HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "name": "a",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.114Z",
+#     "updated_at": "2021-12-05T09:32:31.114Z"
+#   },
+#   {
+#     "id": 2,
+#     "name": "b",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.127Z",
+#     "updated_at": "2021-12-05T09:32:31.127Z"
+#   },
+#   {
+#     "id": 3,
+#     "name": "e",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:44:40.761Z",
+#     "updated_at": "2021-12-05T09:44:40.761Z"
+#   }
+# ]
+
+GET http://127.0.0.1:3000/api/v1/todo_lists HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "title": "E",
+#     "description": "F",
+#     "user_id": 1,
+#     "created_at": "2021-12-05T09:32:31.135Z",
+#     "updated_at": "2021-12-05T09:43:29.786Z",
+#     "all_tags": ["e"]
+#   }
+# ]
+
+
+
+
+GET http://127.0.0.1:3000/api/v1/todo_items HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# []
+
+POST http://127.0.0.1:3000/api/v1/todo_items HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+
+{
+    "title": "todo 1",
+    "description": "description"
+}
+### 422
+# { "message": "Validation failed: Todo list must exist" }
+
+POST http://127.0.0.1:3000/api/v1/todo_items HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+
+{
+    "title": "todo 1",
+    "description": "description",
+    "todo_list_id": 1
+}
+### 200
+# {
+#   "id": 1,
+#   "title": "todo 1",
+#   "description": "description",
+#   "notes": "",
+#   "completed": false,
+#   "start_at": null,
+#   "duration": 60,
+#   "importance": 1,
+#   "todo_list_id": 1,
+#   "user_id": 1,
+#   "created_at": "2021-12-05T10:40:05.214Z",
+#   "updated_at": "2021-12-05T10:40:05.214Z"
+# }
+
+PATCH http://127.0.0.1:3000/api/v1/todo_items/2 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+
+{
+    "notes": "My note"
+}
+### 401
+# { "message": "Unauthorized request" }
+
+# PUT or PATCH
+PATCH http://127.0.0.1:3000/api/v1/todo_items/1 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+
+{
+    "notes": "My note"
+}
+### 204
+
+GET http://127.0.0.1:3000/api/v1/todo_items HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# [
+#   {
+#     "id": 1,
+#     "title": "todo 1",
+#     "description": "description",
+#     "notes": "My note",
+#     "completed": false,
+#     "start_at": "2021-12-05T10:40:05.000Z",
+#     "duration": 60,
+#     "importance": 1,
+#     "todo_list_id": 1,
+#     "user_id": 1,
+#     "created_at": "2021-12-05T10:40:05.214Z",
+#     "updated_at": "2021-12-05T10:45:23.773Z"
+#   }
+# ]
+
+DELETE http://127.0.0.1:3000/api/v1/todo_items/2 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+### 401
+# { "message": "Unauthorized request" }
+
+DELETE http://127.0.0.1:3000/api/v1/todo_items/1 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+content-type: application/json
+### 204
+
+GET http://127.0.0.1:3000/api/v1/todo_items HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjIzOTYwNjU2NTl9.nNVlzZlE77en1yqk-LTCZp3GXWkaoesVTuf3yiFCQ4M
+### 200
+# []
