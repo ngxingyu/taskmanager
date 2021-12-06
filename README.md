@@ -36,6 +36,7 @@
 - Optional: Ability to perform search by task title / notes (full text search?)
 - Optional: Pagination
 - Optional: Kanban visualisation for status (todo, in progress, completed)
+- Perhaps include a field to mark deletion of entries, and trigger the actual deletion X days later using a CRON job, allowing the user to undo any recent changes.
 
 ## Intended implementation details:
 

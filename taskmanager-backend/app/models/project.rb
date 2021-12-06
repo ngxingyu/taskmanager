@@ -13,7 +13,7 @@ class Project < ApplicationRecord
   ### Returns tasks depth-level deep from a given parent
   ### E.g. depth of 2 returns the top-most list of tasks for the project,
   ### and the list of subtasks for each task.
-  def get_tasks(parent = nil, depth = 1)
+  def get_tasks(parent: nil, depth: 1)
     @res = Array.new()
 
     def helper(parent, depth, tasks)
@@ -33,7 +33,8 @@ class Project < ApplicationRecord
     @res
   end
 
-  def to_h
-    attributes.merge("permissions" => permissions)
+  def to_h(depth: 0)
+    res = attributes.merge("permissions" => permissions)
+    depth == 0 ? res : res.merge("tasks" => get_tasks(depth: depth))
   end
 end

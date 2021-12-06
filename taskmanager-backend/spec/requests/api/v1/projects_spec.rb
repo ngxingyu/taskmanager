@@ -6,6 +6,7 @@ RSpec.describe "Api::V1::Project", type: :request do
   let!(:admin) { create(:user, email: "admin@email.com", admin: true) }
   let(:headers) { valid_headers(user) }
   let(:admin_headers) { valid_headers(admin) }
+  let(:user1_headers) { valid_headers(user1) }
   let(:valid_attributes) do
     attributes_for(:user, password: user.password, password_confirmation: user.password)
   end
@@ -30,16 +31,20 @@ RSpec.describe "Api::V1::Project", type: :request do
     it "returns status code 200" do
       expect(response).to have_http_status(200)
     end
-    it "returns the correct number of items" do      
+    it "returns the correct number of items" do
       expect(json.size).to eq(1)
     end
   end
   describe "POST /api/v1/projects updates project_user_roles with user as owner" do
     before {
-      params = { name: "blah", permissions: [{email: "user1@email.com", role: 2}, {username: "admin@email.com", role: 1}] }
+      params = { name: "blah", permissions: [{ email: "user@email.com", role: 2 },
+                                            { email: "user1@email.com", role: 2 },
+                                            { email: "admin@email.com", role: 1 },
+                                            { email: "missing@email.com", role: 1 }] }
       post "/api/v1/projects",
            params: params.to_json,
            headers: headers
+      @user = User.find(user.id)
     }
     it "succeeds" do
       expect(response).to have_http_status(200)
@@ -47,40 +52,54 @@ RSpec.describe "Api::V1::Project", type: :request do
       expect(json["name"]).to eq("blah")
     end
     it "creates the new project" do
-      expect(user.projects.count).to eq(3)
-      expect(user.projects.last.name).to eq("blah")
+      expect(@user.projects.count).to eq(3)
+      expect(@user.projects.last.name).to eq("blah")
+    end
+
+    it "assigns the correct roles to the existing users" do
+      users = Project.last.users
+      expect(users.count).to eq(3)
+      p = Project.last
+      expect(user.project_user_roles.find_by(project_id: p).role_id).to eq(0)
+      expect(user1.project_user_roles.find_by(project_id: p).role_id).to eq(2)
+      expect(admin.project_user_roles.find_by(project_id: p).role_id).to eq(1)
     end
   end
 
-  # describe "GET /api/v1/todo_lists/:id" do
-  #   before(:each) {
-  #     @user1 = create(:user)
-  #     @x = TodoList.create(user: user, title: "A", description: "B")
-  #     @y = TodoList.create(user: @user1, title: "C", description: "D")
-  #   }
+  describe "GET /api/v1/projects/:id" do
+    before {
+      params = { name: "Project 1", permissions: [{ email: "admin@email.com", role: 1 }] }
+      post "/api/v1/projects", params: params.to_json, headers: headers
+      @project = Project.find_by(name:"Project 1")
+      create(:task, subtasks: 2, depth: 4, project: @project)
+    }
 
-  #   it "returns the list for the current user" do
-  #     get "/api/v1/todo_lists/#{@x[:id]}", headers: headers
-  #     expect(response).to have_http_status(200)
-  #     expect(json).not_to be_empty
-  #     expect(json["title"]).to eq("A")
-  #     expect(json["description"]).to eq("B")
-  #   end
-  #   it "does not return the list for another user" do
-  #     get "/api/v1/todo_lists/#{@y[:id]}", headers: headers
-  #     expect(JsonWebToken.decode(headers["Authorization"])["user_id"]).to be(user.id)
-  #     expect(response).to have_http_status(404)
-  #   end
-  #   it "returns the list for the other user" do
-  #     @header1 = valid_headers(@user1)
-  #     get "/api/v1/todo_lists/#{@y[:id]}", headers: @header1
-  #     expect(response).to have_http_status(200)
-  #     expect(json).not_to be_empty
-  #     expect(JsonWebToken.decode(@header1["Authorization"])["user_id"]).to be(@user1.id)
-  #     expect(json["title"]).to eq("C")
-  #     expect(json["description"]).to eq("D")
-  #   end
-  # end
+    it "returns the list for the current user" do
+      get "/api/v1/projects/#{@project[:id]}", headers: headers
+      expect(response).to have_http_status(200)
+      expect(json).not_to be_empty
+      expect(json["name"]).to eq("Project 1")
+    end
+    it "returns the list for admin in group" do
+      get "/api/v1/projects/#{@project[:id]}", headers: admin_headers
+      expect(response).to have_http_status(200)
+      expect(json).not_to be_empty
+      expect(json["name"]).to eq("Project 1")
+    end
+    it "does not return list for user outside group" do
+      get "/api/v1/projects/#{@project[:id]}", headers: user1_headers
+      expect(response).to have_http_status(401)
+      expect(json).not_to be_empty
+      expect(json["message"]).to eq("Unauthorized request")
+    end
+    it "returns the list for the current user" do
+      get "/api/v1/projects/#{@project[:id]}?depth=1", headers: headers
+      expect(response).to have_http_status(200)
+      expect(json).not_to be_empty
+      expect(json["name"]).to eq("Project 1")
+      puts json
+    end
+  end
   # describe "update: PUT /api/v1/todo_items/:id" do
   #   before(:each) {
   #     @user1 = create(:user)

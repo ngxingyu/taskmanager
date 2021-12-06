@@ -18,13 +18,13 @@ class User < ApplicationRecord
     project
   end
 
+  def to_h
+    attributes.merge("all_projects" => all_projects)
+  end
+
   private
 
   def all_projects
     self.projects.map(&:id)
-  end
-
-  def to_h
-    attributes.merge("all_projects" => all_projects)
   end
 end
