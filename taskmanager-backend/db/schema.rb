@@ -15,11 +15,11 @@ ActiveRecord::Schema.define(version: 2021_11_26_171230) do
   create_table "project_user_roles", force: :cascade do |t|
     t.integer "project_id", null: false
     t.integer "user_id", null: false
-    t.integer "tag_id", null: false
+    t.integer "role_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["project_id"], name: "index_project_user_roles_on_project_id"
-    t.index ["tag_id"], name: "index_project_user_roles_on_tag_id"
+    t.index ["role_id"], name: "index_project_user_roles_on_role_id"
     t.index ["user_id"], name: "index_project_user_roles_on_user_id"
   end
 
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_171230) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["name"], name: "index_roles_on_name"
+    t.index ["name"], name: "index_roles_on_name", unique: true
   end
 
   create_table "tags", force: :cascade do |t|
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_171230) do
     t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_task_statuses_on_name", unique: true
   end
 
   create_table "task_tags", force: :cascade do |t|
@@ -67,14 +68,14 @@ ActiveRecord::Schema.define(version: 2021_11_26_171230) do
     t.datetime "start_at"
     t.integer "duration", default: 60
     t.integer "importance", default: 1
-    t.integer "status_id", null: false
+    t.integer "task_status_id", null: false
     t.integer "project_id", null: false
-    t.integer "tasks_id"
+    t.integer "parent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["parent_id"], name: "index_tasks_on_parent_id"
     t.index ["project_id"], name: "index_tasks_on_project_id"
-    t.index ["status_id"], name: "index_tasks_on_status_id"
-    t.index ["tasks_id"], name: "index_tasks_on_tasks_id"
+    t.index ["task_status_id"], name: "index_tasks_on_task_status_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -84,15 +85,14 @@ ActiveRecord::Schema.define(version: 2021_11_26_171230) do
     t.boolean "admin", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   add_foreign_key "project_user_roles", "projects"
-  add_foreign_key "project_user_roles", "tags"
   add_foreign_key "project_user_roles", "users"
   add_foreign_key "tags", "projects"
   add_foreign_key "task_tags", "tags"
   add_foreign_key "task_tags", "tasks"
   add_foreign_key "tasks", "projects"
-  add_foreign_key "tasks", "statuses"
-  add_foreign_key "tasks", "tasks", column: "tasks_id"
+  add_foreign_key "tasks", "tasks", column: "parent_id"
 end

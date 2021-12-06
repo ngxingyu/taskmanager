@@ -40,3 +40,8 @@ development:
   <<: *default
   adapter: sqlite3
   database: db/development.sqlite3
+
+test:
+  <<: *default
+  adapter: sqlite3
+  database: db/test.sqlite3

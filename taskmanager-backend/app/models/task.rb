@@ -1,7 +1,7 @@
-class Tasks < ApplicationRecord
+class Task < ApplicationRecord
   belongs_to :project
-  belongs_to :parent, :class_name => "Task", optional: true
-  has_many :children, :class_name => "Task", :foreign_key => "parent_id"
+  belongs_to :parent, :class_name => "Task", optional: true, inverse_of: :children
+  has_many :children, :class_name => "Task", :foreign_key => { to_table: :tasks }, inverse_of: :parent
   has_many :task_tags, dependent: :destroy
   has_many :tags, through: :task_tags
   attr_accessor :all_tags
