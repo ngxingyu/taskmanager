@@ -5,4 +5,15 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }, format: { with: /\A[^@\s]+@[^@\s]+\z/, message: "Invalid email" }
   validates_presence_of :password_digest
   scope :filter_by_id, ->(user_id) { where user_id: user_id }
+  has_many :project_user_roles, dependent: :destroy
+  has_many :projects, through: :project_user_roles
+
+
+  def all_projects
+    self.projects.map(&:id)
+  end
+
+  def to_h
+    attributes.merge("all_projects" => all_projects)
+  end
 end

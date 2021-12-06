@@ -10,68 +10,89 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_26_171228) do
+ActiveRecord::Schema.define(version: 2021_11_26_171230) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
-  create_table "taggings", force: :cascade do |t|
-    t.bigint "todo_list_id", null: false
-    t.bigint "tag_id", null: false
+  create_table "project_user_roles", force: :cascade do |t|
+    t.integer "project_id", null: false
+    t.integer "user_id", null: false
+    t.integer "tag_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["tag_id"], name: "index_taggings_on_tag_id"
-    t.index ["todo_list_id"], name: "index_taggings_on_todo_list_id"
+    t.index ["project_id"], name: "index_project_user_roles_on_project_id"
+    t.index ["tag_id"], name: "index_project_user_roles_on_tag_id"
+    t.index ["user_id"], name: "index_project_user_roles_on_user_id"
+  end
+
+  create_table "projects", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_roles_on_name"
   end
 
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
-    t.bigint "user_id", null: false
+    t.integer "project_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["name"], name: "index_tags_on_name"
-    t.index ["user_id"], name: "index_tags_on_user_id"
+    t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["project_id"], name: "index_tags_on_project_id"
   end
 
-  create_table "todo_items", force: :cascade do |t|
+  create_table "task_statuses", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "task_tags", force: :cascade do |t|
+    t.integer "task_id", null: false
+    t.integer "tag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_id"], name: "index_task_tags_on_tag_id"
+    t.index ["task_id"], name: "index_task_tags_on_task_id"
+  end
+
+  create_table "tasks", force: :cascade do |t|
     t.string "title"
-    t.string "description"
     t.string "notes", default: ""
     t.boolean "completed", default: false
-    t.datetime "start_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "start_at"
     t.integer "duration", default: 60
     t.integer "importance", default: 1
-    t.bigint "todo_list_id", null: false
-    t.bigint "user_id", null: false
+    t.integer "status_id", null: false
+    t.integer "project_id", null: false
+    t.integer "tasks_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["todo_list_id"], name: "index_todo_items_on_todo_list_id"
-    t.index ["user_id"], name: "index_todo_items_on_user_id"
-  end
-
-  create_table "todo_lists", force: :cascade do |t|
-    t.string "title"
-    t.string "description"
-    t.bigint "user_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_todo_lists_on_user_id"
+    t.index ["project_id"], name: "index_tasks_on_project_id"
+    t.index ["status_id"], name: "index_tasks_on_status_id"
+    t.index ["tasks_id"], name: "index_tasks_on_tasks_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email", null: false
     t.string "name", null: false
+    t.string "email", null: false
     t.string "password_digest"
-    t.boolean "verified", default: false
     t.boolean "admin", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "taggings", "tags"
-  add_foreign_key "taggings", "todo_lists"
-  add_foreign_key "tags", "users"
-  add_foreign_key "todo_items", "todo_lists"
-  add_foreign_key "todo_items", "users"
-  add_foreign_key "todo_lists", "users"
+  add_foreign_key "project_user_roles", "projects"
+  add_foreign_key "project_user_roles", "tags"
+  add_foreign_key "project_user_roles", "users"
+  add_foreign_key "tags", "projects"
+  add_foreign_key "task_tags", "tags"
+  add_foreign_key "task_tags", "tasks"
+  add_foreign_key "tasks", "projects"
+  add_foreign_key "tasks", "statuses"
+  add_foreign_key "tasks", "tasks", column: "tasks_id"
 end
