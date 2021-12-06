@@ -8,6 +8,14 @@ class User < ApplicationRecord
   has_many :project_user_roles, dependent: :destroy
   has_many :projects, through: :project_user_roles
 
+  after_create :create_project
+
+  private
+  def create_project(name = "My Tasks")
+    project = Project.new(name: name.strip)
+    self.projects << project
+    ProjectUserRole.where(user: self, project: project).update(role_id: 0)
+  end
 
   def all_projects
     self.projects.map(&:id)

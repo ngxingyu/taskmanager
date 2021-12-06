@@ -21,9 +21,7 @@ FactoryBot.define do
     name { Faker::Name.name }
     password { Faker::Internet.password }
     after(:create) do |user, evaluator|
-      mytasks = create(:project, users: [user], name: "My Tasks")
       projects = create_list(:project, evaluator.projects_count, users: [user])
-      projects.unshift(mytasks)
       projects.each do |project|
         create_list(:tasks, evaluator.tasks_count, project: project, tags_count: evaluator.tags_count)
       end
@@ -57,6 +55,3 @@ FactoryBot.define do
     tag
   end
 end
-
-# FactoryBot.create_list(:user, users_count, todo_lists_count: todo_lists_count, todo_items_count: todo_items_count)
-# FactoryBot.create_list(:tag, user: :user, name: :name)

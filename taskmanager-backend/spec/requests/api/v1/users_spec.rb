@@ -10,7 +10,10 @@ RSpec.describe "Api::V1::Users", type: :request do
   # User signup test suite
   describe "POST /signup" do
     context "when valid request" do
-      before { post "/signup", params: valid_attributes.to_json, headers: headers }
+      before {
+        post "/signup", params: valid_attributes.to_json, headers: headers
+        @current_user = User.last
+      }
 
       it "creates a new user" do
         expect(response).to have_http_status(201)
@@ -23,10 +26,18 @@ RSpec.describe "Api::V1::Users", type: :request do
       it "returns an authentication token" do
         expect(json["auth_token"]).not_to be_nil
       end
+
+      it "expects the default My Tasks project to be created" do
+        projects = ProjectUserRole.where(user_id: @current_user.id)
+        expect(projects.count).to eq(1)
+        expect(Project.find(projects.first.project_id).name).to eq("My Tasks")
+      end
     end
 
     context "when invalid request" do
-      before { post "/signup", params: {}, headers: headers }
+      before {
+        @old_projects_count = Project.all.count
+        post "/signup", params: {}, headers: headers }
 
       it "does not create a new user" do
         expect(response).to have_http_status(422)
@@ -34,6 +45,10 @@ RSpec.describe "Api::V1::Users", type: :request do
 
       it "returns failure message" do
         expect(json["message"]).to match("Validation failed: Password can't be blank, Name can't be blank, Email can't be blank, Email is too short (minimum is 5 characters), Email Invalid email, Password digest can't be blank")
+      end
+
+      it "doesn't change the project count" do
+        expect(Project.all.count).to eq(@old_projects_count)
       end
     end
     context "when wrong confirmation password" do
@@ -198,6 +213,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       before(:each) {
         @user1 = create(:user, email: "user@user.user", name: "user", password: "password")
         @admin = create(:user, email: "admin@admin.admin", admin: true, name: "admin", password: "admin")
+        expect(ProjectUserRole.where(user:@user1).count).to eq(1)
         @header1 = valid_headers(@user1)
         @headeradmin = valid_headers(@admin)
       }
@@ -205,6 +221,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         delete "/api/v1/users/#{@user1[:id]}", headers: @header1
         expect(response).to have_http_status(204)
         expect(User.where(id: @user1.id).count).to eq(0)
+        expect(ProjectUserRole.where(user:@user1).count).to eq(0)
       end
       it "admin modify current user" do
         delete "/api/v1/users/#{@user1[:id]}", headers: @headeradmin

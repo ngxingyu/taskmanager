@@ -15,11 +15,10 @@ ActiveRecord::Schema.define(version: 2021_11_26_171230) do
   create_table "project_user_roles", force: :cascade do |t|
     t.integer "project_id", null: false
     t.integer "user_id", null: false
-    t.integer "role_id", null: false
+    t.integer "role_id", default: 1
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["project_id"], name: "index_project_user_roles_on_project_id"
-    t.index ["role_id"], name: "index_project_user_roles_on_role_id"
     t.index ["user_id"], name: "index_project_user_roles_on_user_id"
   end
 
