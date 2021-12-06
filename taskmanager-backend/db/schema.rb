@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_26_171230) do
+ActiveRecord::Schema.define(version: 2021_11_26_171229) do
 
   create_table "project_user_roles", force: :cascade do |t|
     t.integer "project_id", null: false
