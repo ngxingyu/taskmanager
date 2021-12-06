@@ -49,4 +49,4 @@
 - Intermediate table for Users for each project
 - Intermediate table for Tags for each project
 
-![](https://raw.githubusercontent.com/ngxingyu/todolist/main/todolist-backend/ERD.svg?token=ADAYHMGWEBLBHEC6OH5B5C3BW35M2)
+![](https://raw.githubusercontent.com/ngxingyu/taskmanager/main/taskmanager-backend/ERD.svg?token=ADAYHMGWEBLBHEC6OH5B5C3BW35M2)

@@ -2,19 +2,19 @@ version: "3.8"
 services:
   db:
     image: postgres:14.1-alpine
-    container_name: todolist-postgres
+    container_name: taskmanager-postgres
     ports:
       - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=todolist_development
+      - POSTGRES_DB=taskmanager_development
     volumes:
-      - todolist-data:/var/lib/postgresql/data/
+      - taskmanager-data:/var/lib/postgresql/data/
   backend:
-    build: ./todolist-backend
-    container_name: todolist-backend
-    command: bash -c "rm -f ./todolist-backend/tmp/pids/server.pid && bundle exec
+    build: ./taskmanager-backend
+    container_name: taskmanager-backend
+    command: bash -c "rm -f ./taskmanager-backend/tmp/pids/server.pid && bundle exec
       rails s -p 3000 -b '0.0.0.0'"
     env_file: .env
     environment:
@@ -26,8 +26,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./todolist-backend:/app
+      - ./taskmanager-backend:/app
     depends_on:
       - db
 volumes:
-  todolist-data:
+  taskmanager-data:
