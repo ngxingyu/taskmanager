@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_171230) do
   create_table "project_user_roles", force: :cascade do |t|
     t.integer "project_id", null: false
     t.integer "user_id", null: false
-    t.integer "role_id", default: 1
+    t.integer "role_id", default: 1, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["project_id"], name: "index_project_user_roles_on_project_id"
@@ -67,14 +67,13 @@ ActiveRecord::Schema.define(version: 2021_11_26_171230) do
     t.datetime "start_at"
     t.integer "duration", default: 60
     t.integer "importance", default: 1
-    t.integer "task_status_id", null: false
+    t.integer "task_status_id", default: 0, null: false
     t.integer "project_id", null: false
     t.integer "parent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["parent_id"], name: "index_tasks_on_parent_id"
     t.index ["project_id"], name: "index_tasks_on_project_id"
-    t.index ["task_status_id"], name: "index_tasks_on_task_status_id"
   end
 
   create_table "users", force: :cascade do |t|

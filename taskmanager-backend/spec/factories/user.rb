@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :project do
-    name { Faker::Animal.name }
+    name { Faker::Creature::Animal.name }
     transient do
       users { nil }
       role_id { 0 }
@@ -23,7 +23,7 @@ FactoryBot.define do
     after(:create) do |user, evaluator|
       projects = create_list(:project, evaluator.projects_count, users: [user])
       projects.each do |project|
-        create_list(:tasks, evaluator.tasks_count, project: project, tags_count: evaluator.tags_count)
+        create_list(:task, evaluator.tasks_count, project: project, tags_count: evaluator.tags_count)
       end
     end
   end
@@ -36,9 +36,9 @@ FactoryBot.define do
       instance.reload
     end
   end
-  factory :tasks do
+  factory :task do
     title { Faker::Team.state }
-    description { Faker::Lorem.paragraph }
+    notes { Faker::Lorem.paragraph }
     transient do
       project
       tags_count { 0 }

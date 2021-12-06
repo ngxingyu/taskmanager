@@ -4,7 +4,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
   let!(:user) { create(:user, todo_lists_count: 2, tags_count: 3) }
   let!(:admin) { create(:user, admin: true, todo_lists_count: 2, tags_count: 3) }
   let!(:headers) { valid_headers(user) }
-  let!(:headersadmin) { valid_headers(admin) }
+  let!(:admin_headers) { valid_headers(admin) }
   describe "GET /index" do
     context "user" do
       before {
@@ -31,7 +31,7 @@ RSpec.describe "Api::V1::Tags", type: :request do
         expect(response).to have_http_status(401)
       end
       it "admin view user" do
-        get "/api/v1/tags?user_id=#{user.id}", headers: headersadmin
+        get "/api/v1/tags?user_id=#{user.id}", headers: admin_headers
         expect(json).not_to be_empty
         expect(json.size).to eq(6)
         expect(response).to have_http_status(200)

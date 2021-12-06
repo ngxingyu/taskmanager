@@ -10,12 +10,15 @@ class User < ApplicationRecord
 
   after_create :create_project
 
-  private
+  ### creates project, assigns user as owner and returns the project.
   def create_project(name = "My Tasks")
     project = Project.new(name: name.strip)
     self.projects << project
     ProjectUserRole.where(user: self, project: project).update(role_id: 0)
+    project
   end
+
+  private
 
   def all_projects
     self.projects.map(&:id)

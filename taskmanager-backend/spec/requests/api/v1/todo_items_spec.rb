@@ -6,7 +6,7 @@ RSpec.describe "Api::V1::TodoItems", type: :request do
   let!(:todo_list_id) { TodoList.where(user_id: user.id).first.id }
   let!(:admin_todo_list_id) { TodoList.where(user_id: admin.id).first.id }
   let(:headers) { valid_headers(user) }
-  let(:headersadmin) { valid_headers(admin) }
+  let(:admin_headers) { valid_headers(admin) }
 
   describe "GET /index" do
     context "current user" do
@@ -26,7 +26,7 @@ RSpec.describe "Api::V1::TodoItems", type: :request do
       end
     end
     context "admin" do
-      before { get "/api/v1/todo_items?user_id=#{user.id}", headers: headersadmin }
+      before { get "/api/v1/todo_items?user_id=#{user.id}", headers: admin_headers }
       it "returns items" do
         expect(json).not_to be_empty
         expect(json.size).to eq(12)

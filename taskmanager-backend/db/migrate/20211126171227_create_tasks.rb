@@ -7,7 +7,7 @@ class CreateTasks < ActiveRecord::Migration[6.1]
       t.datetime :start_at, default: -> { "CURRENT_TIMESTAMP" }
       t.integer :duration, default: 60
       t.integer :importance, default: 1
-      t.belongs_to :task_status,  null: false
+      t.integer :task_status_id,  null: false, default: 0 # Default To Do, id: 0
       t.belongs_to :project, null: false, foreign_key: true
       t.belongs_to :parent, null: true, foreign_key: { to_table: :tasks }
 
