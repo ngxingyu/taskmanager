@@ -1,51 +1,60 @@
 FactoryBot.define do
+  factory :project do
+    name { Faker::Animal.name }
+    transient do
+      users { nil }
+      role_id { 0 }
+    end
+    after(:create) do |project, evaluator|
+      evaluator.users.each do |user|
+        ProjectUserRole.create(user_id: user.id, project_id: project.id, role_id: evaluator.role_id)
+      end
+    end
+  end
   factory :user do
     transient do
-      todo_lists_count { 0 }
-      todo_items_count { 0 }
+      projects_count { 0 }
+      tasks_count { 0 }
       tags_count { 0 }
     end
     email { Faker::Internet.email }
     name { Faker::Name.name }
     password { Faker::Internet.password }
     after(:create) do |user, evaluator|
-      create_list(:todo_list, evaluator.todo_lists_count, user: user, tags_count: evaluator.tags_count) do |list|
-        create_list(:todo_item, evaluator.todo_items_count, todo_list: list, user: user)
+      mytasks = create(:project, users: [user], name: "My Tasks")
+      projects = create_list(:project, evaluator.projects_count, users: [user])
+      projects.unshift(mytasks)
+      projects.each do |project|
+        create_list(:tasks, evaluator.tasks_count, project: project, tags_count: evaluator.tags_count)
       end
     end
   end
+
   factory :tag do
     sequence(:name) { |n| "#{Faker::Company.name} #{n}" }
-    user
+    project
     to_create do |instance|
-      instance.id = Tag.find_or_create_by(name: instance.name, user: instance.user).id
+      instance.id = Tag.find_or_create_by(name: instance.name, project: instance.project).id
       instance.reload
     end
   end
-  factory :todo_list do
+  factory :tasks do
     title { Faker::Team.state }
     description { Faker::Lorem.paragraph }
     transient do
-      user
+      project
       tags_count { 0 }
     end
-    after(:create) do |todo_list, evaluator|
+    after(:create) do |task, evaluator|
       (0...evaluator.tags_count).each do |i|
-        tag = create(:tag, user: evaluator.user)
-        create(:tagging, todo_list: todo_list, tag: tag)
+        tag = create(:tag, project: evaluator.project)
+        create(:task_tag, task: task, tag: tag)
       end
     end
   end
-  factory :tagging do
-    todo_list
+  factory :task_tag do
+    task
     tag
-  end 
-  factory :todo_item do
-    association :user
-    association :todo_list
-    title { Faker::Team.state }
-    description { Faker::Lorem.paragraph }
-    completed { false }
   end
 end
 
