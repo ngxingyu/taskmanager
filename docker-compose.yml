@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:14.1-alpine
+    container_name: todolist-postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=todolist_development
+    volumes:
+      - todolist-data:/var/lib/postgresql/data/
+  backend:
+    build: ./todolist-backend
+    container_name: todolist-backend
+    command: bash -c "rm -f ./todolist-backend/tmp/pids/server.pid && bundle exec
+      rails s -p 3000 -b '0.0.0.0'"
+    env_file: .env
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - RAILS_ENV=development
+    ports:
+      - 3000:3000
+    volumes:
+      - ./todolist-backend:/app
+    depends_on:
+      - db
+volumes:
+  todolist-data:

@@ -12,9 +12,12 @@
 
 ActiveRecord::Schema.define(version: 2021_11_26_171228) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "taggings", force: :cascade do |t|
-    t.integer "todo_list_id", null: false
-    t.integer "tag_id", null: false
+    t.bigint "todo_list_id", null: false
+    t.bigint "tag_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -23,7 +26,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_171228) do
 
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_tags_on_name"
@@ -35,11 +38,11 @@ ActiveRecord::Schema.define(version: 2021_11_26_171228) do
     t.string "description"
     t.string "notes", default: ""
     t.boolean "completed", default: false
-    t.datetime "start_at"
+    t.datetime "start_at", default: -> { "CURRENT_TIMESTAMP" }
     t.integer "duration", default: 60
     t.integer "importance", default: 1
-    t.integer "todo_list_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "todo_list_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["todo_list_id"], name: "index_todo_items_on_todo_list_id"
@@ -49,7 +52,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_171228) do
   create_table "todo_lists", force: :cascade do |t|
     t.string "title"
     t.string "description"
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_todo_lists_on_user_id"
