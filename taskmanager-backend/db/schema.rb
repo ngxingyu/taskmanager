@@ -16,8 +16,9 @@ ActiveRecord::Schema.define(version: 2021_11_26_171229) do
     t.integer "project_id", null: false
     t.integer "user_id", null: false
     t.integer "role_id", default: 1, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", precision: 6, default: "2021-12-07 03:57:29", null: false
+    t.datetime "updated_at", precision: 6, default: "2021-12-07 03:57:29", null: false
+    t.index ["project_id", "user_id"], name: "index_project_user_roles_on_project_id_and_user_id", unique: true
     t.index ["project_id"], name: "index_project_user_roles_on_project_id"
     t.index ["user_id"], name: "index_project_user_roles_on_user_id"
   end

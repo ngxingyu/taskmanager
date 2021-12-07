@@ -70,7 +70,7 @@ RSpec.describe "Api::V1::Project", type: :request do
     before {
       params = { name: "Project 1", permissions: [{ email: "admin@email.com", role: 1 }] }
       post "/api/v1/projects", params: params.to_json, headers: headers
-      @project = Project.find_by(name:"Project 1")
+      @project = Project.find_by(name: "Project 1")
       create(:task, subtasks: 2, depth: 4, project: @project)
     }
 
@@ -79,12 +79,14 @@ RSpec.describe "Api::V1::Project", type: :request do
       expect(response).to have_http_status(200)
       expect(json).not_to be_empty
       expect(json["name"]).to eq("Project 1")
+      expect(json["tasks"]).to eq(nil)
     end
     it "returns the list for admin in group" do
       get "/api/v1/projects/#{@project[:id]}", headers: admin_headers
       expect(response).to have_http_status(200)
       expect(json).not_to be_empty
       expect(json["name"]).to eq("Project 1")
+      expect(json["tasks"]).to eq(nil)
     end
     it "does not return list for user outside group" do
       get "/api/v1/projects/#{@project[:id]}", headers: user1_headers
@@ -97,70 +99,92 @@ RSpec.describe "Api::V1::Project", type: :request do
       expect(response).to have_http_status(200)
       expect(json).not_to be_empty
       expect(json["name"]).to eq("Project 1")
-      puts json
+      expect(json["tasks"].length).to eq(1)
+      get "/api/v1/projects/#{@project[:id]}?depth=2", headers: headers
+      expect(json["tasks"].length).to eq(3)
+      get "/api/v1/projects/#{@project[:id]}?depth=3", headers: headers
+      expect(json["tasks"].length).to eq(7)
+      get "/api/v1/projects/#{@project[:id]}?depth=4", headers: headers
+      expect(json["tasks"].length).to eq(15)
+      get "/api/v1/projects/#{@project[:id]}?depth=5", headers: headers
+      expect(json["tasks"].length).to eq(15)
+      get "/api/v1/projects/#{@project[:id]}?depth=5&parent_id=#{@project.tasks.first.children.first.id}", headers: headers
+      expect(json["tasks"].length).to eq(7)
     end
   end
-  # describe "update: PUT /api/v1/todo_items/:id" do
-  #   before(:each) {
-  #     @user1 = create(:user)
-  #     @x = TodoList.create(user: user, title: "A", description: "B", all_tags: ["1", "2", "3"])
-  #     @y = TodoList.create(user: @user1, title: "C", description: "D")
-  #     @header1 = valid_headers(@user1)
-  #   }
+  describe "update: PUT /api/v1/projects/:id" do
+    before(:each) {
+      params = { name: "Project 1", permissions: [{ email: "admin@email.com", role: 1 }] }
+      post "/api/v1/projects", params: params.to_json, headers: headers
+      @project = Project.find_by(name: "Project 1")
+      create_list(:task, 2, project: @project)
+      expect(@project.tasks.count).to eq(2)
+    }
 
-  #   it "modifies the list for the current user" do
-  #     expect(TodoList.find_by(id: @x.id).title).to eq("A")
-  #     expect(TodoList.find_by(id: @x.id).description).to eq("B")
-  #     params = { title: "E", description: "F" }
-  #     put "/api/v1/todo_lists/#{@x[:id]}", params: params.to_json, headers: headers
-  #     expect(response).to have_http_status(204)
-  #     expect(TodoList.find_by(id: @x.id).title).to eq("E")
-  #     expect(TodoList.find_by(id: @x.id).description).to eq("F")
-  #   end
-  #   it "does not modify the list for the wrong user" do
-  #     expect(TodoList.find_by(id: @x.id).title).to eq("A")
-  #     expect(TodoList.find_by(id: @x.id).description).to eq("B")
-  #     params = { title: "E", description: "F" }
-  #     put "/api/v1/todo_lists/#{@x[:id]}", params: params.to_json, headers: @header1
-  #     expect(response).to have_http_status(404)
-  #     expect(TodoList.find_by(id: @x.id).title).to eq("A")
-  #     expect(TodoList.find_by(id: @x.id).description).to eq("B")
-  #   end
-  #   it "modifies the taggings table properly" do
-  #     expect(Tagging.where(todo_list_id: @x.id).count).to eq(3)
-  #     params = { title: "E", description: "F" }
-  #     put "/api/v1/todo_lists/#{@x[:id]}", params: params.to_json, headers: headers
-  #     expect(Tagging.where(todo_list_id: @x.id).count).to eq(3)
-  #     params = { all_tags: [] }
-  #     put "/api/v1/todo_lists/#{@x[:id]}", params: params.to_json, headers: headers
-  #     expect(Tagging.where(todo_list_id: @x.id).count).to eq(0)
-  #     params = { all_tags: ["1"] }
-  #     put "/api/v1/todo_lists/#{@x[:id]}", params: params.to_json, headers: headers
-  #     expect(Tagging.where(todo_list_id: @x.id).count).to eq(1)
-  #   end
-  # end
-  # describe "delete: DELETE /api/v1/todo_lists/:id" do
-  #   before(:each) {
-  #     @user1 = create(:user)
-  #     @x = TodoList.create(user: user, title: "A", description: "B", all_tags: ["1", "2", "3"])
-  #     @y = TodoList.create(user: @user1, title: "C", description: "D")
-  #     @header1 = valid_headers(@user1)
-  #   }
+    it "allows owner to modify name and user permissions" do
+      params = { name: "Project 2" }
+      put "/api/v1/projects/#{@project[:id]}", params: params.to_json, headers: headers
+      expect(response).to have_http_status(204)
+      expect(Project.find(@project.id).name).to eq("Project 2")
+      expect(Project.find(@project.id).permissions).to eq([{ :email => "user@email.com", :role => 0 }, { :email => "admin@email.com", :role => 1 }])
+    end
 
-  #   it "deletes the list for the current user" do
-  #     delete "/api/v1/todo_lists/#{@x[:id]}", headers: headers
-  #     expect(response).to have_http_status(204)
-  #     expect(TodoList.where(id: @x.id).count).to eq(0)
-  #   end
-  #   it "does not delete the list for the wrong user" do
-  #     delete "/api/v1/todo_lists/#{@x[:id]}", headers: @header1
-  #     expect(response).to have_http_status(404)
-  #     expect(TodoList.where(id: @x.id).count).to eq(1)
-  #   end
-  #   it "modifies the taggings table properly" do
-  #     expect(Tagging.where(todo_list_id: @x.id).count).to eq(3)
-  #     delete "/api/v1/todo_lists/#{@x[:id]}", headers: headers
-  #     expect(Tagging.where(todo_list_id: @x.id).count).to eq(0)
-  #   end
-  # end
+    it "doesn't downgrade user owner status when no replacement has been given" do
+      params = { permissions: [{ :email => "user@email.com", :role => 1 }, { :email => "admin@email.com", :role => 1 }] }
+      put "/api/v1/projects/#{@project[:id]}", params: params.to_json, headers: headers
+      expect(response).to have_http_status(204)
+      expect(Project.find(@project.id).permissions).to eq([{ :email => "user@email.com", :role => 0 }, { :email => "admin@email.com", :role => 1 }])
+    end
+
+    it "downgrades user owner status when a replacement owner is specified" do
+      params = { permissions: [{ :email => "user@email.com", :role => 1 }, { :email => "admin@email.com", :role => 0 }] }
+      put "/api/v1/projects/#{@project[:id]}", params: params.to_json, headers: headers
+      expect(response).to have_http_status(204)
+      expect(Project.find(@project.id).permissions).to eq([{ :email => "user@email.com", :role => 1 }, { :email => "admin@email.com", :role => 0 }])
+    end
+
+    it "does not allow non-owner to modify other's permissions" do
+      params = { permissions: [{ :email => "user@email.com", :role => 1 }, { :email => "admin@email.com", :role => 2 }] }
+      put "/api/v1/projects/#{@project[:id]}", params: params.to_json, headers: admin_headers
+      expect(response).to have_http_status(204)
+      expect(Project.find(@project.id).permissions).to eq([{ :email => "user@email.com", :role => 0 }, { :email => "admin@email.com", :role => 2 }])
+    end
+
+    it "does not allow non-member to do anything" do
+      params = { permissions: [{ :email => "user@email.com", :role => 1 }, { :email => "admin@email.com", :role => 2 }] }
+      put "/api/v1/projects/#{@project[:id]}", params: params.to_json, headers: user1_headers
+      expect(response).to have_http_status(401)
+      expect(Project.find(@project.id).permissions).to eq([{ :email => "user@email.com", :role => 0 }, { :email => "admin@email.com", :role => 1 }])
+    end
+  end
+  describe "delete: DELETE /api/v1/projects/:id" do
+    before {
+      params = { name: "Project 1", permissions: [{ email: "admin@email.com", role: 1 }] }
+      post "/api/v1/projects", params: params.to_json, headers: headers
+      @project = Project.find_by(name: "Project 1")
+      create_list(:task, 2, project: @project)
+      @tasks = @project.tasks
+      expect(@tasks.count).to eq(2)
+    }
+
+    it "deletes the entire project for owners" do
+      delete "/api/v1/projects/#{@project[:id]}", headers: headers
+      expect(response).to have_http_status(204)
+      expect(Project.exists?(id: @project.id)).to be(false)
+      @tasks.each do |t|
+        expect(Task.exists?(id: t.id)).to be { false }
+      end
+    end
+
+    it "doesn't delete for non owners" do
+      delete "/api/v1/projects/#{@project[:id]}", headers: admin_headers
+      expect(response).to have_http_status(401)
+      delete "/api/v1/projects/#{@project[:id]}", headers: user1_headers
+      expect(response).to have_http_status(401)
+      expect(Project.exists?(id: @project.id)).to be(true)
+      @tasks.each do |t|
+        expect(Task.exists?(id: t.id)).to be { true }
+      end
+    end
+  end
 end

@@ -33,8 +33,10 @@ class Project < ApplicationRecord
     @res
   end
 
-  def to_h(depth: 0)
+  def to_h(depth: 0, parent_id: nil)
     res = attributes.merge("permissions" => permissions)
-    depth == 0 ? res : res.merge("tasks" => get_tasks(depth: depth))
+    parents = tasks.where(id: parent_id)
+    parent = (parent_id.nil? || parents.empty?) ? nil : parents.first
+    depth == 0 ? res : res.merge("tasks" => get_tasks(depth: depth, parent: parent))
   end
 end
