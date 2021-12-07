@@ -3,11 +3,14 @@ class Task < ApplicationRecord
   belongs_to :parent, :class_name => "Task", optional: true
   has_many :children, :class_name => "Task", :foreign_key => :parent_id
   has_many :task_tags, dependent: :destroy
-  has_many :tags, through: :task_tags
+  has_many :tags, through: :task_tags  
 
   def all_tags=(names)
     names.each do |name|
-      self.tags << Tag.find_or_create_by!(project: project, name: name.strip)
+      tag = Tag.find_or_create_by!(project: project, name: name.strip)
+      # puts tag.id,id
+      # TaskTag.upsert({tag_id: tag.id, task_id: self.id})
+      self.tags << tag
     end
   end
 

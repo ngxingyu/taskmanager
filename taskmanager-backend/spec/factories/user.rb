@@ -50,15 +50,15 @@ FactoryBot.define do
     after(:create) do |t, evaluator|
       (0...evaluator.tags_count).each do |i|
         tag = create(:tag, project: evaluator.project)
-        create(:task_tag, task: t, tag: tag)
+        t.tags << tag
       end
       create_list(:task, evaluator.subtasks,
                   parent: t, project: evaluator.project, subtasks: evaluator.subtasks,
                   depth: evaluator.depth - 1, tags_count: evaluator.tags_count) unless evaluator.depth <= 1
     end
   end
-  factory :task_tag do
-    task
-    tag
-  end
+  # factory :task_tag do
+  #   task_id
+  #   tag_id
+  # end
 end

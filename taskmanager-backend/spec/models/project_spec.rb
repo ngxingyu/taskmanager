@@ -17,12 +17,12 @@ RSpec.describe Project, type: :model do
     }
     it "retrieves correct count for various calls for binary tree" do
       expect(@project.get_tasks().count).to eq(1)
-      expect(@project.get_tasks(nil, 2).count).to eq(3)
-      expect(@project.get_tasks(nil, 3).count).to eq(7)
-      expect(@project.get_tasks(nil, 4).count).to eq(15)
-      expect(@project.get_tasks(nil, 5).count).to eq(15)
-      expect(@project.get_tasks(nil, -1).count).to eq(1)
-      expect(@project.get_tasks(@tasks.first.children.first, 5).count).to eq(7)
+      expect(@project.get_tasks(parent:nil, depth: 2).count).to eq(3)
+      expect(@project.get_tasks(parent:nil, depth: 3).count).to eq(7)
+      expect(@project.get_tasks(parent:nil, depth: 4).count).to eq(15)
+      expect(@project.get_tasks(parent:nil, depth: 5).count).to eq(15)
+      expect(@project.get_tasks(parent:nil, depth: -1).count).to eq(1)
+      expect(@project.get_tasks(parent:@tasks.first.children.first, depth: 5).count).to eq(7)
     end
   end
 end
