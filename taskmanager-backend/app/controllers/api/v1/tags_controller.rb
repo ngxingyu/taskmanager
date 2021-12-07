@@ -1,54 +1,56 @@
 class Api::V1::TagsController < ApplicationController
-  # GET /api/v1/tags?user_id=??
+  # GET /api/v1/projects/#{project.id}/tags
   def index
-    @tags = Tag.all
-    if params[:user_id].present?
-      check_permission(lambda {
-        @tags = @tags.where(user_id: params[:user_id])
-        json_response(@tags)
-      })
-    else
-      @tags = @tags.where(user_id: current_user.id)
+    check_permission(params[:project_id], lambda {
+      @tags = Tag.where(project_id: params[:project_id])
       json_response(@tags)
-    end
+    })
   end
 
-  # POST /api/v1/tags
+  # POST /api/v1/projects/#{project.id}/tags
   def create
-    json_response(Tag.create(tag_params))
+    check_permission(params[:project_id], lambda {
+      json_response(Tag.find_or_create_by!(tag_params))
+    })
   end
 
   # GET /api/v1/tags/:id
   def show
-    json_response(Tag.find_by(tag_params))
+    @tag = Tag.find(params[:id])
+    check_permission(@tag.project_id, lambda {
+      json_response(@tag)
+    })
   end
 
   # PUT /api/v1/tags/:id
   def update
-    Tag.where(user_id: current_user.id, id: params[:id])
-      .update(tag_params)
-    head :no_content
+    @tag = Tag.find(params[:id])
+    check_permission(@tag.project_id, lambda {
+      @tag.update(tag_params)
+      head :no_content
+    })
   end
 
   # DELETE /api/v1/tags/:id
   def destroy
-    # @taggings = Tagging.where(params.permit(:tag_id))
-    # @taggings.destroy
-    @tag = Tag.where(user_id: current_user.id).find(params[:id])
-    @tag.destroy
-    head :no_content
+    @tag = Tag.find(params[:id])
+    check_permission(@tag.project_id, lambda {
+      @tag.destroy
+      head :no_content
+    })
   end
 
   private
 
   def tag_params
     # whitelist params
-    params.permit(:tag, :id, :name).merge({ user_id: current_user.id })
+    params.permit(:tag, :id, :name).merge({ project_id: params[:project_id] })
   end
 
-  def check_permission(fn)
-    # proceed if admin or same user id as current_user
-    if (current_user.admin || params[:user_id].to_i == current_user.id)
+  def check_permission(project_id, fn)
+    # user is member of project
+    if (Project.exists?(id: project_id) &&
+        !ProjectUserRole.where(project_id: project_id, user_id: current_user.id).empty?)
       fn.call
     else
       raise(

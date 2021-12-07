@@ -8,8 +8,6 @@ class Task < ApplicationRecord
   def all_tags=(names)
     names.each do |name|
       tag = Tag.find_or_create_by!(project: project, name: name.strip)
-      # puts tag.id,id
-      # TaskTag.upsert({tag_id: tag.id, task_id: self.id})
       self.tags << tag
     end
   end

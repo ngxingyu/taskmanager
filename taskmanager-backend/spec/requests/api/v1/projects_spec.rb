@@ -7,9 +7,6 @@ RSpec.describe "Api::V1::Project", type: :request do
   let(:headers) { valid_headers(user) }
   let(:admin_headers) { valid_headers(admin) }
   let(:user1_headers) { valid_headers(user1) }
-  let(:valid_attributes) do
-    attributes_for(:user, password: user.password, password_confirmation: user.password)
-  end
 
   describe "GET /index (user)" do
     before { get "/api/v1/projects", headers: headers }
@@ -171,9 +168,6 @@ RSpec.describe "Api::V1::Project", type: :request do
       delete "/api/v1/projects/#{@project[:id]}", headers: headers
       expect(response).to have_http_status(204)
       expect(Project.exists?(id: @project.id)).to be(false)
-      @tasks.each do |t|
-        expect(Task.exists?(id: t.id)).to be { false }
-      end
     end
 
     it "doesn't delete for non owners" do
