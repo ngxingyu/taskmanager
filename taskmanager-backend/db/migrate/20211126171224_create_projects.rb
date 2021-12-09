@@ -12,7 +12,9 @@ class CreateProjects < ActiveRecord::Migration[6.1]
       t.timestamps
     end
     add_index :project_user_roles, [:project_id, :user_id], unique: true
-    change_column_default :project_user_roles, :created_at, DateTime.now
-    change_column_default :project_user_roles, :updated_at, DateTime.now
+    # change_column_default :project_user_roles, :created_at, -> { 'now' }
+    # change_column_default :project_user_roles, :updated_at, -> { 'now' }
+    change_column :project_user_roles, :created_at, :datetime, null: false, default: -> { "CURRENT_TIMESTAMP" }
+    change_column :project_user_roles, :updated_at, :datetime, null: false, default: -> { "CURRENT_TIMESTAMP" }
   end
 end

@@ -7,7 +7,8 @@ FactoryBot.define do
     end
     after(:create) do |project, evaluator|
       evaluator.users.each do |user|
-        ProjectUserRole.upsert_all([{ user_id: user.id, project_id: project.id, role_id: evaluator.role_id }],
+        ProjectUserRole.upsert_all([{ user_id: user.id, project_id: project.id, role_id: evaluator.role_id,
+                                      created_at: Time.now, updated_at: Time.now }],
                                    unique_by: :index_project_user_roles_on_project_id_and_user_id)
       end
     end

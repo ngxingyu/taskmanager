@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 2021_11_26_171229) do
     t.integer "project_id", null: false
     t.integer "user_id", null: false
     t.integer "role_id", default: 1, null: false
-    t.datetime "created_at", precision: 6, default: "2021-12-07 09:00:08", null: false
-    t.datetime "updated_at", precision: 6, default: "2021-12-07 09:00:08", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["project_id", "user_id"], name: "index_project_user_roles_on_project_id_and_user_id", unique: true
     t.index ["project_id"], name: "index_project_user_roles_on_project_id"
     t.index ["user_id"], name: "index_project_user_roles_on_user_id"
@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(version: 2021_11_26_171229) do
   create_table "task_tags", force: :cascade do |t|
     t.integer "task_id"
     t.integer "tag_id"
-    t.datetime "created_at", precision: 6, default: "2021-12-07 09:00:08", null: false
-    t.datetime "updated_at", precision: 6, default: "2021-12-07 09:00:08", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["tag_id"], name: "index_task_tags_on_tag_id"
     t.index ["task_id"], name: "index_task_tags_on_task_id"
   end

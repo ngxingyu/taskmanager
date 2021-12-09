@@ -44,7 +44,7 @@ class Api::V1::TagsController < ApplicationController
 
   def tag_params
     # whitelist params
-    params.permit(:tag, :id, :name).merge({ project_id: params[:project_id] })
+    params.require(:tag).permit(:name).merge({ project_id: params[:project_id] })
   end
 
   def check_permission(project_id, fn)

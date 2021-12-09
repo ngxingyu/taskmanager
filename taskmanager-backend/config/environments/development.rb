@@ -7,7 +7,12 @@ Rails.application.configure do
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
-
+  config.hosts = [
+    IPAddr.new("0.0.0.0/0"), # All IPv4 addresses.
+    IPAddr.new("::/0"),      # All IPv6 addresses.
+    "localhost",             # The localhost reserved domain.
+    ENV["SERVER_HOST_NAME"]  # Allow this to be addressed when running in containers via docker-compose.yml.
+  ]
   # Do not eager load code on boot.
   config.eager_load = false
 
@@ -50,6 +55,7 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
+  config.active_record.record_timestamps = true
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true

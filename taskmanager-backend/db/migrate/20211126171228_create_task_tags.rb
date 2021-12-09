@@ -6,7 +6,9 @@ class CreateTaskTags < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
-    change_column_default :task_tags, :created_at, DateTime.now
-    change_column_default :task_tags, :updated_at, DateTime.now
+    # change_column_default :task_tags, :created_at, -> { 'now()' }
+    # change_column_default :task_tags, :created_at, -> { 'now()' }
+    change_column :task_tags, :created_at, :datetime, null: false, default: -> { "CURRENT_TIMESTAMP" }
+    change_column :task_tags, :updated_at, :datetime, null: false, default: -> { "CURRENT_TIMESTAMP" }
   end
 end

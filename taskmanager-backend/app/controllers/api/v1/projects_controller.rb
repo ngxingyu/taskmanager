@@ -89,24 +89,24 @@ class Api::V1::ProjectsController < ApplicationController
       user_role = get_user_role(project.id)
       if user_role > 0
         ## User can only demote himself.
-        permissions << { user_id: current_user.id, project_id: project.id, role_id: [user_role, hash[current_user.id]].max }
+        permissions << { user_id: current_user.id, project_id: project.id, role_id: [user_role, hash[current_user.id]].max, created_at: Time.now, updated_at: Time.now }
       elsif hash.key?(current_user.id) && hash[current_user.id] > 0 && new_owner_count == 0
         ## User tries to demote himself with no replacement owner
         hash[current_user.id] = 0
         hash.map { |uid, rid|
-          permissions << { user_id: uid, project_id: project.id, role_id: rid }
+          permissions << { user_id: uid, project_id: project.id, role_id: rid, created_at: Time.now, updated_at: Time.now }
         }
       else
         ## User doesn't demote himself
         hash.map { |uid, rid|
-          permissions << { user_id: uid, project_id: project.id, role_id: rid }
+          permissions << { user_id: uid, project_id: project.id, role_id: rid, created_at: Time.now, updated_at: Time.now }
         }
       end
     else
       hash[current_user.id] = 0
 
       hash.map { |uid, rid|
-        permissions << { user_id: uid, role_id: rid }
+        permissions << { user_id: uid, role_id: rid, created_at: Time.now, updated_at: Time.now }
       }
     end
     params
