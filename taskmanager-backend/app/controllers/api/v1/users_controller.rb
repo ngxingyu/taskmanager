@@ -15,6 +15,9 @@ class Api::V1::UsersController < ApplicationController
 
   # POST /api/v1/users
   def create
+    if !params[:email].nil?
+      params[:email] = params[:email].downcase
+    end
     par = user_params
     if par[:password_confirmation] != par[:password]
       raise(
@@ -39,6 +42,9 @@ class Api::V1::UsersController < ApplicationController
 
   # PUT /api/v1/users/:id
   def update
+    if !params[:email].nil?
+      params[:email] = params[:email].downcase
+    end
     check_permission(lambda {
       @user = User.find(params[:id])
       @user.update(user_params)

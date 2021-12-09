@@ -186,21 +186,21 @@ RSpec.describe "Api::V1::Users", type: :request do
         @headeradmin = valid_headers(@admin)
       }
       it "current user modify current user" do
-        params = { email: "user1@user.user", name: "user1" }
+        params = { email: "User1@user.user", name: "user1" }
         put "/api/v1/users/#{@user1[:id]}", params: params.to_json, headers: @header1
         expect(response).to have_http_status(204)
         expect(User.find_by(id: @user1.id).email).to eq("user1@user.user")
         expect(User.find_by(id: @user1.id).name).to eq("user1")
       end
       it "admin modify current user" do
-        params = { email: "user1@user.user", name: "user1" }
+        params = { email: "useR1@user.user", name: "user1" }
         put "/api/v1/users/#{@user1[:id]}", params: params.to_json, headers: @headeradmin
         expect(response).to have_http_status(204)
         expect(User.find_by(id: @user1.id).email).to eq("user1@user.user")
         expect(User.find_by(id: @user1.id).name).to eq("user1")
       end
       it "non admin modify another user" do
-        params = { email: "user1@user.user", name: "user1" }
+        params = { email: "user1@uSer.user", name: "user1" }
         put "/api/v1/users/#{@admin[:id]}", params: params.to_json, headers: @header1
         expect(response).to have_http_status(401)
         expect(User.find_by(id: @admin.id).email).to eq("admin@admin.admin")
