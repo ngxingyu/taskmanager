@@ -6,6 +6,18 @@ GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/users
 ### 422
 # { "message": "Missing token" }
 
+GET http://taskmanager-ngxingyu.herokuapp.com/profile
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkyMzYxODh9.5NsBRUPY--1K3g_mIjneAtVoOT6dfBBxsTj1dk7AwOs
+### 200
+# {
+#   "id": 1,
+#   "name": "admin",
+#   "email": "admin@admin.admin",
+#   "password_digest": "$2a$12$wbZPZ3GJivUXHGn3QrX3KOwPAJ42IkgoFt.Y2oA9oe9Wl6oENwxTW",
+#   "admin": true,
+#   "created_at": "2021-12-09T16:22:05.131Z",
+#   "updated_at": "2021-12-09T16:32:39.056Z"
+# }
 # Signup a new user - get token from here
 POST http://taskmanager-ngxingyu.herokuapp.com/signup HTTP/1.1
 content-type: application/json
