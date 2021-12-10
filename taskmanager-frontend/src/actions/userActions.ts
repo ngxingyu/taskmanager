@@ -9,25 +9,36 @@ export enum UserActionTypes {
     LOGGED_IN = 'users/logged_in',
     LOG_IN_FAILED = 'users/log_in_failed',
 
+    LOG_OUT = 'users/log_out',
+    LOGGING_OUT = 'users/logging_out',
+    LOGGED_OUT = 'users/logged_out',
+
     DELETE_USER = 'users/delete_user',
     DELETING_USER = 'users/deleting_user',
     DELETED_USER = 'users/deleted_user',
     DELETE_USER_FAILED = 'users/delete_user_failed',
+
+    RETRIEVE_PROFILE = 'users/retrieve_profile',
+    RETRIEVING_PROFILE = 'users/retrieving_profile',
+    RETRIEVED_PROFILE = 'users/retrieved_profile',
+    RETRIEVE_PROFILE_FAILED = 'users/retrieve_profile_failed',
 }
 
-export interface SignUpAction {
-    type: UserActionTypes.SIGN_UP;
-}
-export interface SigningUpAction {
-    type: UserActionTypes.SIGNING_UP;
-}
+export interface SignUpAction { type: UserActionTypes.SIGN_UP; }
+export interface SigningUpAction { type: UserActionTypes.SIGNING_UP; }
 export interface SignedUpAction {
     type: UserActionTypes.SIGNED_UP;
+    payload: {
+        auth_token: string;
+    }
+}
+export interface RetrievedProfileAction {
+    type: UserActionTypes.RETRIEVED_PROFILE;
     payload: {
         id: number;
         name: string;
         email: string;
-        auth_token: string;
+        admin: boolean;
     }
 }
 export interface SignUpFailedAction {
@@ -36,18 +47,11 @@ export interface SignUpFailedAction {
         message: string
     }
 }
-export interface LogInAction {
-    type: UserActionTypes.LOG_IN;
-}
-export interface LoggingInAction {
-    type: UserActionTypes.LOGGING_IN;
-}
+export interface LogInAction { type: UserActionTypes.LOG_IN; }
+export interface LoggingInAction { type: UserActionTypes.LOGGING_IN; }
 export interface LoggedInAction {
     type: UserActionTypes.LOGGED_IN;
     payload: {
-        id: number;
-        name: string;
-        email: string;
         auth_token: string
     }
 }
@@ -57,107 +61,29 @@ export interface LogInFailedAction {
         message: string
     }
 }
-export interface DeleteUserAction {
-    type: UserActionTypes.DELETE_USER;
-}
-export interface DeletingUserAction {
-    type: UserActionTypes.DELETING_USER;
-}
-export interface DeletedUserAction {
-    type: UserActionTypes.DELETED_USER;
-}
+export interface LogOutAction { type: UserActionTypes.LOG_OUT; }
+export interface LoggingOutAction { type: UserActionTypes.LOGGING_OUT; }
+export interface LoggedOutAction { type: UserActionTypes.LOGGED_OUT; }
+export interface DeleteUserAction { type: UserActionTypes.DELETE_USER; }
+export interface DeletingUserAction { type: UserActionTypes.DELETING_USER; }
+export interface DeletedUserAction { type: UserActionTypes.DELETED_USER; }
+export interface RetrieveProfileAction { type: UserActionTypes.RETRIEVE_PROFILE; }
+export interface RetrievingProfileAction { type: UserActionTypes.RETRIEVING_PROFILE; }
 export interface DeleteUserFailedAction {
     type: UserActionTypes.DELETE_USER_FAILED;
     payload: {
         message: string
     }
 }
-
-export function signUp(name: string, email: string, password: string, confirmation_password: string): SignUpAction {
-    return {
-        type: UserActionTypes.SIGN_UP
+export interface RetrieveProfileFailedAction {
+    type: UserActionTypes.RETRIEVE_PROFILE_FAILED;
+    payload: {
+        message: string
     }
 }
 
-export function signingUp(): SigningUpAction {
-    return {
-        type: UserActionTypes.SIGNING_UP
-    }
-}
-
-export function signedUp(id: number, name: string, email: string, auth_token: string): SignedUpAction {
-    return {
-        type: UserActionTypes.SIGNED_UP,
-        payload: {
-            id, name, email, auth_token
-        }
-    }
-}
-
-export function signUpFailed(message: string): SignUpFailedAction {
-    return {
-        type: UserActionTypes.SIGN_UP_FAILED,
-        payload: {
-            message
-        }
-    }
-}
-export function logIn(email: string, password: string): LogInAction {
-    return {
-        type: UserActionTypes.LOG_IN
-    }
-}
-
-export function loggingIn(): LoggingInAction {
-    return {
-        type: UserActionTypes.LOGGING_IN
-    }
-}
-
-export function loggedIn(id: number,
-    name: string,
-    email: string, auth_token: string): LoggedInAction {
-    return {
-        type: UserActionTypes.LOGGED_IN,
-        payload: {
-            id, name, email, auth_token
-        }
-    }
-}
-
-export function logInFailed(message: string): LogInFailedAction {
-    return {
-        type: UserActionTypes.LOG_IN_FAILED,
-        payload: {
-            message
-        }
-    }
-}
-export function deleteUser(email: string): DeleteUserAction {
-    return {
-        type: UserActionTypes.DELETE_USER
-    }
-}
-
-export function deletingUser(): DeletingUserAction {
-    return {
-        type: UserActionTypes.DELETING_USER
-    }
-}
-
-export function deletedUser(auth_token: string): DeletedUserAction {
-    return {
-        type: UserActionTypes.DELETED_USER,
-    }
-}
-
-export function deleteUserFailed(message: string): DeleteUserFailedAction {
-    return {
-        type: UserActionTypes.DELETE_USER_FAILED,
-        payload: {
-            message
-        }
-    }
-}
-
-export type UserAction = SignUpAction | SignUpFailedAction | SignedUpAction | SigningUpAction | LogInAction | LogInFailedAction | LoggedInAction | LoggingInAction | DeleteUserAction | DeleteUserFailedAction | DeletedUserAction | DeletingUserAction;
+export type UserAction = SignUpAction | SignUpFailedAction | SignedUpAction | SigningUpAction
+    | LogInAction | LogInFailedAction | LoggedInAction | LoggingInAction
+    | LogOutAction | LoggedOutAction | LoggingOutAction
+    | DeleteUserAction | DeleteUserFailedAction | DeletedUserAction | DeletingUserAction
+    | RetrievingProfileAction | RetrievedProfileAction | RetrieveProfileFailedAction;

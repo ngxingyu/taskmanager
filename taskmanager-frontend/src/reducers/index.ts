@@ -1,14 +1,15 @@
-import { combineReducers } from 'redux';
-import usersReducer, { initialUserState, UserState } from './userReducer';
+import {combineReducers} from 'redux';
+import UsersReducer, {initialUserState, UserStateProps} from './userReducer';
 
-export interface IState {
-    users: UserState;
+export interface StateProps {
+    user_state: UserStateProps;
 }
 
-export const initialState: IState = {
-    users: initialUserState
+export const initialState: StateProps = {
+    user_state: initialUserState
 };
 
-export default combineReducers({
-    users: usersReducer
+const rootReducer = combineReducers({
+    users: UsersReducer
 });
+export default rootReducer;

@@ -1,18 +1,35 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, {Fragment} from 'react';
+import {render} from "react-dom";
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { store } from './app/store'
-import { Provider } from 'react-redux'
+import {store} from './app/store'
+import {Provider} from 'react-redux'
+import {Route, Routes, BrowserRouter} from 'react-router-dom'
+import Login from './components/Login';
+import ProtectedRoute from "./components/ProtectedRoute";
+import SignUp from './components/SignUp';
+import Projects from "./components/Projects/Projects";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
+render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <BrowserRouter>
+                <Fragment>
+                    <Routes>
+                        {/* <Route path="/" element={<App/>}/> */}
+                        <Route index element={<ProtectedRoute><Projects/></ProtectedRoute>}/>
+                        <Route path="/login" element={<Login/>}/>
+                        <Route path="/signup" element={<SignUp/>}/>
+                        <Route path="/projects" element={
+                            <ProtectedRoute><Projects/></ProtectedRoute>
+                        }/>
+                    </Routes>
+                </Fragment>
+            </BrowserRouter>
+        </Provider>
+    </React.StrictMode>
+    ,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
