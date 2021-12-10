@@ -56,8 +56,15 @@ class Api::V1::UsersController < ApplicationController
   def destroy
     check_permission(lambda {
       @user = User.find(params[:id])
-      @user.destroy
-      head :no_content
+      if @user.authenticate(params[:password])
+        @user.destroy
+        head :no_content
+      else
+        raise(
+          ExceptionHandler::AuthenticationError,
+          ("#{Message.unauthorized}")
+        )
+      end
     })
   end
 

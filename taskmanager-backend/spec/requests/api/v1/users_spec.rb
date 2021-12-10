@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Api::V1::Users", type: :request do
-  let!(:user) { create(:user) }
+  let!(:user) { create(:user, password: "password") }
   let(:headers) { valid_headers }
   let(:valid_attributes) do
     attributes_for(:user, password: user.password, password_confirmation: user.password)
@@ -218,19 +218,24 @@ RSpec.describe "Api::V1::Users", type: :request do
         @headeradmin = valid_headers(@admin)
       }
       it "current user modify current user" do
-        delete "/api/v1/users/#{@user1[:id]}", headers: @header1
+        params = { password: "wrong" }
+        delete "/api/v1/users/#{@user1[:id]}", params: params.to_json, headers: @header1
+        expect(response).to have_http_status(401)
+        params = { password: "password" }
+        delete "/api/v1/users/#{@user1[:id]}", params: params.to_json, headers: @header1
         expect(response).to have_http_status(204)
         expect(User.where(id: @user1.id).count).to eq(0)
         expect(ProjectUserRole.where(user:@user1).count).to eq(0)
       end
       it "admin modify current user" do
-        delete "/api/v1/users/#{@user1[:id]}", headers: @headeradmin
+        params = { password: "password" }
+        delete "/api/v1/users/#{@user1[:id]}", params: params.to_json, headers: @headeradmin
         expect(response).to have_http_status(204)
         expect(User.where(id: @user1.id).count).to eq(0)
       end
       it "non admin modify another user" do
-        params = { email: "user1@user.user", name: "user1" }
-        delete "/api/v1/users/#{@admin[:id]}", headers: @header1
+        params = { password: "password" }
+        delete "/api/v1/users/#{@admin[:id]}", params: params.to_json, headers: @header1
         expect(response).to have_http_status(401)
         expect(User.where(id: @user1.id).count).to eq(1)
       end
