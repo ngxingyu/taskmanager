@@ -3,7 +3,6 @@ import { tryParseJSONObject } from "../utils";
 import { UserAction, UserActionTypes } from "../actions/userActions"
 import { UserProps } from "core/entities"
 
-
 export interface UserStateProps {
     authenticated: boolean;
     loading: boolean;
@@ -12,13 +11,13 @@ export interface UserStateProps {
 }
 
 let user: UserProps = tryParseJSONObject(localStorage.getItem('user') || "");
-export const loggedOutUserState: UserStateProps = {loading: false, authenticated: false};
+export const loggedOutUserState: UserStateProps = { loading: false, authenticated: false };
 export const initialUserState: UserStateProps = user ? {
     loading: false,
     error: undefined,
     authenticated: true,
     user: user
-}: loggedOutUserState;
+} : loggedOutUserState;
 
 export default function UsersReducer(state: UserStateProps = initialUserState, action: UserAction) {
     return produce(state, draftState => {
@@ -38,14 +37,14 @@ export default function UsersReducer(state: UserStateProps = initialUserState, a
                 draftState.error = undefined;
                 draftState.authenticated = true;
                 let { auth_token } = action.payload;
-                draftState.user = { auth_token:auth_token }
+                draftState.user = { auth_token: auth_token }
                 break;
             case UserActionTypes.RETRIEVED_PROFILE:
                 draftState.loading = false;
                 draftState.error = undefined;
                 draftState.authenticated = true;
                 const { id, name, email, admin } = action.payload;
-                draftState.user = { id, name, email, admin, auth_token:state.user?.auth_token }
+                draftState.user = { id, name, email, admin, auth_token: state.user?.auth_token }
                 localStorage.setItem("user", JSON.stringify(draftState.user))
                 break;
             case UserActionTypes.SIGN_UP_FAILED:
@@ -55,6 +54,7 @@ export default function UsersReducer(state: UserStateProps = initialUserState, a
                 draftState.loading = false;
                 draftState.error = action.payload.message;
                 break;
+            case UserActionTypes.LOGGED_OUT:
             case UserActionTypes.DELETED_USER:
                 // draftState=loggedOutUserState;
                 draftState.loading = false;

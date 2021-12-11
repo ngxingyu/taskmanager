@@ -1,15 +1,22 @@
-import {combineReducers} from 'redux';
-import UsersReducer, {initialUserState, UserStateProps} from './userReducer';
+import { combineReducers } from 'redux';
+import UsersReducer from './userReducer';
+import ProjectsReducer from './projectsReducer';
 
-export interface StateProps {
-    user_state: UserStateProps;
+
+
+type ValueOrFunctionReturningFunction<S, T> = ((T0: T) => ValueOrFunctionReturningFunction<S, T>) | ((T1: T, T2?: T) => ValueOrFunctionReturningFunction<S, T>) | S
+
+export function createReducers(reducers?: { [key: string]: any }, res = {}): ValueOrFunctionReturningFunction<any, any> {
+    if (reducers === undefined) {
+        return combineReducers(res);
+    } else {
+        return (v?: { [key: string]: any }) => createReducers(v, { ...reducers, ...res })
+    }
 }
 
-export const initialState: StateProps = {
-    user_state: initialUserState
-};
 
-const rootReducer = combineReducers({
-    users: UsersReducer
+const rootReducer = createReducers({
+    user_state: UsersReducer,
+    project_state: ProjectsReducer
 });
 export default rootReducer;

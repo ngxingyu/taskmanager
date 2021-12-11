@@ -8,6 +8,7 @@ import {
 } from "./userActions";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
+import { dropAllProjects } from "./projectsActionCreators";
 
 export const signUp = (name: string, email: string, password: string, confirmation_password: string):
     ThunkAction<Promise<void>, {}, {}, AnyAction> => {
@@ -19,7 +20,7 @@ export const signUp = (name: string, email: string, password: string, confirmati
                 dispatch(signingUp());
                 userService.signUp(name, email, password, confirmation_password)
                     .then(props => {
-                        if (props.id === undefined || props.auth_token === undefined) {
+                        if (props.auth_token === undefined) {
                             dispatch(signUpFailed("invalid id obtained"));
                         } else {
                             dispatch(signedUp(props.auth_token));
@@ -152,13 +153,14 @@ export function logInFailed(message: string): LogInFailedAction {
     }
 }
 
-export const logOut = (email: string, password: string):
+export const logOut = ():
     ThunkAction<Promise<void>, {}, {}, AnyAction> => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
         return new Promise<void>((resolve) => {
             setTimeout(() => {
                 dispatch(loggingOut());
                 localStorage.removeItem("user");
+                dispatch(dropAllProjects());
                 dispatch(loggedOut());
                 resolve();
             }, 3000);

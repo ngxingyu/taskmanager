@@ -1,31 +1,31 @@
-import React, {Fragment} from 'react';
-import {render} from "react-dom";
+import React, { Fragment } from 'react';
+import { render } from "react-dom";
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {store} from './app/store'
-import {Provider} from 'react-redux'
-import {Route, Routes, BrowserRouter} from 'react-router-dom'
-import Login from './components/Login';
-import ProtectedRoute from "./components/ProtectedRoute";
-import SignUp from './components/SignUp';
-import Projects from "./components/Projects/Projects";
+import { store, history } from './app/store'
+import { Provider } from 'react-redux'
+import { BrowserRouter, HistoryRouter, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from 'components/ProtectedRoute';
+import Projects from 'components/Projects';
+import Login from 'components/Login';
+import SignUp from 'components/SignUp';
+import AuthenticationRoute from 'components/AuthenticationRoute';
 
 render(
     <React.StrictMode>
         <Provider store={store}>
-            <BrowserRouter>
-                <Fragment>
-                    <Routes>
-                        {/* <Route path="/" element={<App/>}/> */}
-                        <Route index element={<ProtectedRoute><Projects/></ProtectedRoute>}/>
-                        <Route path="/login" element={<Login/>}/>
-                        <Route path="/signup" element={<SignUp/>}/>
-                        <Route path="/projects" element={
-                            <ProtectedRoute><Projects/></ProtectedRoute>
-                        }/>
-                    </Routes>
-                </Fragment>
-            </BrowserRouter>
+            <React.Fragment>
+                <HistoryRouter history={history}>
+                    <Fragment>
+                        <Routes>
+                            <Route index element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+                            <Route path="/login" element={<AuthenticationRoute><Login /></AuthenticationRoute>} />
+                            <Route path="/signup" element={<AuthenticationRoute><SignUp /></AuthenticationRoute>} />
+                            <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+                        </Routes>
+                    </Fragment>
+                </HistoryRouter>
+            </React.Fragment>
         </Provider>
     </React.StrictMode>
     ,

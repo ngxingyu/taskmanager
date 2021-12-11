@@ -1,4 +1,3 @@
-import * as React from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -9,6 +8,20 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { ProjectProps } from 'core/entities';
+import { Link } from 'react-router-dom';
+
+export const projectsListItems = (projects: { [key: number]: ProjectProps }) => {
+    return (
+        <div>
+            {Object.entries(projects).map(([k, v], i) => {
+                return <Link key={i} to={String(v.id)}><ListItem button>
+                    <ListItemText primary={v.name || ""} />
+                </ListItem></Link>
+            })}
+        </div>
+    );
+}
 
 export const mainListItems = (
     <div>

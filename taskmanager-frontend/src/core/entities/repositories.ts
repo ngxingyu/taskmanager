@@ -26,7 +26,7 @@ export interface ProjectRepositoryProps extends RepositoryProps<ProjectProps> {
     getAllProjects(): Promise<AxiosResponse<ProjectProps[]>>;
     getProject(id: string, depth?: number): Promise<AxiosResponse<ProjectProps>>
     updateProject(name?: string, permissions?: PermissionProps[]): Promise<AxiosResponse<ProjectProps>>
-    createProject(name: string, permissions: PermissionProps[]): Promise<AxiosResponse<ProjectProps>>
+    createProject(name: string, permissions?: PermissionProps[]): Promise<AxiosResponse<ProjectProps>>
     deleteProject(id: string): Promise<AxiosResponse<boolean>>;
 }
 

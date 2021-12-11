@@ -1,12 +1,12 @@
 import {Navigate} from "react-router-dom";
 import {connect} from "react-redux";
-import {StateProps} from "../reducers";
 import {useSelector} from 'react-redux';
+import { StateProps } from "app/store";
 
-const ProtectedRoute = (props: { children: JSX.Element }) => {
-    const loggedIn = useSelector<StateProps>(state => state.user_state?.authenticated);
-    return loggedIn ? props.children : <Navigate to="/login"/>;
 
+const ProtectedRoute = (props: { children: JSX.Element, loggedIn: boolean }) => {
+    // const loggedIn = useSelector<StateProps>(state => state.user_state?.authenticated);
+    return props.loggedIn ? props.children : <Navigate to="/login"/>;
 }
 
 

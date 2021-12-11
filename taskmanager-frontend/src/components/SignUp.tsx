@@ -13,14 +13,29 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Footer from "./Footer";
+import { signUp } from 'actions/userActionCreators';
+import { connect, useDispatch } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { StateProps } from 'app/store';
 
 const theme = createTheme();
 
-export default function SignUp() {
+function SignUp(props: any) {
+    const dispatch = useDispatch();
+    if (props.loggedIn) {
+      return <Navigate to="/projects" />;
+    }
+  
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const name = formData.get("name")?.valueOf().toString() || "";
+      const email = formData.get("email")?.valueOf().toString() || "";
+      const password = formData.get("password")?.valueOf().toString() || "";
+      const password_confirmation = formData.get("password_confirmation")?.valueOf().toString() || "";
+      dispatch(signUp(name, email, password, password_confirmation));
     };
+  
 
     return (
         <ThemeProvider theme={theme}>
@@ -42,27 +57,18 @@ export default function SignUp() {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item xs={12}>
                                 <TextField
                                     autoComplete="given-name"
-                                    name="firstName"
+                                    name="name"
                                     required
                                     fullWidth
-                                    id="firstName"
-                                    label="First Name"
+                                    id="name"
+                                    label="Name"
                                     autoFocus
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
-                                    autoComplete="family-name"
-                                />
-                            </Grid>
+
                             <Grid item xs={12}>
                                 <TextField
                                     required
@@ -81,6 +87,17 @@ export default function SignUp() {
                                     label="Password"
                                     type="password"
                                     id="password"
+                                    autoComplete="new-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="password_confirmation"
+                                    label="Password Confirmation"
+                                    type="password"
+                                    id="password_confirmation"
                                     autoComplete="new-password"
                                 />
                             </Grid>
@@ -113,3 +130,11 @@ export default function SignUp() {
         </ThemeProvider>
     );
 }
+
+const mapStateToProps = (state: StateProps) => {
+    return {
+      loggedIn: state.user_state?.authenticated
+    };
+  };
+  
+  export default connect(mapStateToProps)(SignUp);
