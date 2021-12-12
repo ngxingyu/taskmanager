@@ -1,18 +1,17 @@
+import React, { useCallback } from "react";
 import { Button } from '@mui/material';
-import { logOut } from 'actions/userActionCreators';
+import { logOut } from 'store/user/thunks';
 import { useDispatch } from 'react-redux';
 
-function LogoutButton() {
+const LogoutButton = () => {
     const dispatch = useDispatch();
 
-    const logout = () => {
+    const logout = useCallback(() => {
         dispatch(logOut());
-    };
+    }, []);
     return (
         <div>
-            <Button type="button" fullWidth variant="contained" color="primary"
-                onClick={logout}
-            >
+            <Button type="button" fullWidth variant="contained" color="primary" onClick={logout}>
                 Logout
             </Button>
 

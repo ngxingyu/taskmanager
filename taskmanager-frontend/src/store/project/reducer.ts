@@ -1,25 +1,31 @@
 import produce from "immer";
-import { ProjectProps } from "core/entities"
-import { ProjectAction, ProjectActionTypes } from "actions/projectsActions";
+import { PermissionProps, ProjectProps, TaskProps } from "core/entities"
+import { ProjectAction, ProjectActionTypes } from "store/project/actions";
+import { Reducer } from "redux";
 
 export interface ProjectsStateProps {
     loading: boolean;
     error?: string,
     loaded: boolean;
     projects: { [key: number]: ProjectProps };
+    active?: {
+        id: number,
+        permissions: PermissionProps[],
+        tasks: TaskProps[]
+    };
 }
 
 export const initialProjectsState: ProjectsStateProps = {
     loaded: true,
     loading: false,
     error: undefined,
-    projects: {}
+    projects: {},
+    active: undefined,
 };
 
-export default function ProjectsReducer(state: ProjectsStateProps = initialProjectsState, action: ProjectAction) {
+const ProjectsReducer:Reducer<ProjectsStateProps, ProjectAction>= (state: ProjectsStateProps = initialProjectsState, action: ProjectAction)  => {
     return produce(state, draftState => {
         switch (action.type) {
-
             case ProjectActionTypes.RETRIEVE:
             case ProjectActionTypes.CREATE:
             case ProjectActionTypes.UPDATE:
@@ -36,7 +42,7 @@ export default function ProjectsReducer(state: ProjectsStateProps = initialProje
                 draftState.loading = false;
                 draftState.error = undefined;
                 const projects = action.payload;
-                projects.forEach(x => draftState.projects[x.id!] = x)
+                projects.forEach(x => draftState.projects[x.id||-1] = x)
                 break;
             case ProjectActionTypes.UPDATED:
                 draftState.loading = false;
@@ -45,7 +51,7 @@ export default function ProjectsReducer(state: ProjectsStateProps = initialProje
             case ProjectActionTypes.DELETED:
                 draftState.loading = false;
                 draftState.error = undefined;
-                const { [action.payload.id]: value, ...rest } = draftState.projects;
+                const { [action.payload.id]: v, ...rest } = draftState.projects;
                 draftState.projects = rest;
                 break;
             case ProjectActionTypes.RETRIEVE_FAILED:
@@ -59,6 +65,16 @@ export default function ProjectsReducer(state: ProjectsStateProps = initialProje
                 draftState.projects = {};
                 draftState.loading = false;
                 draftState.loaded = false;
+                break;
+            case ProjectActionTypes.SELECT:
+                draftState.active = {
+                    id: action.payload.id,
+                    permissions: action.payload.permissions,
+                    tasks: action.payload.tasks
+                };
+                break;
+
         }
     });
 }
+export default ProjectsReducer;

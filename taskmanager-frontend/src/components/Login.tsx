@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,27 +12,28 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Footer from "./Footer";
-import { logIn } from "../actions/userActionCreators";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { logInThunk } from "store/user/thunks";
+import { connect, useDispatch } from "react-redux";
 import { Paper } from '@mui/material';
-import { StateProps } from 'app/store';
 import { Navigate } from 'react-router-dom';
+import { StateProps } from 'store';
 
 
 const theme = createTheme();
-function LogIn(props: any) {
+const LogIn: React.FC<{ loggedIn: boolean }> = ({ loggedIn }) => {
   const dispatch = useDispatch();
-  if (props.loggedIn) {
+  if (loggedIn) {
     return <Navigate to="/projects" />;
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email")?.valueOf().toString() || "";
     const password = formData.get("password")?.valueOf().toString() || "";
-    dispatch(logIn(email, password));
-  };
+    dispatch(logInThunk(email, password));
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

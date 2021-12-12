@@ -1,130 +1,74 @@
-import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import React from 'react';
+import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, projectsListItems, secondaryListItems } from './listItems';
+import { projectsListItems } from './listItems';
 import Footer from "../Footer";
-import { StateProps } from 'app/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllProjects } from 'actions/projectsActionCreators';
-import { ProjectProps } from 'core/entities';
-import { useEffect } from 'react';
-import { AppBar } from 'components/AppBar';
+import { PermissionProps, ProjectProps, TaskProps } from 'core/entities';
+import { createContext, useEffect } from 'react';
 import LogoutButton from 'components/LogoutButton';
+import { NavBar } from 'components/AppBar';
+import Drawer from '@mui/material/Drawer';
+import { Outlet, useOutletContext } from 'react-router-dom';
+import { StateProps } from 'store';
+import { getAllProjects } from 'store/project/thunks';
 
-const drawerWidth: number = 240;
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-        '& .MuiDrawer-paper': {
-            position: 'relative',
-            whiteSpace: 'nowrap',
-            width: drawerWidth,
-            transition: theme.transitions.create('width', {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-            boxSizing: 'border-box',
-            ...(!open && {
-                overflowX: 'hidden',
-                transition: theme.transitions.create('width', {
-                    easing: theme.transitions.easing.sharp,
-                    duration: theme.transitions.duration.leavingScreen,
-                }),
-                width: theme.spacing(7),
-                [theme.breakpoints.up('sm')]: {
-                    width: theme.spacing(9),
-                },
-            }),
-        },
-    }),
-);
+const drawerWidth = 240;
 
 const mdTheme = createTheme();
+export const ProjectContext: React.Context<ProjectProps> = createContext({});
 
 const Projects = () => {
-    const [open, setOpen] = React.useState(true);
-    const toggleDrawer = () => {
-        setOpen(!open);
-    };
     const dispatch = useDispatch();
-    const { error, loading, projects } = useSelector<StateProps,
-        { error?: string, loading: boolean, projects: { [key: number]: ProjectProps } }>(
-            state => ({
-                error: state.project_state.error,
-                loading: state.project_state.loading,
-                projects: state.project_state.projects
-            })
-        );
+    const { error, loading, projects, activeProject } =
+        useSelector<StateProps,
+            {
+                error?: string, loading: boolean, projects: { [key: number]: ProjectProps },
+                activeProject?: {
+                    id: number,
+                    permissions: PermissionProps[],
+                    tasks: TaskProps[]
+                }
+            }>(
+                state => ({
+                    error: state.project_state.error,
+                    loading: state.project_state.loading,
+                    projects: state.project_state.projects,
+                    activeProject: state.project_state.active
+                })
+            );
     useEffect(() => {
         dispatch(getAllProjects());
     }, [dispatch]);
 
-    if (error) { return <div>Error! {error}</div>; }
-    if (loading) { return <div>Loading...</div>; }
 
     return <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            <AppBar position="absolute" open={open} drawerWidth={drawerWidth}>
-                <Toolbar
-                    sx={{
-                        pr: '24px', // keep right padding when drawer closed
-                    }}
-                >
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={toggleDrawer}
-                        sx={{
-                            marginRight: '36px',
-                            ...(open && { display: 'none' }),
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        component="h1"
-                        variant="h6"
-                        color="inherit"
-                        noWrap
-                        sx={{ flexGrow: 1 }}
-                    >
-                        Dashboard
-                    </Typography>
-                    <LogoutButton/>
-                </Toolbar>
-            </AppBar>
-            <Drawer variant="permanent" open={open}>
-                <Toolbar
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'flex-end',
-                        px: [1],
-                    }}
-                >
-                    <IconButton onClick={toggleDrawer}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </Toolbar>
+            <NavBar appBarStyles={{
+                position: "fixed",
+                sx: {
+                    zIndex: (theme: Theme) => theme.zIndex.drawer + 1.
+                }
+            }} title="Projects">
+
+                <LogoutButton />
+            </NavBar>
+            <Drawer variant="permanent" sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+            }}>
+                <Toolbar />
+                <List className="ll">{
+                    projectsListItems({ loading, projects, dispatch, error })}</List>
                 <Divider />
-                <List className="ll">{projectsListItems(projects)}</List>
-                {/* <Divider />
-            <List>{secondaryListItems}</List> */}
             </Drawer>
             <Box
                 component="main"
@@ -139,17 +83,23 @@ const Projects = () => {
                 }}
             >
                 <Toolbar />
+                {/* <ProjectContext.Provider value={{ id: activeProject!.id, tasks: activeProject!.tasks }}> */}
                 <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-                    <Grid container spacing={3}>
-                        {/* <React.Fragment>
-                        <ProjectsList />
-                    </React.Fragment> */}
-                    </Grid>
+                    {(!activeProject === undefined) &&
+                        <Grid container spacing={3}>
+                            {/* {outlet} */}
+                            <Outlet context={[activeProject]} />
+                        </Grid>
+                    }
                     <Footer sx={{ pt: 4 }} />
                 </Container>
+                {/* </ProjectContext.Provider> */}
             </Box>
         </Box>
-    </ThemeProvider>
+    </ThemeProvider >
+}
+export const useActiveProject = () => {
+    return useOutletContext<ProjectProps>();
 }
 
 

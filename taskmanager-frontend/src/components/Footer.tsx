@@ -1,13 +1,14 @@
+import React, { FC } from "react";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-import * as React from "react";
 
-function Footer(props: any) {
+
+const Footer:FC<any> = (props) => {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://">
-            </Link>{' '}
+            <Link color="inherit" href="https://"/>
+            {' '}
             {new Date().getFullYear()}
             {'.'}
         </Typography>

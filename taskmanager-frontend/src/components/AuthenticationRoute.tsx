@@ -1,6 +1,7 @@
+import React from 'react';
 import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
-import { StateProps } from "app/store";
+import { StateProps } from "store";
 
 
 const ProtectedRoute = (props: { children: JSX.Element, loggedIn: boolean }) => {

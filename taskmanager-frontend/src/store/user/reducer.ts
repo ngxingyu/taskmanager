@@ -1,7 +1,6 @@
 import produce from "immer";
-import { tryParseJSONObject } from "../utils";
-import { UserAction, UserActionTypes } from "../actions/userActions"
 import { UserProps } from "core/entities"
+import { UserAction, UserActionTypes } from "store/user/actions";
 
 export interface UserStateProps {
     authenticated: boolean;
@@ -10,16 +9,24 @@ export interface UserStateProps {
     user?: UserProps;
 }
 
-let user: UserProps = tryParseJSONObject(localStorage.getItem('user') || "");
+const userFromJson = (raw: string):UserProps|undefined => {
+    try{
+        return JSON.parse(raw) as UserProps;
+    } catch {
+        return undefined;
+    }
+}
+
+const user: UserProps|undefined = userFromJson(localStorage.getItem('user') || "");
 export const loggedOutUserState: UserStateProps = { loading: false, authenticated: false };
 export const initialUserState: UserStateProps = user ? {
     loading: false,
     error: undefined,
     authenticated: true,
-    user: user
-} : loggedOutUserState;
+    user
+} as UserStateProps : loggedOutUserState;
 
-export default function UsersReducer(state: UserStateProps = initialUserState, action: UserAction) {
+const UsersReducer=(state: UserStateProps = initialUserState, action: UserAction) =>{
     return produce(state, draftState => {
         switch (action.type) {
             case UserActionTypes.SIGN_UP:
@@ -36,8 +43,8 @@ export default function UsersReducer(state: UserStateProps = initialUserState, a
                 draftState.loading = false;
                 draftState.error = undefined;
                 draftState.authenticated = true;
-                let { auth_token } = action.payload;
-                draftState.user = { auth_token: auth_token }
+                const { payload:{auth_token} } = action;
+                draftState.user = { auth_token }
                 break;
             case UserActionTypes.RETRIEVED_PROFILE:
                 draftState.loading = false;
@@ -64,3 +71,4 @@ export default function UsersReducer(state: UserStateProps = initialUserState, a
         }
     });
 }
+export default UsersReducer

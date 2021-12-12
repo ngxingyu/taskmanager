@@ -1,10 +1,8 @@
-import React from 'react'
+import React, { FC } from 'react'
 type ProjectProps = { id: number, name: string }
-function ProjectsList() {
+const ProjectsList:FC<ProjectProps> = () => {
     return (
-        <div>
-            
-        </div>
+        <div />
     )
 }
 

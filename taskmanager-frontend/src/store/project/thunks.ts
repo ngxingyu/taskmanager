@@ -1,26 +1,30 @@
-import { UserServiceImpl } from "../core/useCases/userUseCase";
-import { ProjectRepository, UserRepository } from "../core/infrastructure/repositoryImpl";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { ProjectServiceImpl } from "core/useCases/projectUseCase";
-import { ProjectProps } from "core/entities";
-import { ProjectActionTypes, ProjectDeletedAction, ProjectDeleteFailedAction, ProjectDeletingAction, ProjectDropAllAction, ProjectRetrievedAction, ProjectRetrieveFailedAction, ProjectRetrievingAction } from "./projectsActions";
+import { PermissionProps, ProjectProps, TaskProps } from "core/entities";
+import { ProjectActionTypes, ProjectDeletedAction, ProjectDeleteFailedAction, ProjectDeletingAction,
+    ProjectDropAllAction, ProjectRetrievedAction, ProjectRetrieveFailedAction, ProjectRetrievingAction,
+     ProjectSelectAction } from "store/project/actions";
+import { push } from "redux-first-history";
+import { ProjectRepository } from "core/infrastructure/repositoryImpl";
 
-export const getProjectById = (id: number): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
+export const getProjectById = (id: number, depth = 2): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
         const projectRepo = new ProjectRepository();
         const projectService = new ProjectServiceImpl(projectRepo);
         return new Promise<void>((resolve) => {
             setTimeout(() => {
                 dispatch(retrievingProjects());
-                projectService.getProjectById(id, 0)
+                projectService.getProjectById(id, depth)
                     .then(props => {
                         if (props.id === undefined) {
                             dispatch(retrieveProjectsFailed("invalid id obtained"));
                         } else {
                             dispatch(retrievedProjects([props]));
+                            dispatch(selectedProject(props.id, props.permissions, props.tasks));
+                            dispatch(push(`/projects/${props.id}`));
                         }
-                    }).catch(e => {
+                    }).catch((e:string) => {
                         dispatch(retrieveProjectsFailed(e));
                     }
                     );
@@ -43,7 +47,7 @@ export const getAllProjects = (): ThunkAction<Promise<void>, {}, {}, AnyAction> 
                         } else {
                             dispatch(retrievedProjects(props));
                         }
-                    }).catch(e => {
+                    }).catch((e:string) => {
                         dispatch(retrieveProjectsFailed(e));
                     }
                     );
@@ -78,7 +82,7 @@ export const deleteProject = (id: number):
                         } else {
                             dispatch(deleteProjectFailed("Failed to delete project"));
                         }
-                    }).catch(e => {
+                    }).catch((e:string) => {
                         dispatch(deleteProjectFailed(e));
                     }
                     );
@@ -89,15 +93,15 @@ export const deleteProject = (id: number):
     }
 }
 
-export function deletingProject(): ProjectDeletingAction {
+export const deletingProject = (): ProjectDeletingAction => {
     return { type: ProjectActionTypes.DELETING }
 }
 
-export function deletedProject(id: number): ProjectDeletedAction {
+export const deletedProject = (id: number): ProjectDeletedAction => {
     return { type: ProjectActionTypes.DELETED, payload: { id } }
 }
 
-export function deleteProjectFailed(message: string): ProjectDeleteFailedAction {
+export const deleteProjectFailed = (message: string): ProjectDeleteFailedAction => {
     return {
         type: ProjectActionTypes.DELETE_FAILED,
         payload: {
@@ -106,6 +110,11 @@ export function deleteProjectFailed(message: string): ProjectDeleteFailedAction 
     }
 }
 
-export function dropAllProjects(): ProjectDropAllAction {
+export const dropAllProjects = (): ProjectDropAllAction => {
     return { type: ProjectActionTypes.DROP_ALL }
+}
+
+
+export const selectedProject = (id: number, permissions: PermissionProps[] = [], tasks: TaskProps[] = []): ProjectSelectAction => {
+    return { type: ProjectActionTypes.SELECT, payload: { id, permissions, tasks } }
 }

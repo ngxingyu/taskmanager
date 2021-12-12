@@ -10,6 +10,7 @@ import Projects from 'components/Projects';
 import Login from 'components/Login';
 import SignUp from 'components/SignUp';
 import AuthenticationRoute from 'components/AuthenticationRoute';
+import Project from 'components/Projects/Project';
 
 render(
     <React.StrictMode>
@@ -19,9 +20,11 @@ render(
                     <Fragment>
                         <Routes>
                             <Route index element={<ProtectedRoute><Projects /></ProtectedRoute>} />
-                            <Route path="/login" element={<AuthenticationRoute><Login /></AuthenticationRoute>} />
-                            <Route path="/signup" element={<AuthenticationRoute><SignUp /></AuthenticationRoute>} />
-                            <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
+                            <Route path="login" element={<AuthenticationRoute><Login /></AuthenticationRoute>} />
+                            <Route path="signup" element={<AuthenticationRoute><SignUp /></AuthenticationRoute>} />
+                            <Route path="projects" element={<ProtectedRoute><Projects /></ProtectedRoute>}>
+                                <Route path=":projectId" element={<Project />} />
+                            </Route>
                         </Routes>
                     </Fragment>
                 </HistoryRouter>

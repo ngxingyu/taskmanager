@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {FC, useCallback} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,29 +13,29 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Footer from "./Footer";
-import { signUp } from 'actions/userActionCreators';
+import { signUp } from 'store/user/thunks';
 import { connect, useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { StateProps } from 'app/store';
+import { StateProps } from 'store';
 
 const theme = createTheme();
 
-function SignUp(props: any) {
+const SignUp: FC<{ loggedIn: boolean }> = ({ loggedIn }) => {
     const dispatch = useDispatch();
-    if (props.loggedIn) {
-      return <Navigate to="/projects" />;
+    if (loggedIn) {
+        return <Navigate to="/projects" />;
     }
-  
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      const formData = new FormData(event.currentTarget);
-      const name = formData.get("name")?.valueOf().toString() || "";
-      const email = formData.get("email")?.valueOf().toString() || "";
-      const password = formData.get("password")?.valueOf().toString() || "";
-      const password_confirmation = formData.get("password_confirmation")?.valueOf().toString() || "";
-      dispatch(signUp(name, email, password, password_confirmation));
-    };
-  
+
+    const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const name = formData.get("name")?.valueOf().toString() || "";
+        const email = formData.get("email")?.valueOf().toString() || "";
+        const password = formData.get("password")?.valueOf().toString() || "";
+        const password_confirmation = formData.get("password_confirmation")?.valueOf().toString() || "";
+        dispatch(signUp(name, email, password, password_confirmation));
+    }, []);
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -133,8 +133,8 @@ function SignUp(props: any) {
 
 const mapStateToProps = (state: StateProps) => {
     return {
-      loggedIn: state.user_state?.authenticated
+        loggedIn: state.user_state?.authenticated
     };
-  };
-  
-  export default connect(mapStateToProps)(SignUp);
+};
+
+export default connect(mapStateToProps)(SignUp);

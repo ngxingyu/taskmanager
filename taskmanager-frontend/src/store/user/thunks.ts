@@ -1,20 +1,39 @@
-import { UserServiceImpl } from "../core/useCases/userUseCase";
-import { UserRepository } from "../core/infrastructure/repositoryImpl";
+
 import {
-    DeletedUserAction, DeleteUserFailedAction, DeletingUserAction, LoggedOutAction,
-    LoggingInAction, LoggingOutAction, LogInFailedAction, LoggedInAction,
-    SignedUpAction, SigningUpAction, SignUpFailedAction, RetrievingProfileAction, RetrievedProfileAction, RetrieveProfileFailedAction,
-    UserActionTypes
-} from "./userActions";
+    signedUp,
+    signingUp,
+    signUpFailed,
+    deletedUser,
+    deleteUserFailed,
+    deletingUser,
+    loggedOut,
+    loggingIn,
+    loggingOut,
+    logInFailed,
+    retrievedProfile,
+    retrieveProfileFailed,
+    retrievingProfile,
+    loggedIn
+} from "store/user/actions";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
-import { dropAllProjects } from "./projectsActionCreators";
+import { UserRepository } from "core/infrastructure/repositoryImpl";
+import { UserServiceImpl } from "core/useCases/userUseCase";
+import { dropAllProjects } from "store/project/thunks";
 
 export const signUp = (name: string, email: string, password: string, confirmation_password: string):
     ThunkAction<Promise<void>, {}, {}, AnyAction> => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
         const userRepo = new UserRepository();
         const userService = new UserServiceImpl(userRepo);
+        const signedUpCallback = (auth_token:string) => new Promise<void>((resolve) => {
+            setTimeout(() => {
+                dispatch(signedUp())
+                dispatch(loggedInThunk(auth_token)).then().catch((e:string) => {dispatch(retrieveProfileFailed(e))});
+                resolve();
+            }, 3000);
+        }
+        )
         return new Promise<void>((resolve) => {
             setTimeout(() => {
                 dispatch(signingUp());
@@ -23,10 +42,9 @@ export const signUp = (name: string, email: string, password: string, confirmati
                         if (props.auth_token === undefined) {
                             dispatch(signUpFailed("invalid id obtained"));
                         } else {
-                            dispatch(signedUp(props.auth_token));
-                            dispatch(retrieveProfile());
+                            return signedUpCallback(props.auth_token);
                         }
-                    }).catch(e => {
+                    }).catch((e:string) => {
                         dispatch(signUpFailed(e));
                     }
                     );
@@ -37,32 +55,20 @@ export const signUp = (name: string, email: string, password: string, confirmati
     }
 }
 
-export function signingUp(): SigningUpAction {
-    return { type: UserActionTypes.SIGNING_UP }
-}
-
-export function signedUp(auth_token: string): SignedUpAction {
-    return {
-        type: UserActionTypes.SIGNED_UP,
-        payload: { auth_token }
-    }
-}
-
-export function signUpFailed(message: string): SignUpFailedAction {
-    return {
-        type: UserActionTypes.SIGN_UP_FAILED,
-        payload: {
-            message
-        }
-    }
-}
 
 
-export const logIn = (email: string, password: string):
+export const logInThunk = (email: string, password: string):
     ThunkAction<Promise<void>, {}, {}, AnyAction> => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
         const userRepo = new UserRepository();
         const userService = new UserServiceImpl(userRepo);
+        const loggedInCallback = (auth_token:string) => new Promise<void>((resolve) => {
+            setTimeout(() => {
+                dispatch(loggedInThunk(auth_token)).then().catch((e:string) => {dispatch(retrieveProfileFailed(e))});
+                resolve();
+            }, 3000);
+        }
+        )
         return new Promise<void>((resolve) => {
             setTimeout(() => {
                 dispatch(loggingIn());
@@ -71,10 +77,9 @@ export const logIn = (email: string, password: string):
                         if (props.auth_token === undefined) {
                             dispatch(logInFailed("invalid data obtained"));
                         } else {
-                            dispatch(loggedIn(props.auth_token));
-                            dispatch(retrieveProfile());
+                            return loggedInCallback(props.auth_token);
                         }
-                    }).catch(e => {
+                    }).catch((e:string) => {
                         dispatch(logInFailed(e));
                     }
                     );
@@ -85,18 +90,6 @@ export const logIn = (email: string, password: string):
     }
 }
 
-export function loggingIn(): LoggingInAction {
-    return { type: UserActionTypes.LOGGING_IN }
-}
-
-
-export function retrievingProfile(): RetrievingProfileAction {
-    return { type: UserActionTypes.RETRIEVING_PROFILE }
-}
-
-export function retrieveProfileFailed(message: string): RetrieveProfileFailedAction {
-    return { type: UserActionTypes.RETRIEVE_PROFILE_FAILED, payload: { message } }
-}
 export const retrieveProfile = ():
     ThunkAction<Promise<void>, {}, {}, AnyAction> => {
     return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
@@ -116,7 +109,7 @@ export const retrieveProfile = ():
                                 props.email || "",
                                 Boolean(props.admin)));
                         }
-                    }).catch(e => {
+                    }).catch((e:string) => {
                         dispatch(logInFailed(e));
                     }
                     );
@@ -128,30 +121,41 @@ export const retrieveProfile = ():
 }
 
 
-export function retrievedProfile(id: number, name: string, email: string, admin: boolean): RetrievedProfileAction {
-    return {
-        type: UserActionTypes.RETRIEVED_PROFILE,
-        payload: { id, name, email, admin }
+
+export const loggedInThunk = (auth_token: string):
+    ThunkAction<Promise<void>, {}, {}, AnyAction> => {
+    return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+        const userRepo = new UserRepository();
+        const userService = new UserServiceImpl(userRepo);
+        return new Promise<void>((resolve) => {
+            setTimeout(() => {
+                dispatch(loggedIn(auth_token))
+                dispatch(retrievingProfile());
+                userService.getProfile()
+                    .then(props => {
+                        if (props.id === undefined) {
+                            dispatch(retrieveProfileFailed("invalid data obtained"));
+                        } else {
+                            dispatch(retrievedProfile(
+                                props.id,
+                                props.name || "",
+                                props.email || "",
+                                Boolean(props.admin)));
+                        }
+                    }).catch((e:string) => {
+                        dispatch(logInFailed(e));
+                    }
+                    );
+                resolve();
+            }, 3000);
+        }
+        )
     }
 }
 
-export function loggedIn(auth_token: string): LoggedInAction {
-    return {
-        type: UserActionTypes.LOGGED_IN,
-        payload: {
-            auth_token
-        }
-    }
-}
 
-export function logInFailed(message: string): LogInFailedAction {
-    return {
-        type: UserActionTypes.LOG_IN_FAILED,
-        payload: {
-            message
-        }
-    }
-}
+// dispatch(retrieveProfile());
+
 
 export const logOut = ():
     ThunkAction<Promise<void>, {}, {}, AnyAction> => {
@@ -169,13 +173,6 @@ export const logOut = ():
     }
 }
 
-export function loggingOut(): LoggingOutAction {
-    return { type: UserActionTypes.LOGGING_OUT }
-}
-
-export function loggedOut(): LoggedOutAction {
-    return { type: UserActionTypes.LOGGED_OUT }
-}
 
 export const deleteUser = (id: number, password: string):
     ThunkAction<Promise<void>, {}, {}, AnyAction> => {
@@ -193,7 +190,7 @@ export const deleteUser = (id: number, password: string):
                         } else {
                             dispatch(deleteUserFailed("Failed to delete user"));
                         }
-                    }).catch(e => {
+                    }).catch((e:string) => {
                         dispatch(deleteUserFailed(e));
                     }
                     );
@@ -201,22 +198,5 @@ export const deleteUser = (id: number, password: string):
             }, 3000);
         }
         )
-    }
-}
-
-export function deletingUser(): DeletingUserAction {
-    return { type: UserActionTypes.DELETING_USER }
-}
-
-export function deletedUser(): DeletedUserAction {
-    return { type: UserActionTypes.DELETED_USER }
-}
-
-export function deleteUserFailed(message: string): DeleteUserFailedAction {
-    return {
-        type: UserActionTypes.DELETE_USER_FAILED,
-        payload: {
-            message
-        }
     }
 }

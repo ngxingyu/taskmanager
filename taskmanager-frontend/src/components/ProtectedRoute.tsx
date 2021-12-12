@@ -1,19 +1,17 @@
-import {Navigate} from "react-router-dom";
-import {connect} from "react-redux";
-import {useSelector} from 'react-redux';
-import { StateProps } from "app/store";
-
+import React from 'react';
+import { Navigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { StateProps } from "store";
 
 const ProtectedRoute = (props: { children: JSX.Element, loggedIn: boolean }) => {
     // const loggedIn = useSelector<StateProps>(state => state.user_state?.authenticated);
-    return props.loggedIn ? props.children : <Navigate to="/login"/>;
+    return props.loggedIn ? props.children : <Navigate to="/login" />;
 }
 
 
 const mapStateToProps = (state: StateProps) => {
     return {
-        loggedIn: state.user_state?.authenticated,
-        user: state.user_state
+        loggedIn: state.user_state.authenticated
     };
 };
 

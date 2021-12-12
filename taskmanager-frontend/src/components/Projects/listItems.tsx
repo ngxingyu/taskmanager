@@ -1,3 +1,4 @@
+import React, { Dispatch, useCallback } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -9,17 +10,27 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { ProjectProps } from 'core/entities';
-import { Link } from 'react-router-dom';
+import { getProjectById } from 'store/project/thunks';
+import { ListItemButton } from '@mui/material';
+import { FC } from 'react';
+import { ThunkAction } from 'redux-thunk';
 
-export const projectsListItems = (projects: { [key: number]: ProjectProps }) => {
+export const projectsListItems: FC<{
+    loading: boolean,
+    projects: { [key: number]: ProjectProps },
+    dispatch: Dispatch<ThunkAction<Promise<void>,any,any,any>>, error?: string
+}> = ({ loading, projects, dispatch, error }) => {
     return (
-        <div>
-            {Object.entries(projects).map(([k, v], i) => {
-                return <Link key={i} to={String(v.id)}><ListItem button>
-                    <ListItemText primary={v.name || ""} />
-                </ListItem></Link>
-            })}
-        </div>
+        <>{(error) ? <div>Error! {error}</div> :
+            loading ? <div>Loading...</div> :
+                Object.entries(projects).map(([, v], i) => {
+                    const handleClick = useCallback(() => dispatch(getProjectById(v.id || -1)), [v]);
+                    return <ListItemButton key={i} onClick={handleClick}>
+                        <ListItemText primary={v.name || ""} />
+                    </ListItemButton>
+                })
+        }
+        </>
     );
 }
 

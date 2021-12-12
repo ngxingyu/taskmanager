@@ -1,3 +1,5 @@
+import { ActionCreator } from "redux"
+
 export enum UserActionTypes {
     SIGN_UP = 'users/sign_up',
     SIGNING_UP = 'users/signing_up',
@@ -29,7 +31,7 @@ export interface SigningUpAction { type: UserActionTypes.SIGNING_UP; }
 export interface SignedUpAction {
     type: UserActionTypes.SIGNED_UP;
     payload: {
-        auth_token: string;
+        auth_token: string
     }
 }
 export interface RetrievedProfileAction {
@@ -79,6 +81,78 @@ export interface RetrieveProfileFailedAction {
     type: UserActionTypes.RETRIEVE_PROFILE_FAILED;
     payload: {
         message: string
+    }
+}
+
+export const signingUp: ActionCreator<SigningUpAction> = () => {
+    return { type: UserActionTypes.SIGNING_UP }
+}
+
+export const signedUp: ActionCreator<SignedUpAction> = (auth_token: string) => {
+    return { type: UserActionTypes.SIGNED_UP, payload: {auth_token} }
+}
+
+export const signUpFailed: ActionCreator<SignUpFailedAction>=(message: string)=>{
+    return {
+        type: UserActionTypes.SIGN_UP_FAILED,
+        payload: {
+            message
+        }
+    }
+}
+
+export const loggingIn: ActionCreator<LoggingInAction> = () => {
+    return { type: UserActionTypes.LOGGING_IN }
+}
+
+export const logInFailed: ActionCreator<LogInFailedAction> = (message: string) => {
+    return {
+        type: UserActionTypes.LOG_IN_FAILED,
+        payload: { message }
+    }
+}
+export const loggedIn: ActionCreator<LoggedOutAction> = (auth_token: string) => {
+    return { type: UserActionTypes.LOGGED_OUT, payload:{type: UserActionTypes.LOGGED_IN, payload: {auth_token} } }
+}
+
+export const retrievingProfile: ActionCreator<RetrievingProfileAction> = () => {
+    return { type: UserActionTypes.RETRIEVING_PROFILE }
+}
+
+export const retrieveProfileFailed: ActionCreator<RetrieveProfileFailedAction> = (message: string) => {
+    return { type: UserActionTypes.RETRIEVE_PROFILE_FAILED, payload: { message } }
+}
+
+
+export const retrievedProfile: ActionCreator<RetrievedProfileAction> = (id: number, name: string, email: string, admin: boolean)=> {
+    return {
+        type: UserActionTypes.RETRIEVED_PROFILE,
+        payload: { id, name, email, admin }
+    }
+}
+
+export const loggingOut: ActionCreator<LoggingOutAction> = () => {
+    return { type: UserActionTypes.LOGGING_OUT }
+}
+
+export const loggedOut: ActionCreator<LoggedOutAction> = () => {
+    return { type: UserActionTypes.LOGGED_OUT }
+}
+
+export const deletingUser: ActionCreator<DeletingUserAction> = ()=> {
+    return { type: UserActionTypes.DELETING_USER }
+}
+
+export const deletedUser: ActionCreator<DeletedUserAction> = () => {
+    return { type: UserActionTypes.DELETED_USER }
+}
+
+export const deleteUserFailed: ActionCreator<DeleteUserFailedAction> = (message: string) => {
+    return {
+        type: UserActionTypes.DELETE_USER_FAILED,
+        payload: {
+            message
+        }
     }
 }
 

@@ -6,8 +6,8 @@ export interface ProjectProps {
     id?: number;
     created_at?: Date;
     updated_at?: Date;
-    permissions?: Array<UserRole>;
-    tasks?: Array<TaskProps>;
+    permissions?: UserRole[];
+    tasks?: TaskProps[];
 }
 
 export interface TaskProps {
@@ -20,8 +20,8 @@ export interface TaskProps {
     duration?: Duration;
     created_at?: Date;
     updated_at?: Date;
-    subtasks?: Array<TaskProps>;
-    tags?: Array<TagProps>;
+    subtasks?: TaskProps[];
+    tags?: TagProps[];
 }
 
 export interface UserProps {

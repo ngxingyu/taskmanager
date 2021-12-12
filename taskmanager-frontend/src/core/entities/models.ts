@@ -1,5 +1,6 @@
-import moment, {Duration} from "moment";
-import {ProjectProps, Role, TagProps, TaskProps, TaskStatus, UserProps} from "./index";
+// eslint-disable-next-line max-classes-per-file
+import moment, { Duration } from "moment";
+import { ProjectProps, Role, TaskProps, TaskStatus, TagProps, UserProps } from ".";
 
 export class Project implements ProjectProps {
     constructor({name, id, created_at, updated_at, permissions, tasks}: {
@@ -26,7 +27,7 @@ export class Project implements ProjectProps {
     tasks?: Task[];
 }
 
-function next_week(): Date {
+const next_week = () => {
     const today = new Date();
     return new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
 }
@@ -46,8 +47,8 @@ export class Task implements TaskProps {
                     duration?: Duration,
                     created_at?: Date,
                     updated_at?: Date,
-                    subtasks?: Array<Task>,
-                    tags?: Array<TagProps>
+                    subtasks?: Task[],
+                    tags?: TagProps[]
                 }
     ) {
         this.name = name;
@@ -72,12 +73,12 @@ export class Task implements TaskProps {
     duration?: Duration;
     created_at?: Date;
     updated_at?: Date;
-    subtasks?: Array<Task>;
-    tags?: Array<TagProps>;
+    subtasks?: Task[];
+    tags?: TagProps[];
 }
 
 export class User implements UserProps {
-    constructor({email, name, password, password_confirmation, id, admin = false, auth_token = ""}: {
+    constructor({email, name, password, password_confirmation, id, admin = false, auth_token}: {
         id?: number,
         name?: string,
         email: string,
@@ -92,6 +93,7 @@ export class User implements UserProps {
         this.password_confirmation = password_confirmation;
         this.id = id;
         this.admin = admin;
+        this.auth_token = auth_token;
     }
 
     id?: number;
@@ -100,4 +102,5 @@ export class User implements UserProps {
     admin: boolean;
     password?: string;
     password_confirmation?: string;
+    auth_token?: string;
 }

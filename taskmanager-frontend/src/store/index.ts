@@ -1,34 +1,47 @@
-import { applyMiddleware, createStore } from 'redux'
+import { Action, applyMiddleware, createStore, Reducer, Store } from 'redux'
+import { combineReducers } from 'redux-immer';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createBrowserHistory } from 'history';
 import { createReduxHistoryContext, RouterState } from "redux-first-history";
-
-import rootReducer from 'reducers';
-import { initialUserState, UserStateProps } from 'reducers/userReducer';
-import { initialProjectsState, ProjectsStateProps } from 'reducers/projectsReducer';
+import ProjectsReducer, { ProjectsStateProps, initialProjectsState } from './project/reducer';
+import UsersReducer, { UserStateProps, initialUserState } from './user/reducer';
+import produce from 'immer';
 
 export const middlewares = [thunkMiddleware];
 const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
     history: createBrowserHistory()
 });
 
-export const rootReducerWithRouter = rootReducer({
-    router: routerReducer
-});
-export default function configureStore(preloadedState?: any) {
+export interface ApplicationState {
+    router: RouterState;
+    project_state: ProjectsStateProps;
+    user_state: UserStateProps;
+    // layout: LayoutState;
+  }
+
+export const reducers: Reducer = combineReducers(produce, {
+    router: routerReducer,
+    project_state: ProjectsReducer,
+    user_state: UsersReducer,
+    // layout: layoutReducer
+})
+
+export const configureStore = (initialState?: ApplicationState): Store<ApplicationState>  => {
+    const composeEnhancers = composeWithDevTools({});
     const store = createStore(
-        rootReducerWithRouter(),
-        preloadedState,
-        composeWithDevTools(
+        reducers,
+        initialState,
+        composeEnhancers(
             applyMiddleware(
                 routerMiddleware,
-                ...middlewares
+                thunkMiddleware
             ),
         ),
     )
     return store
 }
+
 export const store = configureStore();
 export const history = createReduxHistory(store);
 

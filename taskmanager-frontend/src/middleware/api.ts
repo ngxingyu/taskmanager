@@ -1,9 +1,10 @@
-import { Middleware } from 'redux';
+import { AnyAction, Middleware } from 'redux';
 
-import axios from "axios";
-import { accessDenied, APIActionTypes, apiEnd, apiError, apiStart } from "../actions/apiActions";
+import axios, { AxiosError } from "axios";
+import { accessDenied, APIActionTypes, apiEnd, apiError, APIPayload, apiStart } from "./actions";
+import { store } from 'store';
 
-const apiMiddleware: Middleware = ({ dispatch }) => next => action => {
+const apiMiddleware: Middleware = ({ dispatch }) => next => (action:AnyAction) => {
   next(action);
 
   if (action.type !== APIActionTypes) return;
@@ -11,19 +12,16 @@ const apiMiddleware: Middleware = ({ dispatch }) => next => action => {
   const {
     url,
     method,
-    data,
-    accessToken,
     onSuccess,
     onFailure,
     label,
-    headers
-  } = action.payload;
+    headers,...rest } = (action.payload as APIPayload);
   const dataOrParams = ["GET", "DELETE"].includes(method) ? "params" : "data";
 
   // axios default configs
   axios.defaults.baseURL = process.env.API_URL || "";
   axios.defaults.headers.common["Content-Type"] = "application/json";
-  axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+  axios.defaults.headers.common.Authorization = `Bearer ${store.getState().user_state.user?.auth_token || ""}`;
 
   if (label) {
     dispatch(apiStart(label));
@@ -34,17 +32,22 @@ const apiMiddleware: Middleware = ({ dispatch }) => next => action => {
       url,
       method,
       headers,
-      [dataOrParams]: data
+      [dataOrParams]: {...rest}
     })
     .then(({ data }) => {
-      dispatch(onSuccess(data));
+      if (onSuccess!==undefined) {
+        dispatch(onSuccess(data));
+      }
     })
-    .catch(error => {
+    .catch((error:Error | AxiosError) => {
       dispatch(apiError(error));
-      dispatch(onFailure(error));
-
-      if (error.response && error.response.status === 403) {
-        dispatch(accessDenied(window.location.pathname));
+      if (onFailure!==undefined) {
+        dispatch(onFailure(error));
+      }
+      if (axios.isAxiosError(error)){
+        if (error.response && (error.response.status === 403 || error.response.status === 401)) {
+          dispatch(accessDenied(window.location.pathname));
+        }
       }
     })
     .finally(() => {
