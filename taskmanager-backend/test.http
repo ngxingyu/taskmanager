@@ -64,7 +64,7 @@ content-type: application/json
 
 # User 1:
 # Expired token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjg4MTMwMDg4Mn0.frlG6gNX2foum5hN8gPDYZlEi5wUrnfLC1FmDITrtew
-# Unexpired token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+# Unexpired token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 # Admin token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkxMzA1NzZ9.gX8DTtG3PozecqV7CkbRribB_Y9o4ASJpLvLgumDJFc
 # Retrieve todo_lists
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects HTTP/1.1
@@ -73,7 +73,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjg4MTMwMDg4Mn0.frlG
 # { "message": "Signature has expired" }
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # [
 #   {
@@ -91,7 +91,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 # ]
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # {
 #   "id": 2,
@@ -107,7 +107,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 # }
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2?depth=1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # {
 #   "id": 2,
@@ -124,7 +124,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 # }
 
 PUT http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 content-type: application/json
 
 {
@@ -135,7 +135,7 @@ content-type: application/json
 }
 ### 204
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2?depth=1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # {
 #   "id": 2,
@@ -182,8 +182,8 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkxMzA1NzZ9.gX8
 # { "message": "Unauthorized request" } (admin cannot delete project)
 
 
-POST http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2/tasks HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+POST http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/1/tasks HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 content-type: application/json
 
 {
@@ -211,8 +211,8 @@ content-type: application/json
 #   ]
 # }
 
-GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2?depth=1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkxMzA1NzZ9.gX8DTtG3PozecqV7CkbRribB_Y9o4ASJpLvLgumDJFc
+GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/1?depth=1 HTTP/1.1
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # {
 #   "id": 2,
@@ -248,7 +248,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkxMzA1NzZ9.gX8
 # }
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2/tags HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # [
 #   {
@@ -268,7 +268,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 # ]
 
 PATCH http://taskmanager-ngxingyu.herokuapp.com/api/v1/tasks/1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 content-type: application/json
 
 {
@@ -280,7 +280,7 @@ content-type: application/json
 
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/tasks/1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # {
 #   "id": 1,
@@ -302,7 +302,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 
 
 PATCH http://taskmanager-ngxingyu.herokuapp.com/api/v1/tasks/1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 content-type: application/json
 
 {
@@ -312,7 +312,7 @@ content-type: application/json
 
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2/tasks HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # [
 #   {
@@ -336,7 +336,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 # ]
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2/tags HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # [
 #   {
@@ -370,7 +370,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 # ]
 
 PATCH http://taskmanager-ngxingyu.herokuapp.com/api/v1/tags/3 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 content-type: application/json
 
 {
@@ -379,7 +379,7 @@ content-type: application/json
 ### 204 (not implemented)
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2?depth=1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # {
 #   "id": 2,
@@ -415,11 +415,11 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 # }
 
 DELETE http://taskmanager-ngxingyu.herokuapp.com/api/v1/tags/4 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 204
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2/tags HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # [
 #   {
@@ -446,7 +446,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 # ]
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/0 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 401
 # {
 #   "message": "Unauthorized request"
@@ -455,6 +455,6 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQ
 
 
 GET http://taskmanager-ngxingyu.herokuapp.com/api/v1/projects/2 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjE2MzkxMzAxNzR9.oQQgXZn6SFnj9lX6lhQzo_RgzVWawpEp0lKsVV7_dGs
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkzOTczNjN9.pC2VuDLfXo8BqjUUJrdDh_IggUCMyB-twknzNVi4QCw
 ### 200
 # []
