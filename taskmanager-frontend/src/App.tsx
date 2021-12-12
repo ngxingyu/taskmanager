@@ -1,10 +1,11 @@
-import { Box, CssBaseline, Grid, Paper } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Footer from 'components/Footer';
+import React from 'react'
+import { Box, CssBaseline, Grid, Paper } from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Footer from 'components/Footer'
 
-const theme = createTheme();
+const theme = createTheme()
 
-export default function App() {
+const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -38,5 +39,7 @@ export default function App() {
         </Grid>
       </Grid>
     </ThemeProvider>
-  );
+  )
 }
+
+export default App

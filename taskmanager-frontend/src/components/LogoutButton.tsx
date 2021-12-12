@@ -1,22 +1,21 @@
-import React, { useCallback } from "react";
-import { Button } from '@mui/material';
-import { logOut } from 'store/user/thunks';
-import { useDispatch } from 'react-redux';
+import React, { useCallback } from 'react'
+import { Button } from '@mui/material'
+import { logOut } from 'store/user/thunks'
+import { useDispatch } from 'react-redux'
 
 const LogoutButton = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-    const logout = useCallback(() => {
-        dispatch(logOut());
-    }, []);
-    return (
-        <div>
-            <Button type="button" fullWidth variant="contained" color="primary" onClick={logout}>
-                Logout
-            </Button>
-
-        </div>
-    )
+  const logout = useCallback(() => {
+    dispatch(logOut())
+  }, [])
+  return (
+    <div>
+      <Button type="button" fullWidth variant="contained" color="primary" onClick={logout}>
+        Logout
+      </Button>
+    </div>
+  )
 }
 
 export default LogoutButton

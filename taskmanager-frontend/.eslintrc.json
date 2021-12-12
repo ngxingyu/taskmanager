@@ -11,7 +11,7 @@ https://github.com/typescript-eslint/tslint-to-eslint-config/blob/master/docs/FA
 
 Happy linting! 💖
 */
-module.exports = {
+{
     "env": {
         "browser": true,
         "node": true
@@ -19,7 +19,8 @@ module.exports = {
     "extends": [
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "plugin:prettier/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -134,7 +135,12 @@ module.exports = {
         "radix": "error",
         "react/jsx-boolean-value": "error",
         "react/jsx-key": "error",
-        "react/jsx-no-bind": ["error", { ignoreDOMComponents: true }],
+        "react/react-in-jsx-scope": "off",
+        // "react/jsx-no-bind": ["error", {
+        //     "ignoreDOMComponents": true
+        // }],
+        "react/jsx-no-bind": "off",
+        "react/prop-types": "off",
         "react/self-closing-comp": "error",
         "spaced-comment": [
             "error",
@@ -148,4 +154,4 @@ module.exports = {
         "use-isnan": "error",
         "valid-typeof": "off"
     }
-};
+}
