@@ -27,12 +27,12 @@ export class Repository<T> implements RepositoryProps<T> {
 
   getAll(route: string, params?: any): Promise<AxiosResponse<T[]>> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return API.get<T[]>(route, { params })
+    return API.get<T[]>(route, { params: { ...params } })
   }
 
   getById(route: string, id: string, params?: any): Promise<AxiosResponse<T>> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return API.get<T>(`${route}/${id}`, { params: { params } })
+    return API.get<T>(`${route}/${id}`, { params: { ...params } })
   }
 }
 
@@ -102,7 +102,7 @@ export class TaskRepository extends Repository<TaskProps> implements TaskReposit
   }
 
   updateTask(params: TaskProps): Promise<AxiosResponse<TaskProps>> {
-    return TaskRepository.prototype.update('api/v1/tasks', params)
+    return TaskRepository.prototype.update('/api/v1/tasks', params)
   }
 
   createTask({

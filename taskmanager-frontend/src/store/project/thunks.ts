@@ -4,6 +4,7 @@ import { ProjectServiceImpl } from 'core/useCases/projectUseCase'
 import { PermissionProps, ProjectProps, TaskProps } from 'core/entities'
 import {
   ProjectActionTypes,
+  ProjectCreatedTaskAction,
   ProjectDeletedAction,
   ProjectDeleteFailedAction,
   ProjectDeletingAction,
@@ -132,4 +133,8 @@ export const selectedProject = (
   tasks: TaskProps[] = []
 ): ProjectSelectAction => {
   return { type: ProjectActionTypes.SELECT, payload: { id, permissions, tasks } }
+}
+
+export const updateProjectTask = (project_id: number, task: TaskProps): ProjectCreatedTaskAction => {
+  return { type: ProjectActionTypes.CREATED_TASK, payload: { id: project_id, task } }
 }

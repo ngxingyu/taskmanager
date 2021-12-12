@@ -41,7 +41,7 @@ const next_week = () => {
 
 export class Task implements TaskProps {
   constructor({
-    name,
+    title,
     notes,
     parent_id = null,
     importance = 0,
@@ -53,7 +53,7 @@ export class Task implements TaskProps {
     subtasks,
     tags = [],
   }: {
-    name?: string
+    title?: string
     notes?: string
     parent_id?: number | null
     importance?: number
@@ -65,7 +65,7 @@ export class Task implements TaskProps {
     subtasks?: Task[]
     tags?: TagProps[]
   }) {
-    this.name = name
+    this.title = title
     this.notes = notes
     this.parent_id = parent_id
     this.importance = importance
@@ -78,7 +78,7 @@ export class Task implements TaskProps {
     this.tags = tags
   }
 
-  name?: string
+  title?: string
   notes?: string
   parent_id?: number | null
   importance?: number

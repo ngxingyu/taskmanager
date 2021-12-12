@@ -11,7 +11,7 @@ export interface ProjectProps {
 
 export interface TaskProps {
   id?: number
-  name?: string
+  title?: string
   notes?: string
   parent_id?: number | null
   importance?: number

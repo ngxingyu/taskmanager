@@ -15,6 +15,7 @@ import {
 } from 'store/tasks/actions'
 import { TaskRepository } from 'core/infrastructure/repositoryImpl'
 import { TaskServiceImpl } from 'core/useCases/taskUseCase'
+import { updateProjectTask } from 'store/project/thunks'
 
 export const getTaskById = (
   id: number,
@@ -109,6 +110,7 @@ export const createTask = (project_id: number, task: TaskProps): ThunkAction<Pro
           .then((props) => {
             if (props && props.id!==undefined) {
               dispatch(createdTask(props.id, task))
+              dispatch(updateProjectTask(project_id, props))
             } else {
               dispatch(createTaskFailed('Failed to create task'))
             }

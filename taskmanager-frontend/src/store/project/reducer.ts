@@ -75,6 +75,8 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
           tasks: action.payload.tasks,
         }
         break
+      case ProjectActionTypes.CREATED_TASK:
+        draftState.projects[action.payload.id].tasks = [...(state.projects[action.payload.id].tasks || []), action.payload.task]
     }
   })
 }
