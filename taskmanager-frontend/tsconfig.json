@@ -29,6 +29,7 @@
     "src",
     "./**/*.ts",
     "./**/*.tsx",
-    "utils"
+    "utils",
+    "__mocks__/axios.js"
   ]
 }

@@ -1,17 +1,25 @@
-import React, { Fragment } from 'react'
-import { render } from 'react-dom'
-import './index.css'
-import reportWebVitals from './reportWebVitals'
-import { store, history } from 'store'
-import { Provider } from 'react-redux'
-import { HistoryRouter, Route, Routes } from 'react-router-dom'
-import ProtectedRoute from 'components/ProtectedRoute'
-import Projects from 'components/Projects'
-import Login from 'components/Login'
-import SignUp from 'components/SignUp'
-import AuthenticationRoute from 'components/AuthenticationRoute'
-import Project from 'components/Projects/Project'
+import React, { Fragment } from "react";
+import { render } from "react-dom";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import { store, history } from "store";
+import { Provider } from "react-redux";
+import {
+  unstable_HistoryRouter as HistoryRouter,
+  Route,
+  Routes,
+} from "react-router-dom";
+import ProtectedRoute from "components/ProtectedRoute";
+import Projects from "components/Projects";
+import Login from "components/Login";
+import SignUp from "components/SignUp";
+import AuthenticationRoute from "components/AuthenticationRoute";
+import Project from "components/Projects/Project";
+// import { makeServer } from "mockApi";
 
+// if (process.env.NODE_ENV === "development") {
+//   makeServer({ environment: "development" });
+// }
 render(
   <React.StrictMode>
     <Provider store={store}>
@@ -59,10 +67,10 @@ render(
       </React.Fragment>
     </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
-)
+  document.getElementById("root")
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()
+reportWebVitals();

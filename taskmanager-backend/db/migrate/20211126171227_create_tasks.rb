@@ -3,7 +3,6 @@ class CreateTasks < ActiveRecord::Migration[6.1]
     create_table :tasks do |t|
       t.string :title
       t.string :notes, default: ""
-      t.boolean :completed, default: false
       t.datetime :start_at, default: -> { "CURRENT_TIMESTAMP" }
       t.integer :duration, default: 60
       t.integer :importance, default: 1

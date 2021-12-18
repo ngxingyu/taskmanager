@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"uri": "vscode-remote://wsl+ubuntu/home/ngxingyu/code/CVWO/taskmanager/taskmanager-frontend"
+		},
+		{
+			"uri": "vscode-remote://wsl+ubuntu/home/ngxingyu/code/CVWO/taskmanager/taskmanager-backend"
+		}
+	],
+	"remoteAuthority": "wsl+ubuntu",
+	"settings": {}
+}

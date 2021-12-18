@@ -1,18 +1,23 @@
-import React from 'react'
-import { Toolbar, Typography } from '@mui/material'
-import AppBar from '@mui/material/AppBar'
+import React from "react";
+import { Toolbar, Typography } from "@mui/material";
+import AppBar from "@mui/material/AppBar";
 
 type NavBarProps = {
-  title: string
-  children: React.ReactNode
-  appBarStyles: any
-}
+  title: string;
+  children: React.ReactNode;
+  appBarStyles: any;
+};
 
-export const NavBar = ({ title, children, appBarStyles, ...rest }: NavBarProps) => {
+export const NavBar = ({
+  title,
+  children,
+  appBarStyles,
+  ...rest
+}: NavBarProps) => {
   return (
     <>
       <AppBar {...appBarStyles}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
           <Typography component="div" variant="h6" color="inherit" noWrap>
             {title}
           </Typography>
@@ -20,8 +25,8 @@ export const NavBar = ({ title, children, appBarStyles, ...rest }: NavBarProps) 
         </Toolbar>
       </AppBar>
     </>
-  )
-}
+  );
+};
 
 // export const AppBar = styled(MuiAppBar, {
 //     shouldForwardProp: (prop) => (

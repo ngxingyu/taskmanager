@@ -1,9 +1,9 @@
-import React from 'react'
-import { Login } from '@mui/icons-material'
-import Projects from 'components/Projects'
-import ProtectedRoute from 'components/ProtectedRoute'
-import SignUp from 'components/SignUp'
-import { Route, Routes } from 'react-router-dom'
+import React from "react";
+import { Login } from "@mui/icons-material";
+import Projects from "components/Projects";
+import ProtectedRoute from "components/ProtectedRoute";
+import SignUp from "components/SignUp";
+import { Route, Routes } from "react-router-dom";
 
 const routes = (
   <div>
@@ -28,6 +28,6 @@ const routes = (
       />
     </Routes>
   </div>
-)
+);
 
-export default routes
+export default routes;

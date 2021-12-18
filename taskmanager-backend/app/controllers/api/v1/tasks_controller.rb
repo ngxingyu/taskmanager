@@ -54,7 +54,7 @@ class Api::V1::TasksController < ApplicationController
   def task_params
     # whitelist params
     params
-    # .require(:task)
+    .require(:task)
       .permit(:title, :notes, :start_at, :duration, :importance, :parent_id, :task_status_id)
       .reverse_merge(project_id: params[:project_id], all_tags: params[:all_tags]).reject { |k, v| v.nil? }
   end
