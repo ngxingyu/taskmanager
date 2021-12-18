@@ -12,12 +12,15 @@
 
 ActiveRecord::Schema.define(version: 2021_11_26_171229) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "project_user_roles", force: :cascade do |t|
-    t.integer "project_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "project_id", null: false
+    t.bigint "user_id", null: false
     t.integer "role_id", default: 1, null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["project_id", "user_id"], name: "index_project_user_roles_on_project_id_and_user_id", unique: true
     t.index ["project_id"], name: "index_project_user_roles_on_project_id"
     t.index ["user_id"], name: "index_project_user_roles_on_user_id"
@@ -38,7 +41,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_171229) do
 
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "project_id", null: false
+    t.bigint "project_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_tags_on_name", unique: true
@@ -53,10 +56,10 @@ ActiveRecord::Schema.define(version: 2021_11_26_171229) do
   end
 
   create_table "task_tags", force: :cascade do |t|
-    t.integer "task_id"
-    t.integer "tag_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "task_id"
+    t.bigint "tag_id"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["tag_id"], name: "index_task_tags_on_tag_id"
     t.index ["task_id"], name: "index_task_tags_on_task_id"
   end
@@ -64,13 +67,12 @@ ActiveRecord::Schema.define(version: 2021_11_26_171229) do
   create_table "tasks", force: :cascade do |t|
     t.string "title"
     t.string "notes", default: ""
-    t.boolean "completed", default: false
-    t.datetime "start_at"
+    t.datetime "start_at", default: -> { "CURRENT_TIMESTAMP" }
     t.integer "duration", default: 60
     t.integer "importance", default: 1
     t.integer "task_status_id", default: 0, null: false
-    t.integer "project_id", null: false
-    t.integer "parent_id"
+    t.bigint "project_id", null: false
+    t.bigint "parent_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["parent_id"], name: "index_tasks_on_parent_id"
