@@ -10,5 +10,6 @@ Rails.application.routes.draw do
   end
   post "login", to: "authentication#authenticate"
   post "signup", to: "api/v1/users#create"
+  get "roles", to: "api/v1/users#roles"
   get "profile", to: "api/v1/users#profile"
 end

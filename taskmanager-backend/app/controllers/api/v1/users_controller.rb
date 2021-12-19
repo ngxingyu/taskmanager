@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authorize_request, only: :create
+  skip_before_action :authorize_request, only: [:create, :roles]
   # GET /api/v1/users
   def index
     check_permission(lambda {
@@ -11,6 +11,12 @@ class Api::V1::UsersController < ApplicationController
   # GET /profile
   def profile
     json_response(current_user)
+  end
+
+  
+  # GET /roles
+  def roles
+    json_response(Role.all)
   end
 
   # POST /api/v1/users
