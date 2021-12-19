@@ -2,12 +2,18 @@
 import { TagProps, TaskProps, TaskStatus } from 'core/entities'
 import React, { FC, PropsWithChildren, ReactNode, useState } from 'react'
 import PropTypes from 'prop-types';
-import { alpha, styled } from '@mui/material/styles';
+import EditIcon from '@mui/icons-material/Edit'
+import CheckIcon from '@mui/icons-material/Check'
+import CloseIcon from '@mui/icons-material/Close'
 import Collapse from '@mui/material/Collapse';
 import { useDispatch } from 'react-redux';
-import { Checkbox, Stack } from '@mui/material';
+import { Checkbox, Grid, IconButton, Stack, TextareaAutosize, TextField } from '@mui/material';
 import { TreeItem } from './TreeItemContent';
 import { updateTask } from 'store/tasks/thunks';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { LocalizationProvider, DatePicker } from '@mui/lab';
+import ChipInput from '@jansedlon/material-ui-chip-input';
+import TaskStatusSelector from './TaskStatusSelector';
 
 const TransitionComponent = (props: any) => {
     // const style = useSpring({
@@ -42,8 +48,10 @@ const Tags: FC<{ tags: TagProps[] }> = ({ tags }) => {
         })}
     </>)
 }
-const TaskDetails: FC<{ task: TaskProps }> = ({ task }) => {
+export const TaskDetails: FC<{ task: TaskProps }> = ({ task }) => {
     const [completed, setCompleted] = useState(task.task_status_id === TaskStatus.Completed)
+    const [editing, setEditing] = useState(false)
+    const [state, setState] = useState(task);
     const dispatch = useDispatch();
     const toggleCompletion = () => {
         setCompleted(!completed);
@@ -52,15 +60,83 @@ const TaskDetails: FC<{ task: TaskProps }> = ({ task }) => {
             ...task, task_status_id: taskStatus
         }));
     };
-    return (
-        <Stack direction="row" spacing={2}>
+    const saveChanges = () => {
+        dispatch(updateTask(state));
+        setEditing(false);
+    }
+    return (editing ? (
+        <Grid container spacing={2}>
+            <Grid item xs={3}><TaskStatusSelector callback={(e) => { setState({ ...state, task_status_id: e }) }} task_status_id={task.task_status_id || 0} /></Grid>
+            <Grid item xs={3}>
+                <TextField
+                    value={task.title}
+                    onChange={(e) => { setState({ ...state, title: e.target.value }) }}
+                />
+            </Grid>
+            <Grid item xs={4}>
+                <TextareaAutosize
+                    aria-label="notes"
+                    minRows={3}
+                    placeholder="Task notes"
+                    style={{ width: 200 }}
+                    value={task.notes}
+                    onChange={(e) => { setState({ ...state, notes: e.target.value }) }}
+                />
+            </Grid>
+            <Grid item xs={3}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                        label="Basic example"
+                        value={task.deadline}
+                        onChange={(newValue) => {
+                            if (newValue !== null) {
+                                setState({ ...state, deadline: newValue });
+                            }
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
+                </LocalizationProvider>
+            </Grid>
+            <Grid item xs={4}>
+                <ChipInput
+                    defaultValue={task.tags}
+                    fullWidth
+                    label='Tags'
+                    placeholder='Type and press enter to add tags'
+                    onChange={(chips: string[]) => setState({
+                        ...state, tags: chips.map(chip => {
+                            return { project_id: task.project_id, name: chip } as TagProps
+                        })
+                    })}
+                />
+            </Grid>
+            <Grid item xs={1}>
+                <IconButton
+                    onClick={saveChanges}
+                    disabled={task.title === ""}
+                >
+                    <CheckIcon />
+                </IconButton>
+            </Grid>
+            <Grid item xs={1}>
+                <IconButton onClick={() => setEditing(false)}>
+                    <CloseIcon />
+                </IconButton>
+            </Grid>
+        </Grid >
+    ) :
+        <Stack direction="row" spacing={2} >
             <Checkbox onChange={toggleCompletion} checked={completed} />
             <h4>{task.title}</h4>
             <p>{task.notes}</p>
             <p>{task.deadline}</p>
             <Tags tags={task.tags || []} />
-        </Stack>
+            <IconButton onClick={() => setEditing(true)}>
+                <EditIcon />
+            </IconButton>
+        </Stack >
     )
+
 }
 const TaskItem: FC<PropsWithChildren<{ task: TaskProps }>> = ({ task }) => {
     if (!Array.isArray(task.subtasks) || !task.subtasks.length) {

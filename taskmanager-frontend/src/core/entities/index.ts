@@ -53,10 +53,10 @@ export type UserRole = {
 };
 
 export interface TagProps {
-  id: number;
+  id?: number;
   project_id: number;
   name: string;
-  color: number;
+  color?: number;
 }
 export enum TaskStatus {
   Todo,

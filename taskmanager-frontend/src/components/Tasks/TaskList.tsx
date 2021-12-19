@@ -1,10 +1,17 @@
 /* eslint-disable no-debugger */
 /* eslint-disable no-console */
-import { TreeView } from '@mui/lab';
+
 import SvgIcon from '@mui/material/SvgIcon';
 import { TaskProps } from 'core/entities';
-import { FC } from 'react';
-import TaskItem from './TaskItem';
+import { FC, useState } from 'react';
+import { StylesProvider } from '@mui/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { Tree, NodeModel, DragLayerMonitorProps } from "@minoru/react-dnd-treeview";
+import { CustomNode } from './CustomNode';
+import { CustomDragPreview } from './CustomDragPreview';
+import styles from "./TaskList.module.css";
+import { ThemeProvider } from '@emotion/react';
+import { theme } from 'theme';
 
 const MinusSquare = (props: any) => {
     return (
@@ -63,25 +70,77 @@ const listToTree = (tasks: TaskProps[]) => {
     return roots;
 }
 
-const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
-    return (<TreeView
-        aria-label="customized"
-        defaultExpanded={['1']}
-        defaultCollapseIcon={< MinusSquare />}
-        defaultExpandIcon={< PlusSquare />}
-        defaultEndIcon={< CloseSquare />}
-        multiSelect
-        sx={{ flexGrow: 1, overflowY: 'auto' }}
-    >
-        {
-            listToTree(Object.values(tasks)).map(t => {
-                // console.log(renderTask(t))
-                // return renderTask(t);
-                return (<TaskItem key={t.id} task={t} />)
-            })
-        }
-    </TreeView >);
+const updateTaskParent = (x: NodeModel<TaskProps>, targetId: number | string) => {
+    return { ...x, data: { ...x.data, parent_id: targetId } } as NodeModel<TaskProps>
 }
+const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
+    const [treeData, setTreeData] = useState<NodeModel<TaskProps>[]>(Object.values(tasks).map(task => {
+        return { id: task.id, parent: task.parent_id || -1, text: task.title, droppable: true, data: task } as NodeModel<TaskProps>
+    }));
+    const handleDrop = (newTree: NodeModel<TaskProps>[], { dragSourceId, dropTargetId }: { dragSourceId: number | string, dropTargetId: number | string }) => {
+        newTree.map(x => x.id === dragSourceId ? updateTaskParent(x, dropTargetId) : x)
+        setTreeData(newTree);
+    }
+    const handleValueChange = (id: NodeModel<TaskProps>["id"], value: TaskProps | undefined) => {
+
+        const newTree = treeData.map((node) => {
+            if (node.id === id) {
+                return {
+                    ...node,
+                    text: value?.title || "",
+                    data: value
+                } as NodeModel<TaskProps>;
+            }
+
+            return node;
+        });
+
+        setTreeData(newTree);
+    };
+
+    return (
+        <StylesProvider injectFirst>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <div className={styles.app}>
+                    <Tree
+                        tree={treeData}
+                        rootId={-1}
+                        render={(node: NodeModel<TaskProps>, { depth, isOpen, onToggle }) => (
+                            <CustomNode node={node} depth={depth} isOpen={isOpen} onToggle={onToggle} onValueChange={handleValueChange} />
+                        )}
+                        dragPreviewRender={(
+                            monitorProps: DragLayerMonitorProps<TaskProps>
+                        ) => <CustomDragPreview monitorProps={monitorProps} />}
+                        // canDrop={(
+                        //     currentTree,
+                        //     { dragSourceId, dropTargetId }
+                        // ) => {
+                        //     return dragSourceId !== dropTargetId;
+                        // }}
+                        onDrop={handleDrop}
+                        classes={{
+                            root: styles.treeRoot,
+                            draggingSource: styles.draggingSource,
+                            dropTarget: styles.dropTarget,
+                        }}
+                        sort={false}
+                        initialOpen
+
+                    // aria-label="customized"
+                    // defaultExpanded={['1']}
+                    // defaultCollapseIcon={< MinusSquare />}
+                    // defaultExpandIcon={< PlusSquare />}
+                    // defaultEndIcon={< CloseSquare />}
+                    // multiSelect
+                    // sx={{ flexGrow: 1, overflowY: 'auto' }}
+                    />
+                </div>
+            </ThemeProvider>
+        </StylesProvider>
+    );
+}
+
 
 
 export default TaskList;

@@ -33,13 +33,6 @@ const AddPermission: FC<{ callback: (x: PermissionProps[]) => void }> =
                         value={emails}
                         onAdd={(chip:string) => setEmails([...emails, chip])}
                         onDelete={(chip:string) => setEmails(emails.filter(x=>x!==chip))}
-                        // onChange={(chips:string[]) => setEmails(chips)}
-                    // text={state.email}
-                    // label="Email: "
-                    // name="email"
-                    // placeholder="user email"
-                    // callback={(x: string) => handleChange({ ...state, email: x })}
-
                     />
                 </Grid>}
                 {emails.length !== 0 && (

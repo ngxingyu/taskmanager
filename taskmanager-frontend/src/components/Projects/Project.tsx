@@ -12,7 +12,6 @@ import { createTask } from "store/tasks/thunks";
 import {
   Box,
   Button,
-  Container,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -142,9 +141,7 @@ const ProjectDescription: FC<{ projectId: number }> = ({ projectId }) => {
 
 const Tasks = ({ tasks }: { tasks: { [key: number]: TaskProps } }) => {
   return (
-    <Container>
-      <TaskList tasks={tasks} />
-    </Container>
+    <TaskList tasks={tasks} />
   );
 };
 
