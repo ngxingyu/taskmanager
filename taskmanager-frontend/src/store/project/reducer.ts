@@ -64,6 +64,9 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
       case ProjectActionTypes.UPDATED:
         draftState.loading = false;
         draftState.error = undefined;
+        if (action.payload.id !== undefined) {
+          draftState.projects[action.payload.id] = action.payload;
+        }
         break;
       case ProjectActionTypes.DELETED:
         draftState.loading = false;

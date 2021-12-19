@@ -40,6 +40,7 @@ export interface ProjectRepositoryProps extends RepositoryProps<ProjectProps> {
   getAllProjects(): Promise<AxiosResponse<ProjectProps[]>>;
   getProject(id: string, depth?: number): Promise<AxiosResponse<ProjectProps>>;
   updateProject(
+    id: string,
     name?: string,
     permissions?: PermissionProps[]
   ): Promise<AxiosResponse<ProjectProps>>;

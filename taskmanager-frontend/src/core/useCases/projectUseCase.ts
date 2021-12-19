@@ -5,7 +5,7 @@ export interface ProjectService {
   getAllProjects(): Promise<ProjectProps[]>;
   getProjectById(id: number): Promise<ProjectProps>;
   deleteProject(id: number): Promise<boolean>;
-  updateProject(props: ProjectProps): Promise<ProjectProps>;
+  updateProject(props: ProjectProps): Promise<boolean>;
   createProject(props: ProjectProps): Promise<ProjectProps>;
 }
 
@@ -26,10 +26,10 @@ export class ProjectServiceImpl implements ProjectService {
   deleteProject(id: number): Promise<boolean> {
     return this.projectRepo.deleteProject(String(id)).then((r) => r.data);
   }
-  updateProject(props: ProjectProps): Promise<ProjectProps> {
+  updateProject(props: ProjectProps): Promise<boolean> {
     return this.projectRepo
-      .updateProject(String(props.id), props.permissions)
-      .then((r) => r.data);
+      .updateProject(props.id?.toString()||"", String(props.name), props.permissions)
+      .then((r) => r.status===204);
   }
   createProject(props: ProjectProps): Promise<ProjectProps> {
     return this.projectRepo

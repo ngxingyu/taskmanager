@@ -46,6 +46,7 @@ export enum Role {
   Editor,
   Viewer,
 }
+
 export type UserRole = {
   email: string;
   role: Role;

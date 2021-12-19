@@ -5,8 +5,6 @@ import React, {
     useState,
 } from "react";
 
-import { AnyAction } from "redux";
-import { ThunkAction } from "redux-thunk";
 import {
     Box,
     TextField,
@@ -16,7 +14,7 @@ const CreateEntry: FC<{
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     label: string;
     id: string;
-    initValue: string|number|null|boolean;
+    initValue: string | number | null | boolean;
 }> = ({ onSubmit, label, id, initValue }) => {
     const [value, setValue] = useState(initValue);
     const handleSubmit = useCallback(

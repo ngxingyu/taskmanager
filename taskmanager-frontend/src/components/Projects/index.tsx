@@ -35,14 +35,14 @@ interface ProjectsProps {
   error?: string;
   loading: boolean;
   projects: { [key: number]: ProjectStateProps };
-  activeProject?: ProjectComponentState;
+  activeProjectId?: number;
 }
 
 const Projects = ({
   error,
   loading,
   projects,
-  activeProject,
+  activeProjectId
 }: ProjectsProps) => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -106,7 +106,7 @@ const Projects = ({
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Outlet context={activeProject} />
+            {activeProjectId && <Outlet context={projects[activeProjectId]} />}
             <Footer sx={{ pt: 4 }} />
           </Container>
         </Box>
@@ -132,14 +132,8 @@ const mapStateToProps = (state: StateProps) => {
   const {
     project_state: { loading, projects, error, active },
   } = state;
-  const activeProject =
-    active !== undefined
-      ? ({
-        ...projects[active.id],
-        id: active.id,
-      } as ProjectComponentState)
-      : undefined;
-  return { error, loading, projects, activeProject };
+  const activeProjectId = active !== undefined ? active.id : undefined;
+  return { error, loading, projects, activeProjectId };
 };
 
 export default connect(mapStateToProps)(Projects);

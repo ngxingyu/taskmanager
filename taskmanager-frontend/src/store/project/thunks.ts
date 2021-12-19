@@ -16,7 +16,10 @@ import {
   ProjectRetrieveFailedAction,
   ProjectRetrievingAction,
   ProjectSelectAction,
+  ProjectUpdatedAction,
   ProjectUpdatedTaskAction,
+  ProjectUpdateFailedAction,
+  ProjectUpdatingAction,
 } from "store/project/actions";
 import { push } from "redux-first-history";
 import { ProjectRepository } from "core/infrastructure/projectRepository";
@@ -142,8 +145,6 @@ export const deleteProjectFailed = (
   };
 };
 
-
-
 export const createProject = (
   project: ProjectProps
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
@@ -175,11 +176,16 @@ export const creatingProject = (): ProjectCreatingAction => {
   return { type: ProjectActionTypes.CREATING };
 };
 
-export const createdProject = (id: number, project: ProjectProps): ProjectCreatedAction => {
+export const createdProject = (
+  id: number,
+  project: ProjectProps
+): ProjectCreatedAction => {
   return { type: ProjectActionTypes.CREATED, payload: [project] };
 };
 
-export const createProjectFailed = (message: string): ProjectCreateFailedAction => {
+export const createProjectFailed = (
+  message: string
+): ProjectCreateFailedAction => {
   return {
     type: ProjectActionTypes.CREATE_FAILED,
     payload: {
@@ -188,6 +194,55 @@ export const createProjectFailed = (message: string): ProjectCreateFailedAction 
   };
 };
 
+export const updateProject = (
+  project: ProjectProps,
+  onSuccess?: () => void
+): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
+  return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+    const projectRepo = new ProjectRepository();
+    const projectService = new ProjectServiceImpl(projectRepo);
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        dispatch(updatingProject());
+        projectService
+          .updateProject(project)
+          .then((props) => {
+            if (props) {
+              dispatch(updatedProject(project));
+              if (onSuccess !== undefined) {
+                onSuccess();
+              }
+            } else {
+              dispatch(updateProjectFailed("Failed to update project"));
+            }
+          })
+          .catch((e: string) => {
+            dispatch(updateProjectFailed(e));
+          });
+        resolve();
+      }, 3000);
+    });
+  };
+};
+
+export const updatingProject = (): ProjectUpdatingAction => {
+  return { type: ProjectActionTypes.UPDATING };
+};
+
+export const updatedProject = (project: ProjectProps): ProjectUpdatedAction => {
+  return { type: ProjectActionTypes.UPDATED, payload: project };
+};
+
+export const updateProjectFailed = (
+  message: string
+): ProjectUpdateFailedAction => {
+  return {
+    type: ProjectActionTypes.UPDATE_FAILED,
+    payload: {
+      message,
+    },
+  };
+};
 
 export const dropAllProjects = (): ProjectDropAllAction => {
   return { type: ProjectActionTypes.DROP_ALL };
