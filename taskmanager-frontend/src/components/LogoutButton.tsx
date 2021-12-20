@@ -10,9 +10,11 @@ const LogoutButton: FC = () => {
     dispatch(logOut());
   }, []);
   return (
-    <Button type="button" fullWidth variant="contained" color="primary" onClick={logout}>
-      Logout
-    </Button>
+    <div>
+      <Button type="button" fullWidth variant="contained" color="primary" onClick={logout}>
+        Logout
+      </Button>
+    </div>
   );
 };
 

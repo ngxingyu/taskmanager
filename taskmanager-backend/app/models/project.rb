@@ -1,8 +1,8 @@
 class Project < ApplicationRecord
   has_many :project_user_roles, dependent: :destroy
   has_many :users, through: :project_user_roles
-  has_many :tasks
-  has_many :tags
+  has_many :tasks, dependent: :destroy 
+  has_many :tags, dependent: :destroy
 
   def permissions
     self.project_user_roles.map { |u|
