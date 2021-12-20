@@ -1,7 +1,7 @@
-/* eslint-disable no-debugger */
+
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { Role } from 'core/entities';
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 
 type RoleKeys = { [key: string]: number; }
 const RoleSelector: FC<{ role: number, callback: (x: number) => void }> = ({ role, callback }) => {

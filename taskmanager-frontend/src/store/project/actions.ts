@@ -26,6 +26,7 @@ export enum ProjectActionTypes {
   SELECT = "project/select",
   CREATED_TASK = "project/created_task",
   UPDATED_TASK = "project/updated_task",
+  DELETED_TASK = "project/deleted_task",
 }
 
 export interface ProjectCreateAction extends Action {
@@ -36,7 +37,7 @@ export interface ProjectCreatingAction extends Action {
 }
 export interface ProjectCreatedAction extends Action {
   type: ProjectActionTypes.CREATED;
-  payload: [ProjectProps];
+  payload: ProjectProps;
 }
 export interface ProjectCreateFailedAction extends Action {
   type: ProjectActionTypes.CREATE_FAILED;
@@ -115,6 +116,14 @@ export interface ProjectUpdatedTaskAction extends Action {
   };
 }
 
+export interface ProjectDeletedTaskAction extends Action {
+  type: ProjectActionTypes.DELETED_TASK;
+  payload: {
+    project_id: number;
+    task_id: number;
+  };
+}
+
 export type ProjectAction =
   | ProjectCreateAction
   | ProjectCreatingAction
@@ -135,4 +144,5 @@ export type ProjectAction =
   | ProjectDropAllAction
   | ProjectSelectAction
   | ProjectCreatedTaskAction
-  | ProjectUpdatedTaskAction;
+  | ProjectUpdatedTaskAction
+  | ProjectDeletedTaskAction;

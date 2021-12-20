@@ -1,30 +1,28 @@
+
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
-import { TaskProps, TaskStatus } from "core/entities";
+import { TaskProps } from "core/entities";
 import {
   TaskActionTypes,
   TaskCreatedAction,
   TaskCreateFailedAction,
   TaskCreatingAction,
-  TaskDeletedAction,
   TaskDeleteFailedAction,
   TaskDeletingAction,
   TaskRetrievedAction,
   TaskRetrieveFailedAction,
   TaskRetrievingAction,
-  TaskUpdateAction,
   TaskUpdatedAction,
   TaskUpdateFailedAction,
   TaskUpdatingAction,
 } from "store/tasks/actions";
 import { TaskRepository } from "core/infrastructure/taskRepository";
 import { TaskServiceImpl } from "core/useCases/taskUseCase";
-import { updateProjectTask } from "store/project/thunks";
-import { update } from "cypress/types/lodash";
+import { deletedProjectTask, updateProjectTask } from "store/project/thunks";
 
 export const getTaskById = (
   id: number,
-  depth = 2
+  depth = 5
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
     const taskRepo = new TaskRepository();
@@ -64,6 +62,7 @@ export const retrievedTask = (tasks: TaskProps): TaskRetrievedAction => {
 };
 
 export const deleteTask = (
+  project_id: number,
   id: number
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
@@ -76,7 +75,7 @@ export const deleteTask = (
           .deleteTask(id)
           .then((props) => {
             if (props) {
-              dispatch(deletedTask(id));
+              dispatch(deletedProjectTask(project_id, id));
             } else {
               dispatch(deleteTaskFailed("Failed to delete task"));
             }
@@ -94,9 +93,9 @@ export const deletingTask = (): TaskDeletingAction => {
   return { type: TaskActionTypes.DELETING };
 };
 
-export const deletedTask = (id: number): TaskDeletedAction => {
-  return { type: TaskActionTypes.DELETED, payload: { id } };
-};
+// export const deletedTask = (id: number): TaskDeletedAction => {
+//   return { type: TaskActionTypes.DELETED, payload: { id } };
+// };
 
 export const deleteTaskFailed = (message: string): TaskDeleteFailedAction => {
   return {
@@ -187,6 +186,7 @@ export const updateTask = (
             importance: task.importance,
             parent_id: task.parent_id,
             task_status_id: task.task_status_id,
+            all_tags: task.all_tags || [],
           })
           .then((props) => {
             if (props) {

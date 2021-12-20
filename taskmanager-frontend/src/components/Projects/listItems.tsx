@@ -20,7 +20,8 @@ export const projectsListItems: FC<{
   projects: { [key: number]: ProjectStateProps };
   dispatch: Dispatch<ThunkAction<Promise<void>, any, any, any>>;
   error?: string;
-}> = ({ loading, projects, dispatch, error }) => {
+  activeProjectId: number | undefined;
+}> = ({ loading, projects, dispatch, error, activeProjectId }) => {
   const handleClick = (id: number) => dispatch(getProjectById(id));
   return (
     <>
@@ -31,7 +32,10 @@ export const projectsListItems: FC<{
         Object.entries(projects).map(([, v], i) => {
           return (
             // eslint-disable-next-line react/jsx-no-bind
-            <ListItemButton key={i} onClick={() => handleClick(v.id || -1)}>
+            <ListItemButton
+              key={i}
+              selected={v.id === activeProjectId}
+              onClick={() => handleClick(v.id || -1)}>
               <ListItemText primary={v.name || ""} />
             </ListItemButton>
           );

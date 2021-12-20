@@ -1,5 +1,5 @@
-/* eslint-disable no-debugger */
-/* eslint-disable no-console */
+
+
 /* routes/user-favorites/index.ts */
 import { Request } from "miragejs";
 

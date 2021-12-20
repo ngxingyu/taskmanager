@@ -10,6 +10,7 @@ export type UpdateTaskProps = Pick<
   | "importance"
   | "parent_id"
   | "task_status_id"
+  | "all_tags"
 >;
 export interface TaskService {
   getTaskById(id: number): Promise<TaskProps>;
@@ -28,7 +29,7 @@ export class TaskServiceImpl implements TaskService {
     return this.taskRepo.getTask(String(id), depth).then((r) => r.data);
   }
   deleteTask(id: number): Promise<boolean> {
-    return this.taskRepo.deleteTask(String(id)).then((r) => r.data);
+    return this.taskRepo.deleteTask(String(id)).then((r) => r.status===204);
   }
   updateTask(id: number, props: UpdateTaskProps): Promise<boolean> {
     return this.taskRepo.updateTask(id, props).then((r) => r.status === 204);

@@ -20,11 +20,11 @@ export class ProjectServiceImpl implements ProjectService {
       return r.data;
     });
   }
-  getProjectById(id: number, depth = 2): Promise<ProjectProps> {
+  getProjectById(id: number, depth = 5): Promise<ProjectProps> {
     return this.projectRepo.getProject(String(id), depth).then((r) => r.data);
   }
   deleteProject(id: number): Promise<boolean> {
-    return this.projectRepo.deleteProject(String(id)).then((r) => r.data);
+    return this.projectRepo.deleteProject(String(id)).then((r) => r.status===204);
   }
   updateProject(props: ProjectProps): Promise<boolean> {
     return this.projectRepo
@@ -33,7 +33,7 @@ export class ProjectServiceImpl implements ProjectService {
   }
   createProject(props: ProjectProps): Promise<ProjectProps> {
     return this.projectRepo
-      .createProject(String(props.id), props.permissions)
+      .createProject(String(props.name))
       .then((r) => r.data);
   }
 }

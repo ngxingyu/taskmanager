@@ -1,5 +1,5 @@
-/* eslint-disable no-debugger */
-/* eslint-disable no-console */
+
+
 /* routes/user-favorites/index.ts */
 import { UserProps } from "core/entities";
 import { Request } from "miragejs";

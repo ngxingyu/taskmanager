@@ -1,166 +1,89 @@
-/* eslint-disable no-console */
-import { TagProps, TaskProps, TaskStatus } from 'core/entities'
-import React, { FC, PropsWithChildren, ReactNode, useState } from 'react'
-import PropTypes from 'prop-types';
-import EditIcon from '@mui/icons-material/Edit'
-import CheckIcon from '@mui/icons-material/Check'
-import CloseIcon from '@mui/icons-material/Close'
-import Collapse from '@mui/material/Collapse';
-import { useDispatch } from 'react-redux';
-import { Checkbox, Grid, IconButton, Stack, TextareaAutosize, TextField } from '@mui/material';
-import { TreeItem } from './TreeItemContent';
-import { updateTask } from 'store/tasks/thunks';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { LocalizationProvider, DatePicker } from '@mui/lab';
-import ChipInput from '@jansedlon/material-ui-chip-input';
-import TaskStatusSelector from './TaskStatusSelector';
 
-const TransitionComponent = (props: any) => {
-    // const style = useSpring({
-    //     from: {
-    //         opacity: 0,
-    //         transform: 'translate3d(20px,0,0)',
-    //     },
-    //     to: {
-    //         opacity: props.in ? 1 : 0,
-    //         transform: `translate3d(${props.in ? 0 : 20}px,0,0)`,
-    //     },
-    // });
+import React, { useEffect, useState } from "react";
 
-    return (
-        <div>
-            <Collapse {...props} />
-        </div>
-    );
-}
+import { NodeModel, useDragOver } from "@minoru/react-dnd-treeview";
+import styles from "./TaskItem.module.css";
+import { TaskProps } from "core/entities";
+import CheckIcon from "@mui/icons-material/Check"
+import CloseIcon from "@mui/icons-material/Close"
+import ArrowRightIcon from "@mui/icons-material/ArrowRight"
+import { TextField, IconButton } from "@mui/material";
+import { TaskDetails } from "./TaskDetails";
 
-TransitionComponent.propTypes = {
-    /**
-     * Show the component; triggers the enter or exit states
-     */
-    in: PropTypes.bool,
+type Props = {
+    node: NodeModel<TaskProps>;
+    depth: number;
+    isOpen: boolean;
+    onToggle: (id: NodeModel["id"]) => void;
+    onValueChange: (id: NodeModel["id"], value: TaskProps | undefined) => void;
 };
 
-const Tags: FC<{ tags: TagProps[] }> = ({ tags }) => {
-    return (<>
-        {tags.map(tag => {
-            return <p key={tag.id}>{tag.name}</p>
-        })}
-    </>)
-}
-export const TaskDetails: FC<{ task: TaskProps }> = ({ task }) => {
-    const [completed, setCompleted] = useState(task.task_status_id === TaskStatus.Completed)
-    const [editing, setEditing] = useState(false)
-    const [state, setState] = useState(task);
-    const dispatch = useDispatch();
-    const toggleCompletion = () => {
-        setCompleted(!completed);
-        const taskStatus = task.task_status_id === TaskStatus.Completed ? TaskStatus.Todo : TaskStatus.Completed;
-        dispatch(updateTask({
-            ...task, task_status_id: taskStatus
-        }));
+export const TaskItem: React.FC<Props> = (props) => {
+    const { id, data } = props.node;
+    const [visibleInput, setVisibleInput] = useState(false);
+    const [value, setValue] = useState(data);
+    const indent = props.depth * 24;
+
+    const handleToggle = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        props.onToggle(props.node.id);
     };
-    const saveChanges = () => {
-        dispatch(updateTask(state));
-        setEditing(false);
-    }
-    return (editing ? (
-        <Grid container spacing={2}>
-            <Grid item xs={3}><TaskStatusSelector callback={(e) => { setState({ ...state, task_status_id: e }) }} task_status_id={task.task_status_id || 0} /></Grid>
-            <Grid item xs={3}>
-                <TextField
-                    value={task.title}
-                    onChange={(e) => { setState({ ...state, title: e.target.value }) }}
-                />
-            </Grid>
-            <Grid item xs={4}>
-                <TextareaAutosize
-                    aria-label="notes"
-                    minRows={3}
-                    placeholder="Task notes"
-                    style={{ width: 200 }}
-                    value={task.notes}
-                    onChange={(e) => { setState({ ...state, notes: e.target.value }) }}
-                />
-            </Grid>
-            <Grid item xs={3}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                        label="Basic example"
-                        value={task.deadline}
-                        onChange={(newValue) => {
-                            if (newValue !== null) {
-                                setState({ ...state, deadline: newValue });
-                            }
-                        }}
-                        renderInput={(params) => <TextField {...params} />}
-                    />
-                </LocalizationProvider>
-            </Grid>
-            <Grid item xs={4}>
-                <ChipInput
-                    defaultValue={task.tags}
-                    fullWidth
-                    label='Tags'
-                    placeholder='Type and press enter to add tags'
-                    onChange={(chips: string[]) => setState({
-                        ...state, tags: chips.map(chip => {
-                            return { project_id: task.project_id, name: chip } as TagProps
-                        })
-                    })}
-                />
-            </Grid>
-            <Grid item xs={1}>
-                <IconButton
-                    onClick={saveChanges}
-                    disabled={task.title === ""}
-                >
-                    <CheckIcon />
-                </IconButton>
-            </Grid>
-            <Grid item xs={1}>
-                <IconButton onClick={() => setEditing(false)}>
-                    <CloseIcon />
-                </IconButton>
-            </Grid>
-        </Grid >
-    ) :
-        <Stack direction="row" spacing={2} >
-            <Checkbox onChange={toggleCompletion} checked={completed} />
-            <h4>{task.title}</h4>
-            <p>{task.notes}</p>
-            <p>{task.deadline}</p>
-            <Tags tags={task.tags || []} />
-            <IconButton onClick={() => setEditing(true)}>
-                <EditIcon />
-            </IconButton>
-        </Stack >
-    )
 
-}
-const TaskItem: FC<PropsWithChildren<{ task: TaskProps }>> = ({ task }) => {
-    if (!Array.isArray(task.subtasks) || !task.subtasks.length) {
-        return <TreeItem key={task.id} nodeId={(task.id?.toString(10) || "-1")} label={<TaskDetails task={task} />} />
-    }
+    const handleCancel = () => {
+        setValue(data);
+        setVisibleInput(false);
+    };
+
+    const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValue({ ...data, title: e.target.value });
+    };
+
+    const handleSubmit = () => {
+        setVisibleInput(false);
+        props.onValueChange(id, value);
+    };
+
+    const dragOverProps = useDragOver(id, props.isOpen, props.onToggle);
+
     return (
-        <TreeItem key={task.id} nodeId={(task.id?.toString(10) || "-1")} label={<TaskDetails task={task} />}>
-            {
-                task.subtasks.map((t, idx) => <TaskItem key={idx} task={t} />)
-            }
-        </TreeItem >
-    )
-}
+        <div
+            className={`tree-node ${styles.root}`}
+            style={{ paddingInlineStart: indent }}
+            {...dragOverProps}
+        >
+            <div
+                className={`${styles.expandIconWrapper} ${props.isOpen ? styles.isOpen : ""}`}
+            >
+                {props.node.droppable && (
+                    <div onClick={handleToggle}>
+                        <ArrowRightIcon />
+                    </div>
+                )}
+            </div>
+            <div className={styles.labelGridItem}>
+                {visibleInput ? (
+                    <div className={styles.inputWrapper}>
+                        <TextField
+                            className={`${styles.textField} ${styles.nodeInput}`}
+                            value={value?.title}
+                            onChange={handleChangeText}
+                        />
+                        <IconButton
+                            className={styles.editButton}
+                            onClick={handleSubmit}
+                            disabled={value?.title === ""}
+                        >
+                            <CheckIcon className={styles.editIcon} />
+                        </IconButton>
+                        <IconButton className={styles.editButton} onClick={handleCancel}>
+                            <CloseIcon className={styles.editIcon} />
+                        </IconButton>
+                    </div>
+                ) : (
+                    value !== undefined && <TaskDetails task={value} />
+                )}
+            </div>
 
-// const renderTask = (task: TaskProps) => {
-//     return (
-//         <StyledTreeItem key={task.id} nodeId={(task.id?.toString(10) || "-1")} label={<TaskDetails task={task} />}>
-//             {
-//                 Array.isArray(task.subtasks)
-//                     ? task.subtasks.map((t) => renderTask(t))
-//                     : null
-//             }
-//         </StyledTreeItem >
-//     )
-// }
-
-export default TaskItem
+        </div>
+    );
+};

@@ -1,5 +1,5 @@
-/* eslint-disable no-debugger */
-/* eslint-disable no-console */
+
+
 /* routes/user-favorites/index.ts */
 import { Request } from "miragejs";
 
@@ -25,7 +25,6 @@ export const getTasksWith = (
     depth: number,
     parent_id: string | undefined
   ): MockTaskProps[] => {
-    debugger
     if (depth === 1) {
       return (schema.findBy("task", (task) => task.parent_id === parent_id) ||
         []) as MockTaskProps[];

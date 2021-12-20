@@ -6,7 +6,6 @@ import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
 import { projectsListItems } from "./listItems";
 import Footer from "../Footer";
 import { connect, useDispatch } from "react-redux";
@@ -17,14 +16,10 @@ import Drawer from "@mui/material/Drawer";
 import { Outlet, useOutletContext } from "react-router-dom";
 import { StateProps } from "store";
 import { createProject, getAllProjects } from "store/project/thunks";
-import {
-  UserRole,
-  ProjectProps as Project,
-  TaskProps,
-  ProjectProps,
-} from "core/entities";
+import { ProjectProps as Project, ProjectProps } from "core/entities";
 import { ProjectStateProps } from "store/project/reducer";
 import CreateEntry from "components/CreateEntry";
+import { CircularProgress } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -47,7 +42,7 @@ const Projects = ({
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllProjects());
-  }, [dispatch]);
+  }, []);
   const createProjectCallback = (e: React.FormEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name")?.valueOf().toString() || "";
@@ -80,15 +75,18 @@ const Projects = ({
           }}
         >
           <Toolbar />
-          <List className="ll">
-            {projectsListItems({ loading, projects, dispatch, error })}
-            <CreateEntry
-              onSubmit={createProjectCallback}
-              initValue=""
-              id="name"
-              label='Enter new project'
-            />
-          </List>
+          {loading
+            ? <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1 }}><CircularProgress /></Box>
+            : <List className="ll">
+              {projectsListItems({ loading, projects, dispatch, error, activeProjectId })}
+              <CreateEntry
+                onSubmit={createProjectCallback}
+                initValue=""
+                id="name"
+                label='Enter new project'
+              />
+            </List>
+          }
 
           <Divider />
         </Drawer>
@@ -106,7 +104,11 @@ const Projects = ({
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {activeProjectId && <Outlet context={projects[activeProjectId]} />}
+            {activeProjectId === undefined &&
+              <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1, textAlign: 'center', }}>
+                Select a project to begin.
+              </Box>}
+            <Outlet context={{ projects, activeProjectId }} />
             <Footer sx={{ pt: 4 }} />
           </Container>
         </Box>
@@ -116,16 +118,11 @@ const Projects = ({
 };
 
 interface ProjectComponentState {
-  id: number;
-  tasks: TaskProps[];
-  created_at?: Date;
-  updated_at?: Date;
-  permissions?: UserRole[];
-  name: string;
-  project: ProjectStateProps;
+  projects: { [key: number]: ProjectStateProps; },
+  activeProjectId: number
 }
 export const useActiveProject = () => {
-  return useOutletContext<ProjectComponentState | undefined>();
+  return useOutletContext<ProjectComponentState>();
 };
 
 const mapStateToProps = (state: StateProps) => {

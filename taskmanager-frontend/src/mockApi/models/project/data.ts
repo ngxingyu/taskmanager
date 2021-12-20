@@ -1,5 +1,5 @@
-/* eslint-disable no-debugger */
-/* eslint-disable no-console */
+
+
 import { Model } from "miragejs";
 import { ModelDefinition } from "miragejs/-types";
 import { MockTaskProps } from "../task/data";

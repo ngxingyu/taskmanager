@@ -6,7 +6,9 @@ export const theme = createTheme({
       styleOverrides: {
         "*": {
           margin: 0,
-          padding: 0,
+          padding: {
+            left: 1,
+          },
         },
         "html, body, #root": {
           height: "100%",

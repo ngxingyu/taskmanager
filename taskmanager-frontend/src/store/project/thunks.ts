@@ -1,3 +1,4 @@
+
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { ProjectServiceImpl } from "core/useCases/projectUseCase";
@@ -9,6 +10,7 @@ import {
   ProjectCreateFailedAction,
   ProjectCreatingAction,
   ProjectDeletedAction,
+  ProjectDeletedTaskAction,
   ProjectDeleteFailedAction,
   ProjectDeletingAction,
   ProjectDropAllAction,
@@ -26,7 +28,7 @@ import { ProjectRepository } from "core/infrastructure/projectRepository";
 
 export const getProjectById = (
   id: number,
-  depth = 2
+  depth = 5
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
     const projectRepo = new ProjectRepository();
@@ -100,7 +102,8 @@ export const retrievedProjects = (
 };
 
 export const deleteProject = (
-  id: number
+  id: number,
+  onDelete: () => void
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
     const projectRepo = new ProjectRepository();
@@ -113,6 +116,7 @@ export const deleteProject = (
           .then((props) => {
             if (props) {
               dispatch(deletedProject(id));
+              onDelete();
             } else {
               dispatch(deleteProjectFailed("Failed to delete project"));
             }
@@ -158,7 +162,7 @@ export const createProject = (
           .createProject(project)
           .then((props) => {
             if (props && props.id !== undefined) {
-              dispatch(createdProject(props.id, project));
+              dispatch(createdProject(props));
             } else {
               dispatch(createProjectFailed("Failed to create project"));
             }
@@ -177,10 +181,9 @@ export const creatingProject = (): ProjectCreatingAction => {
 };
 
 export const createdProject = (
-  id: number,
-  project: ProjectProps
+  props: ProjectProps
 ): ProjectCreatedAction => {
-  return { type: ProjectActionTypes.CREATED, payload: [project] };
+  return { type: ProjectActionTypes.CREATED, payload: props };
 };
 
 export const createProjectFailed = (
@@ -276,5 +279,15 @@ export const updateProjectTask = (
   return {
     type: ProjectActionTypes.UPDATED_TASK,
     payload: { id: project_id, task },
+  };
+};
+
+export const deletedProjectTask = (
+  project_id: number,
+  task_id: number
+): ProjectDeletedTaskAction => {
+  return {
+    type: ProjectActionTypes.DELETED_TASK,
+    payload: { project_id, task_id },
   };
 };

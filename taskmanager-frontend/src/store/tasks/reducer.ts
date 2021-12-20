@@ -14,8 +14,8 @@ export interface TaskStateProps {
 }
 
 export const initialTaskState: TaskStateProps = {
-  loaded: true,
-  loading: false,
+  loaded: false,
+  loading: true,
   error: undefined,
   task: undefined,
 };

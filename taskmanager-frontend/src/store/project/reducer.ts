@@ -24,8 +24,8 @@ export interface ProjectsStateProps {
 }
 
 export const initialProjectsState: ProjectsStateProps = {
-  loaded: true,
-  loading: false,
+  loaded: false,
+  loading: true,
   error: undefined,
   projects: {},
   active: undefined,
@@ -47,8 +47,14 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
       case ProjectActionTypes.DELETING:
         draftState.loading = true;
         break;
-      case ProjectActionTypes.RETRIEVED:
       case ProjectActionTypes.CREATED:
+        draftState.loaded = true;
+        draftState.loading = false;
+        draftState.error = undefined;
+        const project = action.payload;
+        draftState.projects[project.id || -1] = { ...project, tasks: {} };
+        break;
+      case ProjectActionTypes.RETRIEVED:
         draftState.loaded = true;
         draftState.loading = false;
         draftState.error = undefined;
@@ -104,6 +110,11 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
           ...(state.projects[action.payload.id].tasks || {}),
           [action.payload.task.id || -1]: action.payload.task,
         };
+        break;
+      case ProjectActionTypes.DELETED_TASK:
+        const { [action.payload.task_id]: v1, ...rest1 } =
+          draftState.projects[action.payload.project_id].tasks || {};
+        draftState.projects[action.payload.project_id].tasks = { ...rest1 };
         break;
     }
   });

@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
-import { TextField, Typography } from "@mui/material";
+
+import { TextField } from "@mui/material";
 import { debounce, DebouncedFunc } from "lodash";
 import React, { ChangeEventHandler, FC, useCallback, useState } from "react";
 
@@ -22,7 +22,6 @@ const Editable: FC<{
 
         const handleChange: DebouncedFunc<ChangeEventHandler<HTMLInputElement>> = useCallback(
             debounce((e) => {
-                console.log(e.target.value);
                 callback(e.target.value);
             }, 2000),
             []

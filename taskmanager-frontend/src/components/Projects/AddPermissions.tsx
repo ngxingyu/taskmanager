@@ -1,7 +1,7 @@
-/* eslint-disable no-console */
+
 import { Grid, IconButton } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
-import { PermissionProps, Role } from 'core/entities';
+import { PermissionProps } from 'core/entities';
 import React, { FC, useState } from 'react'
 import RoleSelector from './RoleSelector';
 import ChipInput from '@jansedlon/material-ui-chip-input';
@@ -28,7 +28,7 @@ const AddPermission: FC<{ callback: (x: PermissionProps[]) => void }> =
                     <ChipInput
                         defaultValue={[]}
                         fullWidth
-                        label='Emails'
+                        label='Add new user emails'
                         placeholder='Type and press enter to add emails'
                         value={emails}
                         onAdd={(chip:string) => setEmails([...emails, chip])}

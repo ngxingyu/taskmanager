@@ -17,7 +17,7 @@ export class Repository<T> implements RepositoryProps<T> {
     data?: any
   ): Promise<AxiosResponse<boolean>> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    return API.delete(route, { data: { id, data } });
+    return API.delete(`${route}/${id}`, { data });
   }
 
   getAll(route: string, params?: any): Promise<AxiosResponse<T[]>> {

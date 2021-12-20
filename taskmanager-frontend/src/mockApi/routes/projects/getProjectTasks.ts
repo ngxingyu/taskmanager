@@ -1,5 +1,5 @@
-/* eslint-disable no-debugger */
-/* eslint-disable no-console */
+
+
 /* routes/user-favorites/index.ts */
 import { Request, Response } from "miragejs";
 import { AnyResponse } from "miragejs/-types";
@@ -14,7 +14,6 @@ const getProjectTasks: RouteHandler<AppRegistry, AnyResponse> = (
   schema: AppSchema,
   request: Request
 ) => {
-  console.log("getProjectTasks");
   const depthInput: string = request.queryParams?.depth;
   const depth: number | undefined =
     depthInput === "" ? 0 : parseInt(depthInput, 10);

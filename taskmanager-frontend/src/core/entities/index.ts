@@ -22,6 +22,7 @@ export interface TaskProps {
   created_at?: Date;
   updated_at?: Date;
   subtasks?: TaskProps[];
+  all_tags?: string[];
   tags?: TagProps[];
 }
 
