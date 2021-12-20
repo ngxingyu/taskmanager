@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -26,102 +26,101 @@ const drawerWidth = 240;
 const mdTheme = createTheme();
 export const ProjectContext: React.Context<Project> = createContext({});
 
-interface ProjectsProps {
-  error?: string;
-  loading: boolean;
-  projects: { [key: number]: ProjectStateProps };
-  activeProjectId?: number;
-}
 
-const Projects = ({
+const Projects: FC<{
+  error?: string,
+  loading: boolean,
+  projects: { [key: number]: ProjectStateProps },
+  activeProjectId?: number
+}> = ({
   error,
   loading,
   projects,
   activeProjectId
-}: ProjectsProps) => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAllProjects());
-  }, []);
-  const createProjectCallback = (e: React.FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get("name")?.valueOf().toString() || "";
-    dispatch(createProject({ name } as ProjectProps));
-  };
-  return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <NavBar
-          appBarStyles={{
-            position: "fixed",
-            sx: {
-              zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
-            },
-          }}
-          title="Projects"
-        >
-          <LogoutButton />
-        </NavBar>
-        <Drawer
-          variant="permanent"
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {
+}) => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+      dispatch(getAllProjects());
+    }, []);
+    const createProjectCallback = (e: React.FormEvent<HTMLFormElement>) => {
+      const formData = new FormData(e.currentTarget);
+      const name = formData.get("name")?.valueOf().toString() || "";
+      dispatch(createProject({ name } as ProjectProps));
+    };
+    return (
+      <ThemeProvider theme={mdTheme}>
+        <Box sx={{ display: "flex" }}>
+          <CssBaseline />
+          <NavBar
+            appBarStyles={{
+              position: "fixed",
+              sx: {
+                zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
+              },
+            }}
+            title="Projects"
+          >
+            <LogoutButton />
+          </NavBar>
+          <Drawer
+            variant="permanent"
+            sx={{
               width: drawerWidth,
-              boxSizing: "border-box",
-            },
-          }}
-        >
-          <Toolbar />
-          {loading
-            ? <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1 }}><CircularProgress /></Box>
-            : <List className="ll">
-              {projectsListItems({ loading, projects, dispatch, error, activeProjectId })}
-              <CreateEntry
-                onSubmit={createProjectCallback}
-                initValue=""
-                id="name"
-                label='Enter new project'
-              />
-            </List>
-          }
+              flexShrink: 0,
+              [`& .MuiDrawer-paper`]: {
+                width: drawerWidth,
+                boxSizing: "border-box",
+              },
+            }}
+          >
+            <Toolbar />
+            {loading
+              ? <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1 }}><CircularProgress /></Box>
+              : <List className="ll">
+                {projectsListItems({ loading, projects, dispatch, error, activeProjectId })}
+                <CreateEntry
+                  onSubmit={createProjectCallback}
+                  initValue=""
+                  id="name"
+                  label='Enter new project'
+                />
+              </List>
+            }
 
-          <Divider />
-        </Drawer>
-        <Box
-          component="main"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {activeProjectId === undefined &&
-              <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1, textAlign: 'center', }}>
-                Select a project to begin.
-              </Box>}
-            <Outlet context={{ projects, activeProjectId }} />
-            <Footer sx={{ pt: 4 }} />
-          </Container>
+            <Divider />
+          </Drawer>
+          <Box
+            component="main"
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[100]
+                  : theme.palette.grey[900],
+              flexGrow: 1,
+              height: "100vh",
+              overflow: "auto",
+            }}
+          >
+            <Toolbar />
+            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+              {activeProjectId === undefined &&
+                <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1, textAlign: 'center', }}>
+                  Select a project to begin.
+                </Box>}
+              <Outlet context={{ projects, activeProjectId }} />
+              <Footer sx={{ pt: 4 }} />
+            </Container>
+          </Box>
         </Box>
-      </Box>
-    </ThemeProvider>
-  );
-};
+      </ThemeProvider>
+    );
+  };
 
 interface ProjectComponentState {
   projects: { [key: number]: ProjectStateProps; },
   activeProjectId: number
 }
-export const useActiveProject = () => {
+export const useActiveProject: () => ProjectComponentState = () => {
   return useOutletContext<ProjectComponentState>();
 };
 

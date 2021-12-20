@@ -1,6 +1,7 @@
 
 import { TaskProps } from "core/entities";
 import React, {
+  FC,
   useEffect,
   useState,
 } from "react";
@@ -15,7 +16,7 @@ import CreateEntry from "components/CreateEntry";
 import { ProjectStateProps } from "store/project/reducer";
 import { ProjectDescription } from "./ProjectDescription";
 
-const Project = () => {
+const Project: FC = () => {
   const { projects, activeProjectId } = useActiveProject();
   const dispatch = useDispatch();
   const { projectId: id } = useParams();
@@ -54,7 +55,7 @@ const Project = () => {
 };
 
 
-const Tasks = ({ tasks }: { tasks: { [key: number]: TaskProps } }) => {
+const Tasks: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
   return (
     <TaskList tasks={tasks} />
   );

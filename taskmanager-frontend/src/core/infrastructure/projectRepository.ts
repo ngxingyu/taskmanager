@@ -34,7 +34,7 @@ export class ProjectRepository
     permissions?: PermissionProps[]
   ): Promise<AxiosResponse<ProjectProps>> {
     return ProjectRepository.prototype.update(
-      `api/v1/projects/${id}`,
+      `/api/v1/projects/${id}`,
       new Project({ name, permissions })
     );
   }

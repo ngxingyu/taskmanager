@@ -77,6 +77,7 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
       case ProjectActionTypes.DELETED:
         draftState.loading = false;
         draftState.error = undefined;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { [action.payload.id]: v, ...rest } = draftState.projects;
         draftState.projects = rest;
         break;
@@ -112,6 +113,7 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
         };
         break;
       case ProjectActionTypes.DELETED_TASK:
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { [action.payload.task_id]: v1, ...rest1 } =
           draftState.projects[action.payload.project_id].tasks || {};
         draftState.projects[action.payload.project_id].tasks = { ...rest1 };

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 import { RepositoryProps } from "../entities/repositories";
 import API from "../services/axios-config";
 import { AxiosResponse } from "axios";
-
 export class Repository<T> implements RepositoryProps<T> {
   create(route: string, model: T): Promise<AxiosResponse<T>> {
     return API.post<T>(route, model);

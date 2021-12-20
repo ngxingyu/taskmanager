@@ -2,6 +2,7 @@ import produce from "immer";
 import { UserProps } from "core/entities";
 import { UserAction, UserActionTypes } from "store/user/actions";
 import { decompress, compress } from "lz-string";
+import { Reducer } from "redux";
 
 export interface UserStateProps {
   authenticated: boolean;
@@ -34,7 +35,7 @@ export const initialUserState: UserStateProps = user
     } as UserStateProps)
   : loggedOutUserState;
 
-const UsersReducer = (
+const UsersReducer: Reducer<UserStateProps, UserAction> = (
   state: UserStateProps = initialUserState,
   action: UserAction
 ) => {

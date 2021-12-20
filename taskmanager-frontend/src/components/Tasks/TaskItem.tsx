@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { NodeModel, useDragOver } from "@minoru/react-dnd-treeview";
 import styles from "./TaskItem.module.css";

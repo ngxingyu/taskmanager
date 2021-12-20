@@ -1,5 +1,5 @@
 
-import { TagProps, TaskProps, TaskStatus } from 'core/entities'
+import { TaskProps, TaskStatus } from 'core/entities'
 import  { FC, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
@@ -14,14 +14,6 @@ import ChipInput from '@jansedlon/material-ui-chip-input';
 import TaskStatusSelector from './TaskStatusSelector';
 import TagList from './TagList'
 import { DeleteDialog } from 'components/DeleteDialog'
-
-const Tags: FC<{ tags: TagProps[] }> = ({ tags }) => {
-    return (<>
-        {tags.map(tag => {
-            return <p key={tag.id}>{tag.name}</p>
-        })}
-    </>)
-}
 
 export const TaskDetails: FC<{ task: TaskProps }> = ({ task }) => {
     const [completed, setCompleted] = useState(task.task_status_id === TaskStatus.Completed)

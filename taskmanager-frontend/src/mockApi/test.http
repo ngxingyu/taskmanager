@@ -64,7 +64,7 @@ content-type: application/json
 
 # User 1:
 # Expired token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjg4MTMwMDg4Mn0.frlG6gNX2foum5hN8gPDYZlEi5wUrnfLC1FmDITrtew
-# Unexpired token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+# Unexpired token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 # Admin token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkxMzA1NzZ9.gX8DTtG3PozecqV7CkbRribB_Y9o4ASJpLvLgumDJFc
 # Retrieve todo_lists
 GET http://localhost:3001/api/v1/projects HTTP/1.1
@@ -73,7 +73,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjg4MTMwMDg4Mn0.frlG
 # { "message": "Signature has expired" }
 
 GET http://localhost:3001/api/v1/projects HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # [
 #   {
@@ -91,7 +91,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # ]
 
 GET http://localhost:3001/api/v1/projects/2 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # {
 #   "id": 2,
@@ -107,7 +107,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # }
 
 GET http://localhost:3001/api/v1/projects/2?depth=1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # {
 #   "id": 2,
@@ -124,7 +124,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # }
 
 PUT http://localhost:3001/api/v1/projects/2 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 content-type: application/json
 
 {
@@ -136,7 +136,7 @@ content-type: application/json
 
 ### 204
 GET http://localhost:3001/api/v1/projects/2?depth=1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # {
 #   "id": 2,
@@ -184,7 +184,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MzkxMzA1NzZ9.gX8
 
 
 POST http://localhost:3001/api/v1/projects/1/tasks HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 content-type: application/json
 
 {
@@ -212,7 +212,7 @@ content-type: application/json
 # }
 
 GET http://localhost:3001/api/v1/projects/1?depth=1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # {
 #   "id": 2,
@@ -247,7 +247,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # }
 
 GET http://localhost:3001/api/v1/projects/2/tags HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # [
 #   {
@@ -267,7 +267,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # ]
 
 PATCH http://localhost:3001/api/v1/tasks/1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 content-type: application/json
 
 {
@@ -280,7 +280,7 @@ content-type: application/json
 ###
 
 PATCH http://localhost:3001/api/v1/tasks/3 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 content-type: application/json
 
 {
@@ -290,7 +290,7 @@ content-type: application/json
 ###
 
 GET http://localhost:3001/api/v1/tasks/2 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # {
 #   "id": 1,
@@ -312,14 +312,14 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 ###
 
 PATCH http://localhost:3001/api/v1/tasks/2 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 content-type: application/json
 
 {"start_at":"2021-12-18T04:40:04.667Z","duration":0,"importance":0,"task_status_id":0,"project_id":1,"parent_id":null,"created_at":"2021-12-18T04:40:04.670Z","updated_at":"2021-12-18T08:00:00.595Z","status":2}
 ###
 
 PATCH http://localhost:3001/api/v1/tasks/1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 content-type: application/json
 
 {
@@ -329,7 +329,7 @@ content-type: application/json
 
 
 GET http://localhost:3001/api/v1/projects/2/tasks HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # [
 #   {
@@ -352,7 +352,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # ]
 
 GET http://localhost:3001/api/v1/projects/2/tags HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # [
 #   {
@@ -386,7 +386,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # ]
 
 PATCH http://localhost:3001/api/v1/tags/3 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 content-type: application/json
 
 {
@@ -395,7 +395,7 @@ content-type: application/json
 ### 204 (not implemented)
 
 GET http://localhost:3001/api/v1/projects/2?depth=1 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # {
 #   "id": 2,
@@ -430,11 +430,11 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # }
 
 DELETE http://localhost:3001/api/v1/tags/4 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 204
 
 GET http://localhost:3001/api/v1/projects/2/tags HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # [
 #   {
@@ -461,7 +461,7 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 # ]
 
 GET http://localhost:3001/api/v1/projects/0 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 401
 # {
 #   "message": "Unauthorized request"
@@ -470,6 +470,6 @@ Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPa
 
 
 GET http://localhost:3001/api/v1/projects/2 HTTP/1.1
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2Mzk4OTE0MjV9.vPaZG4Wi3daY8BlQ_Hof1xSC8jCpj6TUBed67Chiahw
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NDAwNTk4MzR9.a6P58xEFfSjT2YvGy5k7JcK1-1Y8xj9ywifffTRaQxU
 ### 200
 # []
