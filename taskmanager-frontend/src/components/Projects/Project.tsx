@@ -40,7 +40,7 @@ const Project: FC = () => {
 
         <Stack key={projectId}>
           <ProjectDescription projectId={projectId} />
-          <Search title="Filter tasks" callback={() => { const x = 1; }}/>
+          <Search title="Filter tasks" />
           <Tasks tasks={activeProject.tasks || {}} />
           <CreateEntry
             onSubmit={createTaskCallback}

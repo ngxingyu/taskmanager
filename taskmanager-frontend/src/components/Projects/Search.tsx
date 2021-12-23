@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { SearchTaskProps } from 'core/entities';
 import ChipInput from '@jansedlon/material-ui-chip-input';
 
-const Search: FC<{ title: string, callback: () => void }> = ({ title, callback }) => {
+const Search: FC<{ title: string, callback?: () => void }> = ({ title }) => {
     const [active, setActive] = useState<boolean>(false);
     const handleChange = () => { setActive(!active); };
     const [state, setState] = useState<SearchTaskProps>({})

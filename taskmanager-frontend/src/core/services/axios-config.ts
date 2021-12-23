@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { ApplicationState } from "store";
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { push } from "redux-first-history";
 import { Store } from "redux";
 import { dropAllProjects } from "store/project/thunks";
@@ -13,7 +13,9 @@ const API = axios.create({
   },
 });
 
-export const setupAPIInterceptors = (store: Store<ApplicationState>) => {
+export const setupAPIInterceptors: (
+  store: Store<ApplicationState>
+) => AxiosInstance = (store) => {
   const { dispatch } = store;
   API.interceptors.request.use(
     (config) => {
