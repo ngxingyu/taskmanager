@@ -4,7 +4,7 @@ import { AxiosResponse } from "axios";
 import { Task } from "../entities/models";
 import { Repository } from "./repository";
 import { UpdateTaskProps } from "core/useCases/taskUseCase";
-import API from "../services/axios-config";
+import { API } from "store";
 
 export class TaskRepository
   extends Repository<TaskProps>

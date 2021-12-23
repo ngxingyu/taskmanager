@@ -1,9 +1,9 @@
 import { UserProps } from "../entities";
 import { UserRepositoryProps } from "../entities/repositories";
-import API from "../services/axios-config";
 import { AxiosResponse } from "axios";
 import { User } from "../entities/models";
 import { Repository } from "./repository";
+import { API } from "store";
 
 export class UserRepository
   extends Repository<UserProps>

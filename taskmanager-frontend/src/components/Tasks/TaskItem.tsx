@@ -10,7 +10,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import { TextField, IconButton } from "@mui/material";
 import { TaskDetails } from "./TaskDetails";
 
-type Props = {
+type TaskItemProps = {
     node: NodeModel<TaskProps>;
     depth: number;
     isOpen: boolean;
@@ -18,7 +18,7 @@ type Props = {
     onValueChange: (id: NodeModel["id"], value: TaskProps | undefined) => void;
 };
 
-export const TaskItem: React.FC<Props> = (props) => {
+export const TaskItem: React.FC<TaskItemProps> = (props) => {
     const { id, data } = props.node;
     const [visibleInput, setVisibleInput] = useState(false);
     const [value, setValue] = useState(data);
@@ -61,7 +61,7 @@ export const TaskItem: React.FC<Props> = (props) => {
                 )}
             </div>
             <div className={styles.labelGridItem}>
-                {visibleInput ? (
+                {visibleInput ?
                     <div className={styles.inputWrapper}>
                         <TextField
                             className={`${styles.textField} ${styles.nodeInput}`}
@@ -78,10 +78,9 @@ export const TaskItem: React.FC<Props> = (props) => {
                         <IconButton className={styles.editButton} onClick={handleCancel}>
                             <CloseIcon className={styles.editIcon} />
                         </IconButton>
-                    </div>
-                ) : (
-                    value !== undefined && <TaskDetails task={value} />
-                )}
+                    </div> :
+                    (value !== undefined && <TaskDetails task={value} />)
+                }
             </div>
 
         </div>

@@ -14,6 +14,7 @@ import TasksReducer, {
   initialTaskState,
   TaskStateProps,
 } from "./tasks/reducer";
+import { setupAPIInterceptors } from "core/services/axios-config";
 
 export const middlewares = [thunkMiddleware];
 const { createReduxHistory, routerMiddleware, routerReducer } =
@@ -44,13 +45,16 @@ export const configureStore = (
   const store = createStore(
     reducers,
     initialState,
-    composeEnhancers(applyMiddleware(routerMiddleware, thunkMiddleware))
+    composeEnhancers(
+      applyMiddleware(routerMiddleware, thunkMiddleware)
+    )
   );
   return store;
 };
 
 export const store = configureStore();
 export const history = createReduxHistory(store);
+export const API = setupAPIInterceptors(store);
 
 export interface StateProps {
   router: RouterState;

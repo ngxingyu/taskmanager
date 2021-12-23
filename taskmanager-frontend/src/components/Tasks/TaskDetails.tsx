@@ -1,6 +1,6 @@
 
 import { TaskProps, TaskStatus } from 'core/entities'
-import  { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -38,7 +38,7 @@ export const TaskDetails: FC<{ task: TaskProps }> = ({ task }) => {
     }
     return (editing ? (
         <>
-            <Grid container spacing={2}>
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} m={2} >
                 <Grid item xs={3}>
                     <TextField
                         label="Task"
@@ -113,12 +113,14 @@ export const TaskDetails: FC<{ task: TaskProps }> = ({ task }) => {
             {deleting && <DeleteDialog onCancel={() => setDeleting(false)} onDelete={triggerDelete} name="task" warning="Confirm deletion of task. This action is irreversible" />}
         </>
     ) :
-        <Stack direction="row" spacing={2} >
+        <Stack direction="row" alignItems="center" spacing={2} >
             <Checkbox onChange={toggleCompletion} checked={completed} />
-            <h4>{task.title}</h4>
-            <p>{task.notes}</p>
+            <Stack direction="column" alignItems="start" spacing={0} >
+                <h4>{task.title}</h4>
+                <p>{task.notes}</p>
+            </Stack>
             <p>{task.deadline}</p>
-            <TagList tags={task.all_tags}/>
+            <TagList tags={task.all_tags} />
             <IconButton onClick={() => setEditing(true)}>
                 <EditIcon />
             </IconButton>

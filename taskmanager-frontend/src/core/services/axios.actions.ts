@@ -6,6 +6,7 @@ export enum APIActionTypes {
   API_END = "api/end",
   ACCESS_DENIED = "api/access_denied",
   API_ERROR = "api/error",
+  LOGIN_EXPIRED = "api/login_expired"
 }
 
 export interface APIStartAction extends Action {
@@ -25,6 +26,11 @@ export interface APIAccessDeniedAction extends Action {
 
 export interface APIErrorAction extends Action {
   type: APIActionTypes.API_ERROR;
+  payload: APIPayload;
+}
+
+export interface APILoginExpiredAction extends Action {
+  type: APIActionTypes.LOGIN_EXPIRED;
   payload: APIPayload;
 }
 export interface APIPayload {
@@ -55,6 +61,13 @@ export const accessDenied: ActionCreator<APIAccessDeniedAction> = (
 ) => ({
   type: APIActionTypes.ACCESS_DENIED,
   payload: { url } as APIPayload,
+});
+
+export const loginExpired: ActionCreator<APILoginExpiredAction> = (
+  error: string
+) => ({
+  type: APIActionTypes.LOGIN_EXPIRED,
+  payload: { error } as APIPayload,
 });
 
 export const apiError: ActionCreator<APIErrorAction> = (error: string) => ({

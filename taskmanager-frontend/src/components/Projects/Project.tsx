@@ -14,6 +14,7 @@ import TaskList from "components/Tasks/TaskList";
 import CreateEntry from "components/CreateEntry";
 import { ProjectStateProps } from "store/project/reducer";
 import { ProjectDescription } from "./ProjectDescription";
+import Search from "./Search";
 
 const Project: FC = () => {
   const { projects, activeProjectId } = useActiveProject();
@@ -39,6 +40,7 @@ const Project: FC = () => {
 
         <Stack key={projectId}>
           <ProjectDescription projectId={projectId} />
+          <Search title="Filter tasks" callback={() => { const x = 1; }}/>
           <Tasks tasks={activeProject.tasks || {}} />
           <CreateEntry
             onSubmit={createTaskCallback}
