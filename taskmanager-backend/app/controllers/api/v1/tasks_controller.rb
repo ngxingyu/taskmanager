@@ -1,12 +1,25 @@
 class Api::V1::TasksController < ApplicationController
   # GET /api/v1/projects/:project_id/tasks?depth=???&parent_id=???
   def index
-    check_permission(params[:project_id],lambda {
-      parent_id = params.key?(:parent_id) ? Integer(params[:parent_id]) : nil
-      parents = Task.where(id: parent_id)
-      parent = (parent_id.nil? || parents.empty?) ? nil : parents.first
-      @tasks = Project.find(params[:project_id]).get_tasks(parent: parent,
-                                                           depth: [Integer(params[:depth] || 2), 0].max)
+    check_permission(params[:project_id], lambda {
+      if (params.key?(:all_tags) || params.key?(:query))
+        @tasks = []
+        if (params.key?(:query))
+          @tasks = @tasks + Project.find(params[:project_id]).tasks.search(params[:query])
+
+        end
+        if (params.key?(:all_tags))
+          @tags = Tag.where(project_id: params[:project_id]).where(name: params[:all_tags])
+          @tasks = @tasks + Task.left_outer_joins(:tags).where(tags: @tags)
+        end
+        @tasks = @tasks.uniq
+      else
+        parent_id = params.key?(:parent_id) ? Integer(params[:parent_id]) : nil
+        parents = Task.where(id: parent_id)
+        parent = (parent_id.nil? || parents.empty?) ? nil : parents.first
+        @tasks = Project.find(params[:project_id]).get_tasks(parent: parent,
+                                                             depth: [Integer(params[:depth] || 2), 0].max)
+      end
       json_response(@tasks.map { |t| t.to_h })
     })
   end
@@ -54,7 +67,7 @@ class Api::V1::TasksController < ApplicationController
   def task_params
     # whitelist params
     params
-    .require(:task)
+    # .require(:task)
       .permit(:title, :notes, :start_at, :duration, :importance, :parent_id, :task_status_id)
       .reverse_merge(project_id: params[:project_id], all_tags: params[:all_tags]).reject { |k, v| v.nil? }
   end

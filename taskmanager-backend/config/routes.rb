@@ -3,9 +3,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :projects, shallow: true do
-        resources  :tags, :tasks
+        resources :tags, :tasks
       end
-       resources :users
+      resources :users
     end
   end
   post "login", to: "authentication#authenticate"

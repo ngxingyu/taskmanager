@@ -7,6 +7,7 @@ RSpec.describe "Api::V1::Project", type: :request do
   let(:headers) { valid_headers(user) }
   let(:admin_headers) { valid_headers(admin) }
   let(:user1_headers) { valid_headers(user1) }
+  let!(:project) { user1.projects.first }
 
   describe "GET /index (user)" do
     before { get "/api/v1/projects", headers: headers }

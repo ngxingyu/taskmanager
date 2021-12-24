@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_171229) do
     t.bigint "project_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["name", "project_id"], name: "index_tags_on_name_and_project_id", unique: true
     t.index ["project_id"], name: "index_tags_on_project_id"
   end
 

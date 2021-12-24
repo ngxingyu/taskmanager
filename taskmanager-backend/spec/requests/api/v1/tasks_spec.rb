@@ -42,6 +42,33 @@ RSpec.describe "Api::V1::Tasks", type: :request do
       expect(json.length).to eq(7)
     end
   end
+  describe "GET /index query" do
+    before {
+      params = { title: "banana", notes: "moderna", all_tags: ["1", "2", "3"] }
+      post "/api/v1/projects/#{project.id}/tasks",
+           params: params.to_json,
+           headers: headers
+      params = { title: "pfizer", notes: "apple", all_tags: ["zzz", "yyy", "xxx"] }
+      post "/api/v1/projects/#{project.id}/tasks",
+           params: params.to_json,
+           headers: headers
+      params = { title: "ana", notes: "apple", all_tags: ["1", "yyy"] }
+      post "/api/v1/projects/#{project.id}/tasks",
+           params: params.to_json,
+           headers: headers
+    }
+
+    it "gets the correct number of items" do
+      expect(TaskTag.where(task_id: json["id"]).size).to eq(2)
+      expect(Tag.where(project_id: project.id).size).to eq(6)
+      get "/api/v1/projects/#{project.id}/tasks?query=ap", headers: headers
+      expect(json.length).to eq(2)
+      get "/api/v1/projects/#{project.id}/tasks?all_tags[]=yyy&all_tags[]=1", headers: headers
+      expect(json.length).to eq(3)
+      get "/api/v1/projects/#{project.id}/tasks?query=moderna&all_tags[]=xxx", headers: headers
+      expect(json.length).to eq(2)
+    end
+  end
 
   describe "POST /api/v1/tasks updates tags, task_tags" do
     before {

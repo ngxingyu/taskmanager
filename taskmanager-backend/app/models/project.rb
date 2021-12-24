@@ -1,7 +1,7 @@
 class Project < ApplicationRecord
   has_many :project_user_roles, dependent: :destroy
   has_many :users, through: :project_user_roles
-  has_many :tasks, dependent: :destroy 
+  has_many :tasks, dependent: :destroy
   has_many :tags, dependent: :destroy
 
   def permissions
@@ -35,8 +35,8 @@ class Project < ApplicationRecord
 
   def to_h(depth: 0, parent_id: nil)
     res = attributes.merge("permissions" => permissions)
-    parents = tasks.where(id: parent_id).map{ |t| t.to_h }
+    parents = tasks.where(id: parent_id)
     parent = (parent_id.nil? || parents.empty?) ? nil : parents.first
-    depth == 0 ? res : res.merge("tasks" => get_tasks(depth: depth, parent: parent).map{ |t| t.to_h })
+    depth == 0 ? res : res.merge("tasks" => get_tasks(depth: depth, parent: parent).map { |t| t.to_h })
   end
 end

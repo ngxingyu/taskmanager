@@ -110,7 +110,7 @@ class Api::V1::ProjectsController < ApplicationController
       }
     end
     params
-      .require(:project)
+    # .require(:project)
       .permit(:name)
       .merge(permissions: permissions, id: params[:id])
       .reject { |k, v| v.nil? }
