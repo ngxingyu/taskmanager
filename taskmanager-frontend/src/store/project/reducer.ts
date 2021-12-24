@@ -123,7 +123,9 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
           action.payload.tasks;
         break;
       case ProjectActionTypes.SET_ACTIVE:
-        draftState.active = { id: action.payload.project_id };
+        if (draftState.loading === false) {
+          draftState.active = { id: action.payload.project_id };
+        }
         break;
     }
   });
