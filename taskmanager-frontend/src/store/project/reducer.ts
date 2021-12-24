@@ -3,8 +3,8 @@ import { TaskProps, UserRole } from "core/entities";
 import { ProjectAction, ProjectActionTypes } from "store/project/actions";
 import { Reducer } from "redux";
 export interface ActiveProjectState {
-  id: number;
-  // tasks: { [key: number]: TaskProps };
+  id?: number;
+  parent_id?: number;
 }
 
 export interface ProjectStateProps {
@@ -122,9 +122,17 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
         draftState.projects[action.payload.project_id].query =
           action.payload.tasks;
         break;
-      case ProjectActionTypes.SET_ACTIVE:
+      case ProjectActionTypes.SET_ACTIVE_PROJECT:
         if (draftState.loading === false) {
           draftState.active = { id: action.payload.project_id };
+        }
+        break;
+      case ProjectActionTypes.SET_PARENT:
+        if (draftState.loading === false) {
+          draftState.active = {
+            id: draftState.active?.id,
+            parent_id: action.payload?.parent_id,
+          };
         }
         break;
     }

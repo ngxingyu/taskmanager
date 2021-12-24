@@ -5,6 +5,9 @@
 		},
 		{
 			"uri": "vscode-remote://wsl+ubuntu/home/ngxingyu/code/CVWO/taskmanager/taskmanager-backend"
+		},
+		{
+			"uri": "vscode-remote://wsl+ubuntu/home/ngxingyu/code/CVWO/taskmanager"
 		}
 	],
 	"remoteAuthority": "wsl+ubuntu",

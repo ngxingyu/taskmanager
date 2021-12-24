@@ -64,7 +64,7 @@ export const getProjectById = (
 export const setActiveProject = (
   project_id: number
 ): SetActiveProjectAction => {
-  return { type: ProjectActionTypes.SET_ACTIVE, payload: { project_id } };
+  return { type: ProjectActionTypes.SET_ACTIVE_PROJECT, payload: { project_id } };
 };
 
 export const getAllProjects = (): ThunkAction<

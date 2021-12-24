@@ -31,7 +31,8 @@ const Projects: FC<{
   error?: string,
   loading: boolean,
   projects: { [key: number]: ProjectStateProps },
-  activeProjectId?: number
+  activeProjectId?: number,
+  parentId?: number,
 }> = ({
   error,
   loading,
@@ -52,7 +53,7 @@ const Projects: FC<{
       dispatch(createProject({ name } as ProjectProps));
     };
     const [searching, setSearching] = useState(false);
-    useEffect(() => { setSearching(false);}, [projects]);
+    useEffect(() => { setSearching(false); }, [projects]);
 
 
     return (
@@ -127,7 +128,8 @@ const Projects: FC<{
 
 interface ProjectComponentState {
   projects: { [key: number]: ProjectStateProps; },
-  activeProjectId: number
+  activeProjectId: number,
+  parentId?: number
 }
 export const useActiveProject: () => ProjectComponentState = () => {
   return useOutletContext<ProjectComponentState>();
@@ -138,7 +140,8 @@ const mapStateToProps = (state: StateProps) => {
     project_state: { loading, projects, error, active },
   } = state;
   const activeProjectId = active !== undefined ? active.id : undefined;
-  return { error, loading, projects, activeProjectId };
+  const parentId = active !== undefined ? active.parent_id : undefined;
+  return { error, loading, projects, activeProjectId, parentId };
 };
 
 export default connect(mapStateToProps)(Projects);
