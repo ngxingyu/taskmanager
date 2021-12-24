@@ -8,13 +8,15 @@ const Editable: FC<{
     name: string,
     label: string,
     placeholder: string,
-    callback: (v: string) => void
+    callback: (v: string) => void,
+    duration?: number,
 }> = ({
     text,
     name,
     label,
     placeholder,
     callback,
+    duration = 2000,
     ...props
 }) => {
         const [isEditing, setEditing] = useState(false);
@@ -23,7 +25,7 @@ const Editable: FC<{
         const handleChange: DebouncedFunc<ChangeEventHandler<HTMLInputElement>> = useCallback(
             debounce((e) => {
                 callback(e.target.value);
-            }, 2000),
+            }, duration),
             []
         );
 

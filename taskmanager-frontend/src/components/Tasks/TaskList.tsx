@@ -67,7 +67,7 @@ const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
                             dropTarget: styles.dropTarget,
                         }}
                         // eslint-disable-next-line react/jsx-boolean-value
-                        initialOpen={treeData.map(d => d.id)}
+                        initialOpen
                         sort={false}
                     />
                 </div>

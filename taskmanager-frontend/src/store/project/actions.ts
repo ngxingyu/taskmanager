@@ -29,6 +29,7 @@ export enum ProjectActionTypes {
   DELETED_TASK = "project/deleted_task",
   RETRIEVING_TASKS = "project/retrieving_tasks",
   RETRIEVED_TASKS = "project/retrieved_tasks",
+  SET_ACTIVE = "project/set_active"
 }
 
 export interface ProjectCreateAction extends Action {
@@ -137,6 +138,10 @@ export interface ProjectTasksRetrieveFailedAction extends Action {
   type: ProjectActionTypes.RETRIEVE_FAILED;
   payload: { message: string };
 }
+export interface SetActiveProjectAction extends Action {
+  type: ProjectActionTypes.SET_ACTIVE;
+  payload: { project_id: number };
+}
 
 export type ProjectAction =
   | ProjectCreateAction
@@ -162,4 +167,5 @@ export type ProjectAction =
   | ProjectDeletedTaskAction
   | ProjectTasksRetrievedAction
   | ProjectTasksRetrievingAction
-  | ProjectTasksRetrieveFailedAction;
+  | ProjectTasksRetrieveFailedAction
+  | SetActiveProjectAction;

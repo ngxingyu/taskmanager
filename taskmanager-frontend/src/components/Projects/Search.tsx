@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
-import { Accordion, AccordionDetails, AccordionSummary, Grid, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Grid, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react'
 import { SearchTaskProps } from 'core/entities';
 import SearchIcon from "@mui/icons-material/Search"
 import ChipInput from '@jansedlon/material-ui-chip-input';
 import { queryTasks } from 'store/project/thunks';
 import { useDispatch } from 'react-redux';
+import Editable from 'components/Editable';
 
 const Search: FC<{ title: string, projectId: number, callback?: () => void }> = ({ title, projectId }) => {
     const [active, setActive] = useState<boolean>(false);
@@ -36,16 +37,15 @@ const Search: FC<{ title: string, projectId: number, callback?: () => void }> = 
             <AccordionDetails>
                 <Grid container component="form" rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} m={2} >
                     <Grid item xs={4}>
-
-                        <TextField
-                            sx={{ ml: 1, flex: 1 }}
+                        <Editable
+                            text={state.query || ""}
+                            label="Query"
+                            name="query"
                             placeholder="Filter Tasks"
-                            inputProps={{ 'aria-label': 'filter tasks' }}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                setState({
-                                    ...state, query: e.target.value
-                                })
-                            }}
+                            callback={(x: string) => setState({
+                                ...state, query: x
+                            })}
+                            duration={1000}
                         />
                     </Grid>
 

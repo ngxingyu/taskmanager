@@ -97,9 +97,6 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
       case ProjectActionTypes.SELECT:
         draftState.projects[action.payload.id].permissions =
           action.payload.permissions;
-        draftState.active = {
-          id: action.payload.id,
-        };
         break;
       case ProjectActionTypes.CREATED_TASK:
         draftState.projects[action.payload.id].tasks = {
@@ -124,6 +121,9 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
         draftState.loading = false;
         draftState.projects[action.payload.project_id].query =
           action.payload.tasks;
+        break;
+      case ProjectActionTypes.SET_ACTIVE:
+        draftState.active = { id: action.payload.project_id };
         break;
     }
   });

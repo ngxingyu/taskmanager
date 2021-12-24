@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -13,9 +13,9 @@ import { createContext, useEffect } from "react";
 import LogoutButton from "components/LogoutButton";
 import { NavBar } from "components/AppBar";
 import Drawer from "@mui/material/Drawer";
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet, useOutletContext, useParams } from "react-router-dom";
 import { StateProps } from "store";
-import { createProject, getAllProjects } from "store/project/thunks";
+import { createProject, getAllProjects, setActiveProject } from "store/project/thunks";
 import { ProjectProps as Project, ProjectProps } from "core/entities";
 import { ProjectStateProps } from "store/project/reducer";
 import CreateEntry from "components/CreateEntry";
@@ -39,14 +39,22 @@ const Projects: FC<{
   activeProjectId
 }) => {
     const dispatch = useDispatch();
+    const { projectId: id } = useParams();
     useEffect(() => {
       dispatch(getAllProjects());
+      if (id !== undefined) {
+        dispatch(setActiveProject(parseInt(id, 10)));
+      }
     }, []);
     const createProjectCallback = (e: React.FormEvent<HTMLFormElement>) => {
       const formData = new FormData(e.currentTarget);
       const name = formData.get("name")?.valueOf().toString() || "";
       dispatch(createProject({ name } as ProjectProps));
     };
+    const [searching, setSearching] = useState(false);
+    useEffect(() => { setSearching(false);}, [projects]);
+
+
     return (
       <ThemeProvider theme={mdTheme}>
         <Box sx={{ display: "flex" }}>
@@ -77,7 +85,7 @@ const Projects: FC<{
             {loading
               ? <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1 }}><CircularProgress /></Box>
               : <List className="ll">
-                {projectsListItems({ loading, projects, dispatch, error, activeProjectId })}
+                {projectsListItems({ searching, setSearching, projects, dispatch, error, activeProjectId })}
                 <CreateEntry
                   onSubmit={createProjectCallback}
                   initValue=""
@@ -107,7 +115,8 @@ const Projects: FC<{
                 <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1, textAlign: 'center', }}>
                   Select a project to begin.
                 </Box>}
-              <Outlet context={{ projects, activeProjectId }} />
+              {activeProjectId !== undefined &&
+                <Outlet context={{ projects, activeProjectId }} />}
               <Footer sx={{ pt: 4 }} />
             </Container>
           </Box>

@@ -26,7 +26,7 @@ const Project: FC = () => {
     if (projectId !== undefined) {
       dispatch(getProjectById(projectId, 5));
     }
-  }, []);
+  }, [projectId]);
   const [activeProject, setActiveProject] = useState<ProjectStateProps | undefined>(undefined);
   useEffect(() => {
     setActiveProject(projects[projectId || activeProjectId]);
@@ -38,6 +38,7 @@ const Project: FC = () => {
       dispatch(createTask(projectId, { title } as TaskProps));
     }
   };
+
   return (
     <>
       {activeProject !== undefined && (

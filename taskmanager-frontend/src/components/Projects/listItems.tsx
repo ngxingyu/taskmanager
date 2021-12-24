@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { Dispatch } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -9,24 +10,32 @@ import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import { getProjectById } from "store/project/thunks";
+import { setActiveProject } from "store/project/thunks";
 import { ListItemButton } from "@mui/material";
 import { FC } from "react";
-import { ThunkAction } from "redux-thunk";
 import { ProjectStateProps } from "store/project/reducer";
+import { AnyAction } from "redux";
+import { push } from "redux-first-history";
 
 export const projectsListItems: FC<{
-  loading: boolean;
+  searching: boolean,
+  setSearching: React.Dispatch<React.SetStateAction<boolean>>
   projects: { [key: number]: ProjectStateProps };
-  dispatch: Dispatch<ThunkAction<Promise<void>, any, any, any>>;
+  dispatch: Dispatch<AnyAction>;
   error?: string;
   activeProjectId: number | undefined;
-}> = ({ loading, projects, dispatch, error, activeProjectId }) => {
-  const handleClick = (id: number) => dispatch(getProjectById(id));
+}> = ({ searching, setSearching, projects, dispatch, error, activeProjectId }) => {
+  const handleClick = (id: number) => {
+    if (!searching) {
+      setSearching(true);
+      dispatch(setActiveProject(id));
+      dispatch(push(`/projects/${id}`));
+    }
+  };
   return (
     <>
       {error && <div>Error! {error.toString()}</div>}
-      {loading ? (
+      {searching ? (
         <div>Loading...</div>
       ) : (
         Object.entries(projects).map(([, v], i) => {

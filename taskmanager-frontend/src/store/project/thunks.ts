@@ -24,6 +24,7 @@ import {
   ProjectUpdatedTaskAction,
   ProjectUpdateFailedAction,
   ProjectUpdatingAction,
+  SetActiveProjectAction,
 } from "store/project/actions";
 import { push } from "redux-first-history";
 import { ProjectRepository } from "core/infrastructure/projectRepository";
@@ -59,6 +60,13 @@ export const getProjectById = (
     });
   };
 };
+
+export const setActiveProject = (
+  project_id: number
+): SetActiveProjectAction => {
+  return { type: ProjectActionTypes.SET_ACTIVE, payload: { project_id } };
+};
+
 export const getAllProjects = (): ThunkAction<
   Promise<void>,
   {},
@@ -165,7 +173,7 @@ export const createProject = (
           .then((props) => {
             if (props && props.id !== undefined) {
               dispatch(createdProject(props));
-              dispatch(push(`/projects/${props.id}`))
+              dispatch(push(`/projects/${props.id}`));
             } else {
               dispatch(createProjectFailed("Failed to create project"));
             }
