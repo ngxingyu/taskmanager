@@ -35,8 +35,8 @@ export const ProjectDescription: FC<{ projectId: number }> = ({ projectId }) => 
         </Dialog>
         {deleting && <DeleteDialog
             onCancel={() => toggleDeleting(false)}
-            onDelete={() => confirmDelete(project.id || -1)}
-            name={project.name|| "Project"}
+            onDelete={() => (project.id !== undefined) && confirmDelete(project.id)}
+            name={project.name || "Project"}
             warning="Note: you will not be able to recover any tasks within the project. Proceed with caution." />}
         <Box sx={{
             '&:hover': {

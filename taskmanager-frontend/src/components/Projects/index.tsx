@@ -42,11 +42,6 @@ const Projects: FC<{
     useEffect(() => {
       dispatch(getAllProjects());
     }, []);
-    const { projectId: _projectId } = useParams();
-    const projectId: number | undefined = _projectId === undefined ? _projectId : parseInt(_projectId, 10);
-    useEffect(() => {
-      dispatch(getProjectById((projectId !== undefined && projectId) || -1, 5));
-    }, [projectId]);
     const createProjectCallback = (e: React.FormEvent<HTMLFormElement>) => {
       const formData = new FormData(e.currentTarget);
       const name = formData.get("name")?.valueOf().toString() || "";

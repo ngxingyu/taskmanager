@@ -23,7 +23,9 @@ const Project: FC = () => {
   const { projectId: id } = useParams();
   const projectId: number | undefined = id === undefined ? id : parseInt(id, 10);
   useEffect(() => {
-    dispatch(getProjectById((projectId !== undefined && projectId) || -1, 5));
+    if (projectId !== undefined) {
+      dispatch(getProjectById(projectId, 5));
+    }
   }, []);
   const [activeProject, setActiveProject] = useState<ProjectStateProps | undefined>(undefined);
   useEffect(() => {
@@ -32,7 +34,9 @@ const Project: FC = () => {
   const createTaskCallback = (e: React.FormEvent<HTMLFormElement>) => {
     const formData = new FormData(e.currentTarget);
     const title = formData.get("title")?.valueOf().toString() || "";
-    dispatch(createTask(projectId || -1, { title } as TaskProps));
+    if (projectId !== undefined) {
+      dispatch(createTask(projectId, { title } as TaskProps));
+    }
   };
   return (
     <>

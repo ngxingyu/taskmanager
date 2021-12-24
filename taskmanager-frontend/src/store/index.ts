@@ -1,7 +1,7 @@
 import { applyMiddleware, createStore, Reducer, Store } from "redux";
 import { combineReducers } from "redux-immer";
 import thunkMiddleware from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { composeWithDevTools } from "redux-devtools-extension/developmentOnly";
 import { createBrowserHistory } from "history";
 import { createReduxHistoryContext, RouterState } from "redux-first-history";
 import ProjectsReducer, {
