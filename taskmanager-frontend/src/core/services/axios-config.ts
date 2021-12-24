@@ -35,9 +35,7 @@ export const setupAPIInterceptors: (
     },
     (error) => {
       dispatch(apiError(error));
-      console.log(error, axios.isAxiosError(error));
       if (axios.isAxiosError(error)) {
-        console.log("iserror");
         if (
           error.response &&
           (error.response.status === 403 || error.response.status === 401)

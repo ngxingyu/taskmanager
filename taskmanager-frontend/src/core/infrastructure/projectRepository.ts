@@ -1,4 +1,5 @@
-import { PermissionProps, ProjectProps } from "../entities";
+/* eslint-disable no-console */
+import { PermissionProps, ProjectProps, TaskProps } from "../entities";
 import { ProjectRepositoryProps } from "../entities/repositories";
 import { AxiosResponse } from "axios";
 import { Project } from "../entities/models";
@@ -8,6 +9,16 @@ export class ProjectRepository
   extends Repository<ProjectProps>
   implements ProjectRepositoryProps
 {
+  queryTasks(
+    project_id: number,
+    query?: string,
+    all_tags?: string[]
+  ): Promise<AxiosResponse<TaskProps[]>> {
+    return ProjectRepository.prototype.getAll(
+      `/api/v1/projects/${project_id}/tasks`,
+      { query, all_tags }
+    );
+  }
   createProject(
     name: string,
     permissions: PermissionProps[]

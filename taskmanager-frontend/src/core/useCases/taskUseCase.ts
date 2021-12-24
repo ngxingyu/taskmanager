@@ -28,8 +28,9 @@ export class TaskServiceImpl implements TaskService {
   getTaskById(id: number, depth = 2): Promise<TaskProps> {
     return this.taskRepo.getTask(String(id), depth).then((r) => r.data);
   }
+
   deleteTask(id: number): Promise<boolean> {
-    return this.taskRepo.deleteTask(String(id)).then((r) => r.status===204);
+    return this.taskRepo.deleteTask(String(id)).then((r) => r.status === 204);
   }
   updateTask(id: number, props: UpdateTaskProps): Promise<boolean> {
     return this.taskRepo.updateTask(id, props).then((r) => r.status === 204);

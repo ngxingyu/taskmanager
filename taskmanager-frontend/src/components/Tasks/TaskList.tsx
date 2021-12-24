@@ -1,40 +1,16 @@
+/* eslint-disable no-console */
 import { TaskProps } from 'core/entities';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { theme } from 'theme';
 import { StylesProvider } from '@mui/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@emotion/react';
-import { Tree, NodeModel, DragLayerMonitorProps } from "@minoru/react-dnd-treeview";
+import { Tree, NodeModel, DragLayerMonitorProps, TreeMethods } from "@minoru/react-dnd-treeview";
 import { TaskItem } from './TaskItem';
 import { CustomDragPreview } from './CustomDragPreview';
 import { useDispatch } from 'react-redux';
 import { updateTask } from 'store/tasks/thunks';
 import styles from "./TaskList.module.css";
-
-// const listToTree = (tasks: TaskProps[]) => {
-//     const tmp = new Array<TaskProps>();
-//     const hash: { [key: number]: number } = {};
-//     const roots = [];
-
-//     for (let i = 0; i < tasks.length; i += 1) {
-//         if (tasks[i].id !== undefined) {
-//             hash[(tasks[i].id) as number] = i;
-//             tmp[i] = { subtasks: [], ...tasks[i] };
-//         }
-//     }
-//     for (const task of tmp) {
-//         const node: TaskProps = task;
-//         if (node.parent_id !== null) {
-//             tmp[hash[node.parent_id as number]] = {
-//                 ...tmp[hash[node.parent_id as number]],
-//                 subtasks: [...(tmp[hash[node.parent_id as number]].subtasks || []), node]
-//             };
-//         } else {
-//             roots.push(node);
-//         }
-//     }
-//     return roots;
-// }
 
 const updateTaskParent = (x: NodeModel<TaskProps>, targetId: number | string) => {
     return { ...x, data: { ...x.data, parent_id: targetId === -1 ? null : targetId } } as NodeModel<TaskProps>
@@ -50,10 +26,10 @@ const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
     useEffect(() => {
         setTreeData(Object.values(tasks).map(task => {
             return { id: task.id, parent: task.parent_id || -1, text: task.title, droppable: true, data: task } as NodeModel<TaskProps>
-        }))
+        }));
+        ref.current?.openAll();
     }, [tasks])
     const handleValueChange = (id: NodeModel<TaskProps>["id"], value: TaskProps | undefined) => {
-
         const newTree = treeData.map((node) => {
             if (node.id === id) {
                 return {
@@ -67,6 +43,7 @@ const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
 
         setTreeData(newTree);
     };
+    const ref = useRef<TreeMethods>(null);
 
     return (
         <StylesProvider injectFirst>
@@ -76,6 +53,7 @@ const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
                     <Tree
                         tree={treeData}
                         rootId={-1}
+                        ref={ref}
                         render={(node: NodeModel<TaskProps>, { depth, isOpen, onToggle }) => (
                             <TaskItem node={node} depth={depth} isOpen={isOpen} onToggle={onToggle} onValueChange={handleValueChange} />
                         )}
@@ -88,7 +66,8 @@ const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
                             draggingSource: styles.draggingSource,
                             dropTarget: styles.dropTarget,
                         }}
-                        initialOpen
+                        // eslint-disable-next-line react/jsx-boolean-value
+                        initialOpen={treeData.map(d => d.id)}
                         sort={false}
                     />
                 </div>

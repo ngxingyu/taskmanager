@@ -14,13 +14,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Footer from "./Footer";
 import { logInThunk } from "store/user/thunks";
 import { connect, useDispatch } from "react-redux";
-import { Paper } from "@mui/material";
+import { Alert, Paper } from "@mui/material";
 import { Navigate } from "react-router-dom";
 import { StateProps } from "store";
 import PropTypes from "prop-types";
 
 const theme = createTheme();
-const LogIn: React.FC<{ loggedIn: boolean }> = ({ loggedIn }) => {
+const LogIn: React.FC<{ loggedIn: boolean, error?: string }> = ({ loggedIn, error }) => {
   const dispatch = useDispatch();
   if (loggedIn) {
     return <Navigate to="/projects" />;
@@ -111,12 +111,15 @@ const LogIn: React.FC<{ loggedIn: boolean }> = ({ loggedIn }) => {
               >
                 Sign In
               </Button>
+              {(error || "") !== "" &&
+                <Alert severity="error">{error}</Alert>
+              }
               <Grid container>
-                <Grid item xs>
+                {/* <Grid item xs>
                   <Link href="forgot" variant="body2">
                     Forgot password?
                   </Link>
-                </Grid>
+                </Grid> */}
                 <Grid item>
                   <Link href="signup" variant="body2">
                     {"Don't have an account? Sign Up"}
@@ -139,6 +142,7 @@ LogIn.propTypes = {
 const mapStateToProps = (state: StateProps) => {
   return {
     loggedIn: state.user_state?.authenticated,
+    error: state.user_state?.error
   };
 };
 

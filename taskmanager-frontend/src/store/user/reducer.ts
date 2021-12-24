@@ -79,7 +79,7 @@ const UsersReducer: Reducer<UserStateProps, UserAction> = (
       case UserActionTypes.DELETE_USER_FAILED:
       case UserActionTypes.RETRIEVE_PROFILE_FAILED:
         draftState.loading = false;
-        draftState.error = action.payload.message;
+        draftState.error = "Login failed.";
         break;
       case UserActionTypes.LOGGED_OUT:
       case UserActionTypes.DELETED_USER:

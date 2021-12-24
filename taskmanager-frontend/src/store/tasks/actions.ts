@@ -10,6 +10,7 @@ export enum TaskActionTypes {
   RETRIEVE = "task/retrieve",
   RETRIEVING = "task/retrieving",
   RETRIEVED = "task/retrieved",
+  RETRIEVED_TASKS = "task/retrieved_tasks",
   RETRIEVE_FAILED = "task/retrieve_failed",
 
   UPDATE = "task/update",
@@ -78,6 +79,7 @@ export interface TaskRetrievedAction extends Action {
   type: TaskActionTypes.RETRIEVED;
   payload: TaskProps;
 }
+
 export interface TaskRetrieveFailedAction extends Action {
   type: TaskActionTypes.RETRIEVE_FAILED;
   payload: { message: string };

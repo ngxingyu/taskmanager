@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { NodeModel, useDragOver } from "@minoru/react-dnd-treeview";
 import styles from "./TaskItem.module.css";
@@ -19,10 +20,10 @@ type TaskItemProps = {
 };
 
 export const TaskItem: React.FC<TaskItemProps> = (props) => {
-    const { id, data } = props.node;
     const [visibleInput, setVisibleInput] = useState(false);
-    const [value, setValue] = useState(data);
+    const [value, setValue] = useState(props.node.data);
     const indent = props.depth * 24;
+    useEffect(() => { setValue(props.node.data) }, [props.node.data]);
 
     const handleToggle = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -30,20 +31,20 @@ export const TaskItem: React.FC<TaskItemProps> = (props) => {
     };
 
     const handleCancel = () => {
-        setValue(data);
+        setValue(props.node.data);
         setVisibleInput(false);
     };
 
     const handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue({ ...data, title: e.target.value });
+        setValue({ ...props.node.data, title: e.target.value });
     };
 
     const handleSubmit = () => {
         setVisibleInput(false);
-        props.onValueChange(id, value);
+        props.onValueChange(props.node.id, value);
     };
 
-    const dragOverProps = useDragOver(id, props.isOpen, props.onToggle);
+    const dragOverProps = useDragOver(props.node.id, props.isOpen, props.onToggle);
 
     return (
         <div

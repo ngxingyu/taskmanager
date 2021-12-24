@@ -1,4 +1,3 @@
-
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { ProjectServiceImpl } from "core/useCases/projectUseCase";
@@ -18,6 +17,9 @@ import {
   ProjectRetrieveFailedAction,
   ProjectRetrievingAction,
   ProjectSelectAction,
+  ProjectTasksRetrievedAction,
+  ProjectTasksRetrieveFailedAction,
+  ProjectTasksRetrievingAction,
   ProjectUpdatedAction,
   ProjectUpdatedTaskAction,
   ProjectUpdateFailedAction,
@@ -163,6 +165,7 @@ export const createProject = (
           .then((props) => {
             if (props && props.id !== undefined) {
               dispatch(createdProject(props));
+              dispatch(push(`/projects/${props.id}`))
             } else {
               dispatch(createProjectFailed("Failed to create project"));
             }
@@ -180,9 +183,7 @@ export const creatingProject = (): ProjectCreatingAction => {
   return { type: ProjectActionTypes.CREATING };
 };
 
-export const createdProject = (
-  props: ProjectProps
-): ProjectCreatedAction => {
+export const createdProject = (props: ProjectProps): ProjectCreatedAction => {
   return { type: ProjectActionTypes.CREATED, payload: props };
 };
 
@@ -289,5 +290,58 @@ export const deletedProjectTask = (
   return {
     type: ProjectActionTypes.DELETED_TASK,
     payload: { project_id, task_id },
+  };
+};
+
+export const retrievingTask = (): ProjectTasksRetrievingAction => {
+  return { type: ProjectActionTypes.RETRIEVING_TASKS };
+};
+export const retrieveTaskFailed = (
+  err: string
+): ProjectTasksRetrieveFailedAction => {
+  return {
+    type: ProjectActionTypes.RETRIEVE_FAILED,
+    payload: { message: err },
+  };
+};
+export const retrievedTasks = (
+  project_id: number,
+  tasks: TaskProps[]
+): ProjectTasksRetrievedAction => {
+  return {
+    type: ProjectActionTypes.RETRIEVED_TASKS,
+    payload: {
+      project_id,
+      tasks,
+    },
+  };
+};
+
+export const queryTasks = (
+  project_id: number,
+  query?: string,
+  all_tags?: string[]
+): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
+  return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
+    const projectRepo = new ProjectRepository();
+    const projectService = new ProjectServiceImpl(projectRepo);
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        dispatch(retrievingTask());
+        if (query === undefined && all_tags === undefined) {
+          dispatch(retrievedTasks(project_id, []));
+        } else {
+          projectService
+            .queryTasks(project_id, query, all_tags)
+            .then((props) => {
+              dispatch(retrievedTasks(project_id, props));
+            })
+            .catch((e: string) => {
+              dispatch(retrieveTaskFailed(e));
+            });
+        }
+        resolve();
+      }, 3000);
+    });
   };
 };

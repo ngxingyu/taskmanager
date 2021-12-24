@@ -14,6 +14,7 @@ export interface ProjectStateProps {
   updated_at?: Date;
   permissions?: UserRole[];
   tasks?: { [key: number]: TaskProps };
+  query?: TaskProps[];
 }
 export interface ProjectsStateProps {
   loading: boolean;
@@ -86,7 +87,7 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
       case ProjectActionTypes.UPDATE_FAILED:
       case ProjectActionTypes.DELETE_FAILED:
         draftState.loading = false;
-        draftState.error = action.payload.message;
+        draftState.error = action.payload.message || "";
         break;
       case ProjectActionTypes.DROP_ALL:
         draftState.projects = {};
@@ -117,6 +118,12 @@ const ProjectsReducer: Reducer<ProjectsStateProps, ProjectAction> = (
         const { [action.payload.task_id]: v1, ...rest1 } =
           draftState.projects[action.payload.project_id].tasks || {};
         draftState.projects[action.payload.project_id].tasks = { ...rest1 };
+        break;
+      case ProjectActionTypes.RETRIEVED_TASKS:
+        draftState.loaded = true;
+        draftState.loading = false;
+        draftState.projects[action.payload.project_id].query =
+          action.payload.tasks;
         break;
     }
   });

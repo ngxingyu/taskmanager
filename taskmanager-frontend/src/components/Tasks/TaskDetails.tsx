@@ -30,6 +30,7 @@ export const TaskDetails: FC<{ task: TaskProps }> = ({ task }) => {
     };
     const saveChanges = () => {
         dispatch(updateTask(state));
+        setCompleted(state.task_status_id===TaskStatus.Completed);
         setEditing(false);
     }
     const triggerDelete = () => {

@@ -49,6 +49,11 @@ export interface ProjectRepositoryProps extends RepositoryProps<ProjectProps> {
     permissions?: PermissionProps[]
   ): Promise<AxiosResponse<ProjectProps>>;
   deleteProject(id: string): Promise<AxiosResponse<boolean>>;
+  queryTasks(
+    project_id: number,
+    query?: string,
+    all_tags?: string[]
+  ): Promise<AxiosResponse<TaskProps[]>>;
 }
 
 export interface TaskRepositoryProps extends RepositoryProps<TaskProps> {
@@ -57,7 +62,7 @@ export interface TaskRepositoryProps extends RepositoryProps<TaskProps> {
     depth?: number
   ): Promise<AxiosResponse<TaskProps[]>>;
   getTask(id: string, depth?: number): Promise<AxiosResponse<TaskProps>>;
-  updateTask(id:number, params: TaskProps): Promise<AxiosResponse<TaskProps>>;
+  updateTask(id: number, params: TaskProps): Promise<AxiosResponse<TaskProps>>;
   createTask({
     project_id,
     params,

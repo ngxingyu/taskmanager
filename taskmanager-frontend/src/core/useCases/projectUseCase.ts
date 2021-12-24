@@ -1,5 +1,5 @@
 import { ProjectRepositoryProps } from "../entities/repositories";
-import { ProjectProps } from "../entities";
+import { ProjectProps, TaskProps } from "../entities";
 
 export interface ProjectService {
   getAllProjects(): Promise<ProjectProps[]>;
@@ -7,6 +7,11 @@ export interface ProjectService {
   deleteProject(id: number): Promise<boolean>;
   updateProject(props: ProjectProps): Promise<boolean>;
   createProject(props: ProjectProps): Promise<ProjectProps>;
+  queryTasks(
+    project_id: number,
+    query?: string,
+    all_tags?: string[]
+  ): Promise<TaskProps[]>;
 }
 
 export class ProjectServiceImpl implements ProjectService {
@@ -24,16 +29,32 @@ export class ProjectServiceImpl implements ProjectService {
     return this.projectRepo.getProject(String(id), depth).then((r) => r.data);
   }
   deleteProject(id: number): Promise<boolean> {
-    return this.projectRepo.deleteProject(String(id)).then((r) => r.status===204);
+    return this.projectRepo
+      .deleteProject(String(id))
+      .then((r) => r.status === 204);
   }
   updateProject(props: ProjectProps): Promise<boolean> {
     return this.projectRepo
-      .updateProject(props.id?.toString()||"", String(props.name), props.permissions)
-      .then((r) => r.status===204);
+      .updateProject(
+        props.id?.toString() || "",
+        String(props.name),
+        props.permissions
+      )
+      .then((r) => r.status === 204);
   }
   createProject(props: ProjectProps): Promise<ProjectProps> {
     return this.projectRepo
       .createProject(String(props.name))
+      .then((r) => r.data);
+  }
+
+  queryTasks(
+    project_id: number,
+    query?: string,
+    all_tags?: string[]
+  ): Promise<TaskProps[]> {
+    return this.projectRepo
+      .queryTasks(project_id, query, all_tags)
       .then((r) => r.data);
   }
 }

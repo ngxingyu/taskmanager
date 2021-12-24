@@ -1,4 +1,3 @@
-
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { TaskProps } from "core/entities";
@@ -19,6 +18,7 @@ import {
 import { TaskRepository } from "core/infrastructure/taskRepository";
 import { TaskServiceImpl } from "core/useCases/taskUseCase";
 import { deletedProjectTask, updateProjectTask } from "store/project/thunks";
+import { TaskRepositoryProps } from "core/entities/repositories";
 
 export const getTaskById = (
   id: number,
@@ -61,12 +61,13 @@ export const retrievedTask = (tasks: TaskProps): TaskRetrievedAction => {
   return { type: TaskActionTypes.RETRIEVED, payload: tasks };
 };
 
+
 export const deleteTask = (
   project_id: number,
   id: number
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
-    const taskRepo = new TaskRepository();
+    const taskRepo: TaskRepositoryProps = new TaskRepository();
     const taskService = new TaskServiceImpl(taskRepo);
     return new Promise<void>((resolve) => {
       setTimeout(() => {
