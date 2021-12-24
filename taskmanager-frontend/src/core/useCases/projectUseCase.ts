@@ -7,6 +7,7 @@ export interface ProjectService {
   deleteProject(id: number): Promise<boolean>;
   updateProject(props: ProjectProps): Promise<boolean>;
   createProject(props: ProjectProps): Promise<ProjectProps>;
+  // Filter all tasks satisfying a query string OR containg any of the given tags belonging to the project.
   queryTasks(
     project_id: number,
     query?: string,

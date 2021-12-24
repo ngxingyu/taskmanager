@@ -23,7 +23,6 @@ export interface TaskProps {
   updated_at?: Date;
   subtasks?: TaskProps[];
   all_tags?: string[];
-  // tags?: TagProps[];
 }
 
 export interface SearchTaskProps {
@@ -31,12 +30,7 @@ export interface SearchTaskProps {
   project_id?: number;
   importance?: number;
   task_status_id?: TaskStatus;
-  // deadline?: Date;
-  // duration?: Duration;
-  // created_at?: Date;
-  // updated_at?: Date;
   all_tags?: string[];
-  // tags?: TagProps[];
 }
 
 export interface UserProps {

@@ -61,7 +61,6 @@ export const retrievedTask = (tasks: TaskProps): TaskRetrievedAction => {
   return { type: TaskActionTypes.RETRIEVED, payload: tasks };
 };
 
-
 export const deleteTask = (
   project_id: number,
   id: number

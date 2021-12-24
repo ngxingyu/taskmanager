@@ -5,7 +5,6 @@ export type UpdateTaskProps = Pick<
   TaskProps,
   | "title"
   | "notes"
-  // | "start_at"
   | "duration"
   | "importance"
   | "parent_id"

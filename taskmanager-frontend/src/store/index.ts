@@ -45,9 +45,7 @@ export const configureStore = (
   const store = createStore(
     reducers,
     initialState,
-    composeEnhancers(
-      applyMiddleware(routerMiddleware, thunkMiddleware)
-    )
+    composeEnhancers(applyMiddleware(routerMiddleware, thunkMiddleware))
   );
   return store;
 };
