@@ -24,7 +24,7 @@ const Project: FC = () => {
   const projectId: number | undefined = id === undefined ? id : parseInt(id, 10);
   useEffect(() => {
     if (projectId !== undefined) {
-      dispatch(getProjectById(projectId, 5));
+      dispatch(getProjectById(projectId, 3));
     }
   }, [projectId]);
   const [activeProject, setActiveProject] = useState<ProjectStateProps | undefined>(undefined);

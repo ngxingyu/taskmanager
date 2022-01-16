@@ -27,7 +27,6 @@ export interface ApplicationState {
   project_state: ProjectsStateProps;
   user_state: UserStateProps;
   task_state: TaskStateProps;
-  // layout: LayoutState;
 }
 
 export const reducers: Reducer = combineReducers(produce, {
@@ -35,7 +34,6 @@ export const reducers: Reducer = combineReducers(produce, {
   project_state: ProjectsReducer,
   user_state: UsersReducer,
   task_state: TasksReducer,
-  // layout: layoutReducer
 });
 
 export const configureStore = (
@@ -70,5 +68,4 @@ export const initialState: StateProps = {
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

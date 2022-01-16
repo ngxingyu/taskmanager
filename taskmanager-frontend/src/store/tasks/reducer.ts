@@ -59,9 +59,6 @@ const TasksReducer: Reducer<TaskStateProps, TaskAction> = (
         draftState.loading = false;
         draftState.error = action.payload.message;
         break;
-      // case TaskActionTypes.SELECT:
-      //   draftState.task = action.payload.task
-      //   break
     }
   });
 };

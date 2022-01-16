@@ -26,7 +26,7 @@ export class ProjectServiceImpl implements ProjectService {
       return r.data;
     });
   }
-  getProjectById(id: number, depth = 5): Promise<ProjectProps> {
+  getProjectById(id: number, depth = 4): Promise<ProjectProps> {
     return this.projectRepo.getProject(String(id), depth).then((r) => r.data);
   }
   deleteProject(id: number): Promise<boolean> {

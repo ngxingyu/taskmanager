@@ -29,9 +29,16 @@ import {
 import { push } from "redux-first-history";
 import { ProjectRepository } from "core/infrastructure/projectRepository";
 
+/**
+ * Retrieves project along with its contained tasks up to a certain depth.
+ *
+ * @param id project id
+ * @param depth number of task levels to retrieve
+ * @returns Thunk
+ */
 export const getProjectById = (
   id: number,
-  depth = 5
+  depth = 4
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
     const projectRepo = new ProjectRepository();
@@ -61,12 +68,17 @@ export const getProjectById = (
   };
 };
 
+/** Helper to set current project */
 export const setActiveProject = (
   project_id: number
 ): SetActiveProjectAction => {
-  return { type: ProjectActionTypes.SET_ACTIVE_PROJECT, payload: { project_id } };
+  return {
+    type: ProjectActionTypes.SET_ACTIVE_PROJECT,
+    payload: { project_id },
+  };
 };
 
+/** Retrieves a list of all projects visible to user */
 export const getAllProjects = (): ThunkAction<
   Promise<void>,
   {},
@@ -96,11 +108,13 @@ export const getAllProjects = (): ThunkAction<
     });
   };
 };
+
 export const retrieveProjectsFailed = (
   message: string
 ): ProjectRetrieveFailedAction => {
   return { type: ProjectActionTypes.RETRIEVE_FAILED, payload: { message } };
 };
+
 export const retrievingProjects = (): ProjectRetrievingAction => {
   return { type: ProjectActionTypes.RETRIEVING };
 };
@@ -111,6 +125,7 @@ export const retrievedProjects = (
   return { type: ProjectActionTypes.RETRIEVED, payload: projects };
 };
 
+/** Deletes single project by its id, and performs onDelete callback if successful */
 export const deleteProject = (
   id: number,
   onDelete: () => void
@@ -159,6 +174,7 @@ export const deleteProjectFailed = (
   };
 };
 
+/** Creates new project with given project properties */
 export const createProject = (
   project: ProjectProps
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
@@ -206,6 +222,7 @@ export const createProjectFailed = (
   };
 };
 
+/** Modify project details on the backend */
 export const updateProject = (
   project: ProjectProps,
   onSuccess?: () => void
@@ -304,6 +321,7 @@ export const deletedProjectTask = (
 export const retrievingTask = (): ProjectTasksRetrievingAction => {
   return { type: ProjectActionTypes.RETRIEVING_TASKS };
 };
+
 export const retrieveTaskFailed = (
   err: string
 ): ProjectTasksRetrieveFailedAction => {
@@ -312,6 +330,7 @@ export const retrieveTaskFailed = (
     payload: { message: err },
   };
 };
+
 export const retrievedTasks = (
   project_id: number,
   tasks: TaskProps[]
@@ -325,6 +344,7 @@ export const retrievedTasks = (
   };
 };
 
+/** Submits query string and query tags along with a specific project_id to the server */
 export const queryTasks = (
   project_id: number,
   query?: string,

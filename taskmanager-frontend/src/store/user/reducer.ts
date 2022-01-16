@@ -83,7 +83,6 @@ const UsersReducer: Reducer<UserStateProps, UserAction> = (
         break;
       case UserActionTypes.LOGGED_OUT:
       case UserActionTypes.DELETED_USER:
-        // draftState=loggedOutUserState;
         draftState.loading = false;
         draftState.authenticated = false;
         draftState.user = undefined;

@@ -32,7 +32,6 @@ export class TaskRepository
       `/api/v1/tasks/${id?.toString(10) || ""}`,
       params
     );
-    // return Repository<UpdateTaskProps>.prototype.update();
   }
 
   createTask({

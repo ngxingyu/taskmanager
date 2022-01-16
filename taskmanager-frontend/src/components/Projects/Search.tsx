@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Accordion, AccordionDetails, AccordionSummary, Grid, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react'
 import { SearchTaskProps } from 'core/entities';

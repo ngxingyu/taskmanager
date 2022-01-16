@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { PermissionProps, ProjectProps, TaskProps } from "../entities";
 import { ProjectRepositoryProps } from "../entities/repositories";
 import { AxiosResponse } from "axios";

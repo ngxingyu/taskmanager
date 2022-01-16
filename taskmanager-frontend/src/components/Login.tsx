@@ -115,11 +115,6 @@ const LogIn: React.FC<{ loggedIn: boolean, error?: string }> = ({ loggedIn, erro
                 <Alert severity="error">{error}</Alert>
               }
               <Grid container>
-                {/* <Grid item xs>
-                  <Link href="forgot" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid> */}
                 <Grid item>
                   <Link href="signup" variant="body2">
                     {"Don't have an account? Sign Up"}

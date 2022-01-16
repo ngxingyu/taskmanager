@@ -155,8 +155,6 @@ export const loggedInThunk = (
   };
 };
 
-// dispatch(retrieveProfile());
-
 export const logOut = (): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
     return new Promise<void>((resolve) => {

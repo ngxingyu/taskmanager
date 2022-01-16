@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ApplicationState } from "store";
 import axios, { AxiosInstance } from "axios";
 import { push } from "redux-first-history";

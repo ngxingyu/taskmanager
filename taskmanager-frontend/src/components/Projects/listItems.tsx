@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { Dispatch } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -40,7 +39,6 @@ export const projectsListItems: FC<{
           ? (<div>Error! {error.toString()}</div>)
           : (Object.entries(projects).map(([, v], i) => {
             return (
-              // eslint-disable-next-line react/jsx-no-bind
               <ListItemButton
                 key={i}
                 selected={v.id === activeProjectId}

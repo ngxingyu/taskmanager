@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-
 import { RepositoryProps } from "../entities/repositories";
 import { AxiosResponse } from "axios";
 import { API } from "store";

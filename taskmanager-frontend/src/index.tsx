@@ -15,11 +15,6 @@ import Login from "components/Login";
 import SignUp from "components/SignUp";
 import AuthenticationRoute from "components/AuthenticationRoute";
 import Project from "components/Projects/Project";
-// import { makeServer } from "mockApi";
-
-// if (process.env.NODE_ENV === "development") {
-//   makeServer({ environment: "development" });
-// }
 render(
   <React.StrictMode>
     <Provider store={store}>

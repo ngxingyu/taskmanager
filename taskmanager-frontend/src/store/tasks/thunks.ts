@@ -22,7 +22,7 @@ import { TaskRepositoryProps } from "core/entities/repositories";
 
 export const getTaskById = (
   id: number,
-  depth = 5
+  depth = 4
 ): ThunkAction<Promise<void>, {}, {}, AnyAction> => {
   return async (dispatch: ThunkDispatch<{}, {}, AnyAction>): Promise<void> => {
     const taskRepo = new TaskRepository();

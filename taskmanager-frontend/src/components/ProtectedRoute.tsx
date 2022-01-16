@@ -7,7 +7,6 @@ const ProtectedRoute = (props: {
   children: JSX.Element;
   loggedIn: boolean;
 }) => {
-  // const loggedIn = useSelector<StateProps>(state => state.user_state?.authenticated);
   return props.loggedIn ? props.children : <Navigate to="/login" />;
 };
 

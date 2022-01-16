@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 import { TaskProps } from 'core/entities';
-import { FC, useRef, useEffect, useState, useCallback } from 'react';
+import { FC, useRef, useEffect, useState } from 'react';
 import { theme } from 'theme';
 import { StylesProvider } from '@mui/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -24,22 +23,12 @@ const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
         setTreeData(newTree);
     }
     useEffect(() => {
-        // console.log(ref);
         setTreeData(Object.values(tasks).map(task => {
             return { id: task.id, parent: task.parent_id || -1, text: task.title, droppable: true, data: task } as NodeModel<TaskProps>
         }));
-        // (ref.current as TreeMethods).openAll();
     }, [tasks]);
 
     const ref = useRef<TreeMethods>(null);
-    useCallback(node => {
-        if (node !== null) {
-            // eslint-disable-next-line no-debugger
-            debugger;
-            (ref.current as TreeMethods).openAll();
-        }
-    }, []);
-
     const handleValueChange = (id: NodeModel<TaskProps>["id"], value: TaskProps | undefined) => {
         const newTree = treeData.map((node) => {
             if (node.id === id) {
@@ -51,7 +40,6 @@ const TaskList: FC<{ tasks: { [key: number]: TaskProps } }> = ({ tasks }) => {
             }
             return node;
         });
-
         setTreeData(newTree);
     };
 

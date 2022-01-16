@@ -13,11 +13,6 @@ const AddPermission: FC<{ callback: (x: PermissionProps[]) => void }> =
         const handleChange = (newEmails: string[], newRole: number) => {
             callback(newEmails.map<PermissionProps>((email) => { return { email, role: newRole } as PermissionProps }))
             setEmails([]);
-            // if (newState !== undefined) { setState(newState); }
-            // callback(newState);
-            // if (permission.email === "") {
-            //     setState({ email: "", role: 1 });
-            // }
         }
         return (
             <Grid container spacing={2}>
