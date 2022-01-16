@@ -10,7 +10,7 @@ class Api::V1::TagsController < ApplicationController
   # POST /api/v1/projects/#{project.id}/tags
   def create
     check_permission(params[:project_id], lambda {
-      json_response(Tag.find_or_create_by!(tag_params))
+      json_response(Tag.create_or_find_by(tag_params))
     })
   end
 
