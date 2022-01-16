@@ -10,7 +10,11 @@ class Task < ApplicationRecord
 
   def all_tags=(names)
     names.each do |name|
-      tag = Tag.find_or_create_by(project: project, name: name.strip)
+      begin
+        tag = Tag.find_or_create_by(project: project, name: name.strip)
+      rescue ActiveRecord::RecordNotUnique
+        retry
+      end
       self.tags << tag
     end
   end
