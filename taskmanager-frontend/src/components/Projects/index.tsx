@@ -1,11 +1,12 @@
 import React, { FC, useState } from "react";
-import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
+
 import { projectsListItems } from "./listItems";
 import Footer from "../Footer";
 import { connect, useDispatch } from "react-redux";
@@ -20,6 +21,8 @@ import { ProjectProps as Project, ProjectProps } from "core/entities";
 import { ProjectStateProps } from "store/project/reducer";
 import CreateEntry from "components/CreateEntry";
 import { CircularProgress } from "@mui/material";
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 const drawerWidth = 240;
 
@@ -53,76 +56,98 @@ const Projects: FC<{
       dispatch(createProject({ name } as ProjectProps));
     };
     const [searching, setSearching] = useState(false);
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const matches = useMediaQuery(mdTheme.breakpoints.up('sm'));
+
+    const handleDrawerToggle = () => { setMobileOpen(!mobileOpen); };
     useEffect(() => { setSearching(false); }, [projects]);
 
 
     return (
       <ThemeProvider theme={mdTheme}>
-        <Box sx={{ display: "flex" }}>
-          <CssBaseline />
-          <NavBar
-            appBarStyles={{
-              position: "fixed",
-              sx: {
-                zIndex: (theme: Theme) => theme.zIndex.drawer + 1,
-              },
-            }}
-            title="Projects"
-          >
-            <LogoutButton />
-          </NavBar>
-          <Drawer
-            variant="permanent"
-            sx={{
-              width: drawerWidth,
-              flexShrink: 0,
-              [`& .MuiDrawer-paper`]: {
-                width: drawerWidth,
-                boxSizing: "border-box",
-              },
-            }}
-          >
-            <Toolbar />
-            {loading
-              ? <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1 }}><CircularProgress /></Box>
-              : <List className="ll">
-                {projectsListItems({ searching, setSearching, projects, dispatch, error, activeProjectId })}
-                <CreateEntry
-                  onSubmit={createProjectCallback}
-                  initValue=""
-                  id="name"
-                  label='Enter new project'
-                />
-              </List>
-            }
+        <CssBaseline />
+        <NavBar
+          appBarStyles={{
+            position: "fixed",
+            sx: {
+              zIndex: mdTheme.zIndex.drawer + 1,
+            },
+          }}
+          title="Projects"
+          toggleButtonCallback={handleDrawerToggle}
+        >
+          <LogoutButton />
+        </NavBar>
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        >
+          {matches ?
+            <Drawer
+              variant="permanent"
+              sx={{
+                display: 'block',
+                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+              }}
+              open
+            >
+              <Toolbar />
+              {loading
+                ? <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1 }}><CircularProgress /></Box>
+                : <List className="ll">
+                  {projectsListItems({ searching, setSearching, projects, dispatch, error, activeProjectId })}
+                  <CreateEntry
+                    onSubmit={createProjectCallback}
+                    initValue=""
+                    id="name"
+                    label='Enter new project'
+                  />
+                </List>
+              }
+              <Divider />
+            </Drawer>
+            : <Drawer
+              variant="temporary"
+              open={mobileOpen}
+              onClose={handleDrawerToggle}
+              sx={{
+                display: 'block',
+                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+              }}
+            >
+              <Toolbar />
+              {loading
+                ? <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1 }}><CircularProgress /></Box>
+                : <List className="ll">
+                  {projectsListItems({ searching, setSearching, projects, dispatch, error, activeProjectId })}
+                  <CreateEntry
+                    onSubmit={createProjectCallback}
+                    initValue=""
+                    id="name"
+                    label='Enter new project'
+                  />
+                </List>
+              }
 
-            <Divider />
-          </Drawer>
-          <Box
-            component="main"
-            sx={{
-              backgroundColor: (theme) =>
-                theme.palette.mode === "light"
-                  ? theme.palette.grey[100]
-                  : theme.palette.grey[900],
-              flexGrow: 1,
-              height: "100vh",
-              overflow: "auto",
-            }}
-          >
-            <Toolbar />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              {activeProjectId === undefined &&
-                <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1, textAlign: 'center', }}>
-                  Select a project to begin.
-                </Box>}
-              {activeProjectId !== undefined &&
-                <Outlet context={{ projects, activeProjectId }} />}
-              <Footer sx={{ pt: 4 }} />
-            </Container>
-          </Box>
+              <Divider />
+            </Drawer>}
         </Box>
-      </ThemeProvider>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, p: 3, marginLeft: { sm: `${drawerWidth}px` }, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        >
+          <Toolbar />
+          <Container>
+            {activeProjectId === undefined &&
+              <Box sx={{ mx: 'auto', p: 1, m: 1, borderRadius: 1, textAlign: 'center', }}>
+                Select a project to begin.
+              </Box>}
+            {activeProjectId !== undefined &&
+              <Outlet context={{ projects, activeProjectId }} />}
+            <Footer sx={{ pt: 4 }} />
+          </Container>
+        </Box>
+      </ThemeProvider >
     );
   };
 

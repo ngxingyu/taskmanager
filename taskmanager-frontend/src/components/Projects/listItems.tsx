@@ -34,22 +34,21 @@ export const projectsListItems: FC<{
   };
   return (
     <>
-      {error && <div>Error! {error.toString()}</div>}
-      {searching ? (
-        <div>Loading...</div>
-      ) : (
-        Object.entries(projects).map(([, v], i) => {
-          return (
-            // eslint-disable-next-line react/jsx-no-bind
-            <ListItemButton
-              key={i}
-              selected={v.id === activeProjectId}
-              onClick={() => handleClick(v.id || -1)}>
-              <ListItemText primary={v.name || ""} />
-            </ListItemButton>
-          );
-        })
-      )}
+      {searching
+        ? (<div>Loading...</div>)
+        : error
+          ? (<div>Error! {error.toString()}</div>)
+          : (Object.entries(projects).map(([, v], i) => {
+            return (
+              // eslint-disable-next-line react/jsx-no-bind
+              <ListItemButton
+                key={i}
+                selected={v.id === activeProjectId}
+                onClick={() => handleClick(v.id || -1)}>
+                <ListItemText primary={v.name || ""} />
+              </ListItemButton>
+            );
+          }))}
     </>
   );
 };
