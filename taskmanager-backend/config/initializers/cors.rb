@@ -7,7 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'https://taskmanager-ngxingyu.netlify.app/'
+    origins 'https://taskmanager-ngxingyu.netlify.app'
 
     resource '*',
       headers: :any,
