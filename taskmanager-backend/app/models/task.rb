@@ -10,7 +10,7 @@ class Task < ApplicationRecord
 
   def all_tags=(names)
     names.each do |name|
-      tag = Tag.create_or_find_by(project: project, name: name.strip)
+      tag = Tag.find_or_create_by(project: project, name: name.strip)
       self.tags << tag
     end
   end

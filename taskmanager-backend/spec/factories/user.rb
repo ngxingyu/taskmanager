@@ -34,7 +34,7 @@ FactoryBot.define do
     sequence(:name) { |n| "#{Faker::Company.name} #{n}" }
     project
     to_create do |instance|
-      instance.id = Tag.create_or_find_by(name: instance.name, project: instance.project).id
+      instance.id = Tag.find_or_create_by(name: instance.name, project: instance.project).id
       instance.reload
     end
   end
