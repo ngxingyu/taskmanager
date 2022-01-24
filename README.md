@@ -1,3 +1,4 @@
+Ng Xing Yu (A0234386Y)
 ## Intended implementation details:
 -	Rails backend with React frontend
 -	Deployed backend on heroku using docker at http://taskmanager-ngxingyu.herokuapp.com/. Refer to taskmanager-backend/test.http for sample api commands.
